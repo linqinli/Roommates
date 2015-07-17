@@ -12,8 +12,8 @@
 hs_err_pid*
 
 #log file
-.log
+*.log
 
 #target file
 target
-/derby.log
+
