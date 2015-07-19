@@ -14,16 +14,18 @@
 		http://www.springframework.org/schema/tx/spring-tx-4.1.xsd ">
 
 	<!-- 加载db.properties文件中的内容，db.properties文件中key命名要有一定的特殊规则 -->
-	<!-- <context:property-placeholder location="classpath:db.properties" /> -->
+	<context:property-placeholder location="classpath:db.properties" />
 
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
-		destroy-method="close" abstract="false" scope="singleton" lazy-init="false">
-		<property name="driverClassName" value="org.apache.derby.jdbc.EmbeddedDriver" />
-		<property name="url" value="jdbc:derby:e:\roommates;create=true" />
+		destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />  
+        <property name="username" value="${jdbc.username}" />  
+        <property name="password" value="${jdbc.password}" />
 		<property name="maxActive" value="30" />
 		<property name="maxIdle" value="5" />
 	</bean>
-	
+
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="configLocation" value="classpath:mybatis/sqlMapConfig.xml" />
