@@ -3,16 +3,21 @@
 ## README
 屋檐下App后端服务器代码
 
-###Database
-系统数据库暂时为Derby，Derby是JDK自带数据库，在JDK根目录到db目录下。
-运行bin\ij.bat(Windows系统), 使用Derby创建数据库的方法如下：
+###Notice
+数据库已经切换为云主机上的Mysql数据库系统
 
-	ij> connect 'jdbc:derby:e:\roommates;create';
-	ij> create table user_info (
-			id int primary key,
-			name varchar(30)
-		);
+###Convention
+程序源码放在  src/main/java目录下  
+程序资源放在  src/main/resources目录下  
 
+测试源码放在  src/test/java目录下  
+测试资源放在  src/test/resources目录下  
+
+程序调用方式为 Controller——>Service——>Mapper(DAO)  
+	Controller:负责与前端交互  
+	Service:负责业务层逻辑  
+	Mapper:负责数据库访问，其实就是DAO  
+	不存在跨层调用，也不存在逆向调用
 ###Requirement
 	JDK1.7+
 	Eclipse
