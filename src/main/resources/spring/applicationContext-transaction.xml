@@ -32,7 +32,7 @@
 	
 	<aop:config>
 		<aop:advisor advice-ref="txAdvice"
-			pointcut="execution(* com.netease.roommates.service.impl.*.*(..))" />
+			pointcut="execution(* com.netease.*.service.impl.*.*(..))" />
 	</aop:config>
 
 </beans>

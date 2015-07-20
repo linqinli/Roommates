@@ -32,7 +32,7 @@
 	</bean>
 
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.netease.roommates.mapper"></property>
+		<property name="basePackage" value="com.netease.*.mapper"></property>
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
 	</bean>
 
