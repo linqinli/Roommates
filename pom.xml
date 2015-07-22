@@ -14,16 +14,17 @@
 
 	<repositories>
 		<repository>
+			<id>offical</id>
+			<name>Official Maven Central Repository</name>
+			<url>http://repo1.maven.org/maven2/</url>
+		</repository>
+		<repository>
 			<id>hzntes</id>
 			<name>NTES-HZ Maven Repository</name>
 			<url>http://mvn.hz.netease.com/artifactory/repo</url>
 			<layout>default</layout>
 		</repository>
-		<repository>
-			<id>offical</id>
-			<name>Official Maven Central Repository</name>
-			<url>http://repo1.maven.org/maven2/</url>
-		</repository>
+		
 	</repositories>
 
 	<dependencies>
@@ -153,6 +154,12 @@
 			<groupId>redis.clients</groupId>
 			<artifactId>jedis</artifactId>
 			<version>2.7.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>1.5.4</version>
 		</dependency>
 	</dependencies>
 
