@@ -3,10 +3,47 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.netease.roommates.mapper.UserMapper">
-	<select id="getUserById" parameterType="int" resultType="user">
-		select * from user_info where id=#{id}
-	</select>
+	
 	<insert id="insertUser" parameterType="user">
 		insert into user_info values(#{id}, #{name})
 	</insert>
+	
+	<select id="getUserById" parameterType="int" resultType="user">
+		select * from sys_user where userId=#{id}
+	</select>
+	
+	<update id="updateUser" parameterType="user">
+		update sys_user
+		<set>
+			<if test="photoId != 0">
+				photoId = #{photoId, jdbcType=INTEGER},
+			</if>
+			<if test="nickName != null">
+				nickName = #{nickName, jdbcType=VARCHAR},
+			</if>
+			<if test="gender != null">
+				gender = #{gender, jdbcType=BIT},
+			</if>
+			<if test="pwdMD5Hash != null">
+				pwdMD5Hash = #{pwdMD5Hash, jdbcType=VARCHAR},
+			</if>
+			<if test="phoneNumber != null">
+				phoneNumber = #{phoneNumber, jdbcType=VARCHAR},
+			</if>
+			<if test="companyMail != null">
+				companyMail = #{companyMail, jdbcType=VARCHAR},
+			</if>
+			<if test="weChat != null">
+				weChat = #{weChat, jdbcType=VARCHAR},
+			</if>
+			<if test="QQ != null">
+				QQ = #{QQ, jdbcType=VARCHAR},
+			</if>
+			<if test="yixin != null">
+				yixin = #{yixin, jdbcType=VARCHAR},
+			</if>
+			updateTime = now()
+		</set>
+		where userId=#{userId}
+	</update>
 </mapper>

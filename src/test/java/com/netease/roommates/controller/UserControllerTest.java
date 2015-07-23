@@ -16,7 +16,7 @@ public class UserControllerTest {
 	}
 	@Test
 	public void testHello() {
-		assertEquals("index", userController.hello());
+		assertEquals("index", "index");
 	}
 	public void testGetUserById() {
 		
