@@ -8,5 +8,5 @@ public interface IUserInfoService {
 	
 	public void updateUserBasicInfo(User user) throws ServiceException;
 	
-	public void insertUser(User user);
+	public void insertUser(User user) throws ServiceException;
 }

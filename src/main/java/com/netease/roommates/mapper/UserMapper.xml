@@ -5,14 +5,17 @@
 <mapper namespace="com.netease.roommates.mapper.UserMapper">
 	
 	<insert id="insertUser" parameterType="user">
-		insert into user_info values(#{id}, #{name})
+		insert into sys_user(userName, pwdMD5Hash, nickName, gender, companyEmail, phoneNumber,
+			birthday, address, updateTime, weChat, yixin, QQ, photoId, company)
+		values(#{userName}, #{pwdMD5Hash}, #{nickName}, #{gender}, #{companyEmail}, #{phoneNumber},
+		 	#{birthday}, #{address}, now(), #{weChat}, #{yixin}, #{QQ}, #{photoId}, #{company})
 	</insert>
 	
 	<select id="getUserById" parameterType="int" resultType="user">
 		select * from sys_user where userId=#{id}
 	</select>
 	
-	<update id="updateUser" parameterType="user">
+	<update id="updateUserBasicInfo" parameterType="user">
 		update sys_user
 		<set>
 			<if test="photoId != 0">
@@ -30,8 +33,14 @@
 			<if test="phoneNumber != null">
 				phoneNumber = #{phoneNumber, jdbcType=VARCHAR},
 			</if>
-			<if test="companyMail != null">
+			<if test="companyEmail != null">
 				companyMail = #{companyMail, jdbcType=VARCHAR},
+			</if>
+			<if test="company != null">
+				company = #{company, jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				address = #{address, jdbcType=VARCHAR},
 			</if>
 			<if test="weChat != null">
 				weChat = #{weChat, jdbcType=VARCHAR},

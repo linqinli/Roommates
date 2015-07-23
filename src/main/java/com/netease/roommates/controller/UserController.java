@@ -2,6 +2,7 @@ package com.netease.roommates.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,10 +24,14 @@ public class UserController {
 		System.out.println(user);
 		return user;
 	}
-
-	@RequestMapping(value = "/updateUser", method = RequestMethod.POST)
-	@ResponseBody
-	public void updateUser(User user) throws ServiceException {
+	
+	@RequestMapping(value = "/addUser", method = RequestMethod.POST)
+	public void addUser(@RequestBody User user) throws ServiceException {
+		userInfoService.insertUser(user);
+	}
+	
+	@RequestMapping(value = "/updateUserBasicInfo", method = RequestMethod.POST)
+	public void updateUser(@RequestBody User user) throws ServiceException {
 		userInfoService.updateUserBasicInfo(user);
 	}
 }

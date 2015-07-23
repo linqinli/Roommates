@@ -3,7 +3,7 @@ package com.netease.roommates.service.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ public class UserInfoService implements IUserInfoService {
 	@Autowired
 	private UserMapper userMapper;
 
-	//@Cacheable(value = "userCache", key = "#id")
+	@Cacheable(value = "userCache", key = "#id")
 	public User getUserById(int id) throws ServiceException {
 		try {
 			log.debug("UserInfoService.getUserById");
@@ -30,7 +30,7 @@ public class UserInfoService implements IUserInfoService {
 		}
 	}
 	
-	@CachePut(value="userCache", key = "#user.getUserId()")
+	@CacheEvict(value="userCache", key = "#user.getUserId()")
 	public void updateUserBasicInfo(User user) throws ServiceException {
 		try {
 			userMapper.updateUserBasicInfo(user);
@@ -40,7 +40,12 @@ public class UserInfoService implements IUserInfoService {
 		}
 	}
 
-	public void insertUser(User user) {
-
+	public void insertUser(User user) throws ServiceException {
+		try {
+			userMapper.insertUser(user);
+		} catch (StorageException se) {
+			log.error("error updatting target user: " + user, se);
+			throw new ServiceException(se);
+		}
 	}
 }

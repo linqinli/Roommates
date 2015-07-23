@@ -1,6 +1,7 @@
 package com.netease.roommates.po;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class User implements Serializable{
 	private static final long serialVersionUID = 1L;
@@ -10,9 +11,12 @@ public class User implements Serializable{
 	private int photoId;
 	private byte gender;
 	private String nickName;
+	private Date birthday;
 	private String pwdMD5Hash;
 	private String phoneNumber;
-	private String companyMail;
+	private String companyEmail;
+	private String company;
+	private String address;
 	private String weChat;
 	private String QQ;
 	private String yixin;
@@ -40,6 +44,14 @@ public class User implements Serializable{
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public Date getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
 	}
 
 	public byte getGender() {
@@ -78,12 +90,28 @@ public class User implements Serializable{
 		this.phoneNumber = phoneNumber;
 	}
 
-	public String getCompanyMail() {
-		return companyMail;
+	public String getCompanyEmail() {
+		return companyEmail;
 	}
 
-	public void setCompanyMail(String companyMail) {
-		this.companyMail = companyMail;
+	public void setCompanyEmail(String companyMail) {
+		this.companyEmail = companyMail;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public String getWeChat() {
@@ -122,7 +150,8 @@ public class User implements Serializable{
 	public String toString() {
 		return "User [userId=" + userId + ", userName=" + userName + ", photoId=" + photoId + ", gender=" + gender
 				+ ", nickName=" + nickName + ", pwdMD5Hash=" + pwdMD5Hash + ", phoneNumber=" + phoneNumber
-				+ ", companyMail=" + companyMail + ", weChat=" + weChat + ", QQ=" + QQ + ", yixin=" + yixin
+				+ ", companyEmail=" + companyEmail + ", weChat=" + weChat + ", QQ=" + QQ + ", yixin=" + yixin
 				+ ", personality=" + personality + "]";
 	}
+	
 }
