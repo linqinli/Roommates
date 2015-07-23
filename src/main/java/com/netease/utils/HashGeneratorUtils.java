@@ -10,10 +10,33 @@ import com.netease.exception.HashGenerationException;
  * Hash functions utility class.
  */
 public class HashGeneratorUtils {
+	private final static String DEFAUT_SALT = "roommates_salt_2&g3(*EH";
+	
     private HashGeneratorUtils() {
  
     }
- 
+    
+    /**
+     * use default salt for easily using.
+     * @param message
+     * @return
+     * @throws HashGenerationException
+     */
+    public static String generateSaltMD5(String message) throws HashGenerationException {
+    	return hashString(message + DEFAUT_SALT, "MD5");
+    }
+    
+    /**
+     *use salt to strength MD5, then store MD5 and salt into database.
+     * @param message password
+     * @param salt 
+     * @return the Salted MD5 hash
+     * @throws HashGenerationException
+     */
+    public static String generateSaltMD5(String message, String salt) throws HashGenerationException {
+    	return hashString(message + salt, "MD5");
+    }
+    
     public static String generateMD5(String message) throws HashGenerationException {
         return hashString(message, "MD5");
     }
