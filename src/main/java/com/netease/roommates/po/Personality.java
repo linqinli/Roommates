@@ -1,7 +1,6 @@
 package com.netease.roommates.po;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class Personality implements Serializable {
 	private static final long serialVersionUID = 1L;
