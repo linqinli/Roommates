@@ -19,6 +19,7 @@ import com.netease.roommates.po.HouseQuery;
 import com.netease.user.service.IHouseService;
 
 @Controller
+@RequestMapping("/api/house")
 public class HouseController {
 	
 	private int pageSize = 10;
@@ -28,7 +29,7 @@ public class HouseController {
 	@Autowired
 	private IHouseService houseService;
 
-	@RequestMapping("/house/{id}")
+	@RequestMapping("/{id}")
 	@ResponseBody
 	public HashMap<String,Object> getHouseDetailById(@PathVariable String id) {
 		
@@ -57,7 +58,7 @@ public class HouseController {
 		return result;
 	}
 
-	@RequestMapping("/house/list")
+	@RequestMapping("/list")
 	@ResponseBody
 	public HashMap<String,Object> getHousesInfoByQuery(@RequestParam("q") String kw, @RequestParam("area") String area,
 			@RequestParam("price") String price, @RequestParam("room") String room,

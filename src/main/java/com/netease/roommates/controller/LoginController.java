@@ -21,6 +21,7 @@ import com.netease.roommates.po.User;
 import com.netease.utils.HashGeneratorUtils;
 
 @Controller
+@RequestMapping("/api")
 public class LoginController {
 	@Autowired
 	private IUserInfoService userInfoService;

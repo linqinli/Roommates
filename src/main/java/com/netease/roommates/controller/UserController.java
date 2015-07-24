@@ -16,7 +16,7 @@ import com.netease.roommates.po.User;
 import com.netease.user.service.IUserInfoService;
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
 	@Autowired
 	private IUserInfoService userInfoService;

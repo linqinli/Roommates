@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.netease.user.service.FileService;
 
 @Controller
-@RequestMapping("/photo")
+@RequestMapping("/api/photo")
 public class FileUploadController {
 	private Logger logger = LoggerFactory.getLogger(FileUploadController.class);
 	private final static String PREFIX = "D:\\photo\\";

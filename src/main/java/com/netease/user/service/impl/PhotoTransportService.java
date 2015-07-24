@@ -21,7 +21,6 @@ public class PhotoTransportService implements FileService {
 	public void fildUpload(String name, byte[] photo) throws IOException {
 		BufferedOutputStream bos = null;
 		try {
-			System.out.println(name);
 			bos = new BufferedOutputStream(new FileOutputStream(name));
 			bos.write(photo);
 			bos.flush();
