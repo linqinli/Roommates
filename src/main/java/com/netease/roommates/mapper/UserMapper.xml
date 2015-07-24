@@ -6,9 +6,9 @@
 	
 	<insert id="insertUser" parameterType="user">
 		insert into sys_user(userName, pwdMD5Hash, nickName, gender, companyEmail, phoneNumber,
-			birthday, address, updateTime, weChat, yixin, QQ, photoId, company)
+			birthday, address, updateTime, weChat, yixin, QQ, photoId, company, position)
 		values(#{userName}, #{pwdMD5Hash}, #{nickName}, #{gender}, #{companyEmail}, #{phoneNumber},
-		 	#{birthday}, #{address}, now(), #{weChat}, #{yixin}, #{QQ}, #{photoId}, #{company})
+		 	#{birthday}, #{address}, now(), #{weChat}, #{yixin}, #{QQ}, #{photoId}, #{company}, #{position})
 	</insert>
 	
 	<select id="getUserById" parameterType="int" resultType="user">
@@ -26,6 +26,9 @@
 			</if>
 			<if test="gender != null">
 				gender = #{gender, jdbcType=BIT},
+			</if>
+			<if test="position != null">
+				position = #{position, jdbcType=VARCHAR},
 			</if>
 			<if test="pwdMD5Hash != null">
 				pwdMD5Hash = #{pwdMD5Hash, jdbcType=VARCHAR},
@@ -96,11 +99,12 @@
 		where id=#{id}
 	</update>
 	
-	
+	<select id="getUserListByAddress" parameterType="String" resultType="user">
+		select * from sys_user where address=#{address}
+	</select>
+
+
 	<select id="getUserByName" parameterType="String" resultType="user">
 		select * from sys_user where userName=#{name}
 	</select>
-	
-
-
 </mapper>
