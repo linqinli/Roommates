@@ -5,27 +5,34 @@ import java.util.Date;
 
 public class Personality implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private String userId;
+	private int id;
+	private int userId;
 	private int smoking;
 	private int pet;
 	private int dailySchedule;
 	private int visitor;
-	private Date birthday;
 	private String constellation;
-	private int sanitation;
-	private int character;
+	private int cleanliness;
+	private int personCharacter;
 	
 	public Personality() {
-		
+	
 	}
 	
-	
-	public String getUserId() {
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getUserId() {
 		return userId;
 	}
 
 
-	public void setUserId(String userId) {
+	public void setUserId(int userId) {
 		this.userId = userId;
 	}
 
@@ -62,14 +69,6 @@ public class Personality implements Serializable {
 		this.visitor = visitor;
 	}
 
-	public Date getBirthday() {
-		return birthday;
-	}
-
-	public void setBirthday(Date birthday) {
-		this.birthday = birthday;
-	}
-
 	public String getConstellation() {
 		return constellation;
 	}
@@ -78,21 +77,23 @@ public class Personality implements Serializable {
 		this.constellation = constellation;
 	}
 
-	public int getSanitation() {
-		return sanitation;
+	public int getCleanliness() {
+		return cleanliness;
 	}
 
-	public void setSanitation(int sanitation) {
-		this.sanitation = sanitation;
+
+	public void setCleanliness(int cleanliness) {
+		this.cleanliness = cleanliness;
 	}
 
-	public int getCharacter() {
-		return character;
+
+	public int getPersonCharacter() {
+		return personCharacter;
 	}
 
-	public void setCharacter(int character) {
-		this.character = character;
+
+	public void setPersonCharacter(int personCharacter) {
+		this.personCharacter = personCharacter;
 	}
-	
 	
 }

@@ -1,4 +1,4 @@
-package com.netease.roommates.service.impl;
+package com.netease.user.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,8 +10,9 @@ import org.springframework.stereotype.Service;
 import com.netease.exception.ServiceException;
 import com.netease.exception.StorageException;
 import com.netease.roommates.mapper.UserMapper;
+import com.netease.roommates.po.Personality;
 import com.netease.roommates.po.User;
-import com.netease.roommates.service.IUserInfoService;
+import com.netease.user.service.IUserInfoService;
 
 @Service
 public class UserInfoService implements IUserInfoService {
@@ -19,7 +20,7 @@ public class UserInfoService implements IUserInfoService {
 	@Autowired
 	private UserMapper userMapper;
 
-	@Cacheable(value = "userCache", key = "#id")
+	@Cacheable(value = "userCache", key = "'User' + #id") //Need to be removed since the query sql is same. 
 	public User getUserById(int id) throws ServiceException {
 		try {
 			log.debug("UserInfoService.getUserById");
@@ -29,8 +30,9 @@ public class UserInfoService implements IUserInfoService {
 			throw new ServiceException(se);
 		}
 	}
-	
-	@CacheEvict(value="userCache", key = "#user.getUserId()")
+
+	@Override
+	@CacheEvict(value = "userCache", key = "'User' + #user.getUserId()")
 	public void updateUserBasicInfo(User user) throws ServiceException {
 		try {
 			userMapper.updateUserBasicInfo(user);
@@ -40,11 +42,44 @@ public class UserInfoService implements IUserInfoService {
 		}
 	}
 
+	@Override
 	public void insertUser(User user) throws ServiceException {
 		try {
 			userMapper.insertUser(user);
 		} catch (StorageException se) {
 			log.error("error updatting target user: " + user, se);
+			throw new ServiceException(se);
+		}
+	}
+
+	@Override
+	@Cacheable(value = "userCache", key = "'personality' + #id")
+	public Personality getUserPersonality(int id) throws ServiceException {
+		try {
+			return userMapper.getUserPersonality(id);
+		} catch (StorageException se) {
+			log.error("error getting target user personality by id: " + id, se);
+			throw new ServiceException(se);
+		}
+	}
+
+	@Override
+	public void insertUserPersonality(Personality personality) throws ServiceException {
+		try {
+			userMapper.insertUserPersonality(personality);
+		} catch (StorageException se) {
+			log.error("error updatting target user personality: " + personality, se);
+			throw new ServiceException(se);
+		}
+	}
+
+	@Override
+	@CacheEvict(value = "userCache", key = "'personality' + #personality.getId()")
+	public void updateUserPersonality(Personality personality) throws ServiceException {
+		try {
+			userMapper.updateUserPersonality(personality);
+		} catch (StorageException se) {
+			log.error("error updatting target user personality: " + personality, se);
 			throw new ServiceException(se);
 		}
 	}
