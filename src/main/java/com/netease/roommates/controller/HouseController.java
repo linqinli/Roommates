@@ -83,7 +83,7 @@ public class HouseController {
 				roomType = HouseConstProperty.roomTypeMap.get(Integer.parseInt(room));
 			}
 			
-			//·ÖÒ³
+			
 			int curPage = Integer.parseInt(page);
 			int startRow = (curPage-1)*pageSize;
 			
