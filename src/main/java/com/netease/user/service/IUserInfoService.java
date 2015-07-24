@@ -16,4 +16,7 @@ public interface IUserInfoService {
 	public void insertUserPersonality(Personality personality) throws ServiceException;
 	
 	public void updateUserPersonality(Personality personality) throws ServiceException;
+	
+	public User getUserByName(String name) throws ServiceException;
+
 }

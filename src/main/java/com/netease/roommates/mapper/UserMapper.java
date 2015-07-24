@@ -16,4 +16,7 @@ public interface UserMapper {
 	public void insertUserPersonality(Personality personality) throws StorageException;
 	
 	public void updateUserPersonality(Personality personality) throws StorageException;
+	
+	public User getUserByName(String name) throws StorageException;
+
 }

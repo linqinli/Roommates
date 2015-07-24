@@ -95,4 +95,12 @@
 		</set>
 		where id=#{id}
 	</update>
+	
+	
+	<select id="getUserByName" parameterType="String" resultType="user">
+		select * from sys_user where userName=#{name}
+	</select>
+	
+
+
 </mapper>

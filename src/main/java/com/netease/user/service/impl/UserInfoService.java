@@ -83,4 +83,17 @@ public class UserInfoService implements IUserInfoService {
 			throw new ServiceException(se);
 		}
 	}
+	
+	
+	@Override
+	public User getUserByName(String name) throws ServiceException {
+		try {
+			return userMapper.getUserByName(name);
+		} catch (StorageException se) {
+			log.error("error get user by name:" + name, se);
+			throw new ServiceException(se);
+		}
+	}
+
+	
 }
