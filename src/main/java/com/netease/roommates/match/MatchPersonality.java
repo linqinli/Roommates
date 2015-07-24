@@ -2,21 +2,52 @@ package com.netease.roommates.match;
 
 import java.util.*;
 import java.util.ArrayList;
-import com.netease.exception.StorageException;
+
+import com.netease.exception.ServiceException;
 import com.netease.roommates.po.User;
 import com.netease.roommates.po.Personality;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.netease.user.service.IUserInfoService;
 
-
-public class matchPersonality {
+public class MatchPersonality {
+	@Autowired
+	private IUserInfoService userInfoService;
+	
 	private User curUser;
 	
-	public matchPersonality(User user){
+	public MatchPersonality(User user){
 		setCurUser(user);
 	}
 	
-	Map<User, Integer> matchResult(){
-		
-		return null;
+	static class MatchScoreAndMessage{
+		int matchScore;
+		String matchMessage;
+	}
+	
+	public List<MatchUserInfo> matchResult() throws ServiceException{
+		List<MatchUserInfo> matchUserInfo = new ArrayList<MatchUserInfo>();
+		List<User> userList = userInfoService.getUserListByAddress(this.curUser.getAddress());
+		for(int i=0; i<userList.size(); ++i){
+			User user = userList.get(i);
+			MatchScoreAndMessage matchScoreAndMessage = getSimilarityBetweenTwoPersonality(
+					this.curUser.getPersonality(), user.getPersonality());
+			MatchUserInfo userTmpInfo = new MatchUserInfo();
+			userTmpInfo.setCompany(user.getCompany());
+			userTmpInfo.setGender(user.getGender());
+			userTmpInfo.setNickName(user.getNickName());
+			userTmpInfo.setPhotoId(user.getPhotoId());
+			userTmpInfo.setUserId(user.getUserId());
+			userTmpInfo.setUserName(user.getUserName());
+			userTmpInfo.setMatchScore(matchScoreAndMessage.matchScore);
+			userTmpInfo.setMatchMessage(matchScoreAndMessage.matchMessage);
+		}
+		Collections.sort(matchUserInfo,new Comparator<MatchUserInfo>(){
+			@Override
+			public int compare(MatchUserInfo matchUserInfo1, MatchUserInfo matchUserInfo2){
+				return matchUserInfo1.getMatchScore()-matchUserInfo2.getMatchScore();
+			}
+		});
+		return matchUserInfo;
 	}
 
 	public User getCurUser() {
@@ -28,8 +59,10 @@ public class matchPersonality {
 	}
 	
 	
-	public int getSimilarityBetweenTwoPersonality(Personality per1, Personality per2){
+	public MatchScoreAndMessage getSimilarityBetweenTwoPersonality(Personality per1, Personality per2){
+		MatchScoreAndMessage matchScoreAndMessage = new MatchScoreAndMessage();
 		int matchScore = 0;
+		String matchMessage = " ";
 		
 		// 权重 分配
 		int zxWeight = 3; // 作息选项权重
@@ -130,7 +163,10 @@ public class matchPersonality {
 		matchScore = matchScore+zxWeight+cyWeight+cwWeight+fkWeight+grwsWeight+xgWeight;
 		matchScore = (int)(100*(double)matchScore/(double)totalWeight);
 		
-		return matchScore;
+		matchScoreAndMessage.matchScore = matchScore;
+		matchScoreAndMessage.matchMessage = matchMessage;
+		
+		return matchScoreAndMessage;
 	}
 }
 
