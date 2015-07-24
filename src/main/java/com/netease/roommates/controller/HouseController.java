@@ -16,7 +16,7 @@ import com.netease.roommates.po.House;
 import com.netease.roommates.po.HouseConstProperty;
 import com.netease.roommates.po.HouseDetail;
 import com.netease.roommates.po.HouseQuery;
-import com.netease.roommates.service.IHouseService;
+import com.netease.user.service.IHouseService;
 
 @Controller
 public class HouseController {

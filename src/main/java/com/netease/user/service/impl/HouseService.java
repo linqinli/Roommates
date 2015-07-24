@@ -9,7 +9,7 @@ import com.netease.roommates.mapper.HouseMapper;
 import com.netease.roommates.po.House;
 import com.netease.roommates.po.HouseDetail;
 import com.netease.roommates.po.HouseQuery;
-import com.netease.roommates.service.IHouseService;
+import com.netease.user.service.IHouseService;
 
 @Service
 public class HouseService implements IHouseService {
