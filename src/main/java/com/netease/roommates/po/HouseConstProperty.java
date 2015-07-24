@@ -11,22 +11,22 @@ public class HouseConstProperty {
 		priceMap = new HashMap<Integer,String>();
 		roomTypeMap = new HashMap<Integer,String>();
 
-		priceMap.put(1, "");//²»ÏŞ
-		priceMap.put(2, "0-500");//500ÒÔÏÂ
+		priceMap.put(1, "");//ä¸é™
+		priceMap.put(2, "0-500");//500ä»¥ä¸‹
 		priceMap.put(3, "500-1000");
 		priceMap.put(4, "1000-1500");
 		priceMap.put(5, "1500-2000");
 		priceMap.put(6, "2000-3000");
 		priceMap.put(7, "3000-5000");
 		priceMap.put(8, "5000-8000");
-		priceMap.put(9, "8000-99999");//8000ÒÔÉÏ
+		priceMap.put(9, "8000-99999");//8000ä»¥ä¸Š
 		
-		roomTypeMap.put(1, "");//²»ÏŞ
-		roomTypeMap.put(2, "1ÊÒ");
-		roomTypeMap.put(3, "2ÊÒ");
-		roomTypeMap.put(4, "3ÊÒ");
-		roomTypeMap.put(5, "4ÊÒ");
-		roomTypeMap.put(6, "4ÊÒÒÔÉÏ");
+		roomTypeMap.put(1, "");//ä¸é™
+		roomTypeMap.put(2, "1å®¤");
+		roomTypeMap.put(3, "2å®¤");
+		roomTypeMap.put(4, "3å®¤");
+		roomTypeMap.put(5, "4å®¤");
+		roomTypeMap.put(6, "4å®¤ä»¥ä¸Š");
 	}
 	
 	public static void main(String[] args) {
