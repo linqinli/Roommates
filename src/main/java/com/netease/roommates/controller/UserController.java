@@ -34,4 +34,13 @@ public class UserController {
 	public void updateUser(@RequestBody User user) throws ServiceException {
 		userInfoService.updateUserBasicInfo(user);
 	}
+	
+	@RequestMapping(value = "/matchable")
+	@ResponseBody
+	public User matchable() throws ServiceException {
+		User user = new User();
+		user.setAddress("hangzhou");
+		user.setCompany("NetEase");
+		return user;
+	}
 }
