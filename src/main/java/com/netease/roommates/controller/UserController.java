@@ -1,5 +1,8 @@
 package com.netease.roommates.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +20,7 @@ import com.netease.user.service.IUserInfoService;
 public class UserController {
 	@Autowired
 	private IUserInfoService userInfoService;
-
+	
 	@RequestMapping(value = "/getUser", method = RequestMethod.GET)
 	@ResponseBody
 	public User getUserById(int id) throws ServiceException {
@@ -59,5 +62,12 @@ public class UserController {
 	@RequestMapping(value = "/updateUserPersonality", method = RequestMethod.POST)
 	public void updateUserPersonality(@RequestBody Personality personality) throws ServiceException {
 		userInfoService.updateUserPersonality(personality);
+	}
+	
+	@RequestMapping(value = "/getUserListByAddress", method = RequestMethod.GET)
+	@ResponseBody
+	public List<User> getUserListByAddress(String address) throws ServiceException, UnsupportedEncodingException {
+		address = new String(address.getBytes("ISO-8859-1"), "UTF-8");
+		return userInfoService.getUserListByAddress(address);
 	}
 }

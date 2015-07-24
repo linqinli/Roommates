@@ -1,5 +1,7 @@
 package com.netease.user.service.impl;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,4 +85,22 @@ public class UserInfoService implements IUserInfoService {
 			throw new ServiceException(se);
 		}
 	}
+
+	@Override
+	public List<User> getUserListByAddress(String address) throws ServiceException {
+		try {
+			return userMapper.getUserListByAddress(address);
+		} catch (StorageException se) {
+			log.error("error getting target user by address: " + address, se);
+			throw new ServiceException(se);
+		}
+	}
+
+	@Override
+	public List<User> getUserListByCompany(String company) throws ServiceException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
 }

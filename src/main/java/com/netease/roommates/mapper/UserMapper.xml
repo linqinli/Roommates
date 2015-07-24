@@ -98,4 +98,8 @@
 		</set>
 		where id=#{id}
 	</update>
+	
+	<select id="getUserListByAddress" parameterType="String" resultType="user">
+		select * from sys_user where address=#{address}
+	</select>
 </mapper>
