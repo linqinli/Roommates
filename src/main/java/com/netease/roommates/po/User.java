@@ -12,6 +12,7 @@ public class User implements Serializable{
 	private byte gender;
 	private String nickName;
 	private Date birthday;
+	private String position;
 	private String pwdMD5Hash;
 	private String phoneNumber;
 	private String companyEmail;
@@ -52,6 +53,14 @@ public class User implements Serializable{
 
 	public void setBirthday(Date birthday) {
 		this.birthday = birthday;
+	}
+
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
 	}
 
 	public byte getGender() {
