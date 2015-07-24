@@ -43,7 +43,8 @@ public class UserController {
 		user.setAddress("hangzhou");
 		user.setCompany("NetEase");
 		return user;
-
+	}
+	
 	@RequestMapping(value = "/getUserPersonality", method = RequestMethod.GET)
 	@ResponseBody
 	public Personality getUserPersonalityById(int id) throws ServiceException {
@@ -58,6 +59,5 @@ public class UserController {
 	@RequestMapping(value = "/updateUserPersonality", method = RequestMethod.POST)
 	public void updateUserPersonality(@RequestBody Personality personality) throws ServiceException {
 		userInfoService.updateUserPersonality(personality);
->>>>>>> fc1d854ebf142a66cfb15ec469b657cd02551c8e
 	}
 }

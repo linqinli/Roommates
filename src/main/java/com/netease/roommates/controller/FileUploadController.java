@@ -1,9 +1,13 @@
 package com.netease.roommates.controller;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,7 +20,9 @@ import com.netease.user.service.FileService;
 
 @Controller
 @RequestMapping("/photo")
-public class FileUpoadController {
+public class FileUploadController {
+	private Logger logger = LoggerFactory.getLogger(FileUploadController.class);
+	private final static String PREFIX = "D:\\photo\\";
 	private final static String SUFFIX = "_photo.jpg";
 	@Autowired
 	FileService photoTransportService;
@@ -28,7 +34,7 @@ public class FileUpoadController {
 		try {
 			if (!file.isEmpty()) {
 				byte[] bytes = file.getBytes();
-				photoTransportService.fildUpload(userId + SUFFIX, bytes);
+				photoTransportService.fildUpload(generatePathByUserId(userId), bytes);
 				result.put("state", "success");
 				return result;
 			}
@@ -40,8 +46,24 @@ public class FileUpoadController {
 	}
 
 	@RequestMapping("/download")
-	public ResponseEntity<byte[]> download(int userId) throws IOException {
-		return photoTransportService.fileDownload(userId, userId + SUFFIX);
+	@ResponseBody
+	public ResponseEntity<byte[]> download(int userId) {
+		try {
+			String path = generatePathByUserId(userId);
+			if (new File(path).exists()) {
+				return photoTransportService.fileDownload(userId, path);
+			} else {
+				
+			}
+		} catch (FileNotFoundException fnfe) {
+			logger.warn("photo not found fot target user, userId" + userId, fnfe);
+		} catch (IOException ioe) {
+			logger.error("IOException when download photo for user, userId=" + userId, ioe);
+		}
+		return null;
 	}
 
+	private String generatePathByUserId(int userId) {
+		return PREFIX + userId + SUFFIX;
+	}
 }

@@ -22,7 +22,7 @@ public class PhotoTransportService implements FileService {
 		BufferedOutputStream bos = null;
 		try {
 			System.out.println(name);
-			bos = new BufferedOutputStream(new FileOutputStream("D:\\photo\\" + name));
+			bos = new BufferedOutputStream(new FileOutputStream(name));
 			bos.write(photo);
 			bos.flush();
 		} finally {
@@ -34,9 +34,9 @@ public class PhotoTransportService implements FileService {
 
 	@Override
 	public ResponseEntity<byte[]> fileDownload(int userId, String fileName) throws IOException {
-	        File file=new File("D:\\photo\\" + fileName);
+	        File file=new File(fileName);
 	        HttpHeaders headers = new HttpHeaders();    
-	        headers.setContentDispositionFormData("attachment", fileName);   
+	        headers.setContentDispositionFormData("attachment", file.getName());   
 	        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);   
 	        return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file),    
 	                                          headers, HttpStatus.CREATED);   

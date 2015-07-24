@@ -79,8 +79,8 @@ public class matchPersonality {
 		else matchScore += fkWeight*(user1Visitor*user2Visitor);
 
 		// 个人卫生选项匹配得分计算
-		int user1Sanitation = per1.getSanitation();
-		int user2Sanitation = per2.getSanitation();
+		int user1Sanitation = per1.getCleanliness();
+		int user2Sanitation = per2.getCleanliness();
 		user1Sanitation -= 2;
 		user2Sanitation -= 2;
 		if(user1Sanitation == user2Sanitation){
@@ -89,8 +89,8 @@ public class matchPersonality {
 		else matchScore += grwsWeight*(user1Sanitation*user2Sanitation);
 
 		// 性格选项匹配得分计算
-		int user1Character = per1.getCharacter();
-		int user2Character = per2.getCharacter();
+		int user1Character = per1.getPersonCharacter();
+		int user2Character = per2.getPersonCharacter();
 		user1Character -= 2;
 		user2Character -= 2;
 		if(user1Character == user2Character){
