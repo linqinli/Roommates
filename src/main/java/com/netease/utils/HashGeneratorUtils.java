@@ -27,7 +27,7 @@ public class HashGeneratorUtils {
     }
     
     /**
-     *use salt to strength MD5, then store MD5 and salt into database.
+     * use salt to strengthen MD5, then store MD5 and salt into database.
      * @param message password
      * @param salt 
      * @return the Salted MD5 hash

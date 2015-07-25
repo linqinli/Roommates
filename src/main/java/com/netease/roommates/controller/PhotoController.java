@@ -22,7 +22,7 @@ import com.netease.user.service.FileService;
 @RequestMapping("/api/photo")
 public class PhotoController {
 	private Logger logger = LoggerFactory.getLogger(PhotoController.class);
-	private final static String PREFIX = "D:\\photo\\photo";
+	private final static String PREFIX = "/var/www/lighttpd/roommates/photo/photo";
 	private final static String SUFFIX = ".jpg";
 	@Autowired
 	FileService photoTransportService;
