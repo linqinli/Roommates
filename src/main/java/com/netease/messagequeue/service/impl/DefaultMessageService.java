@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.netease.messagequeue.service.MessageService;
 import com.netease.roommates.vo.Message;
+import com.netease.utils.MessageUtils;
 
 @Service
 public class DefaultMessageService implements MessageService {
@@ -32,13 +33,13 @@ public class DefaultMessageService implements MessageService {
 	private String getTypeName(int type) {
 		switch (type) {
 		case 1:
-			return "合租邀请";
+			return MessageUtils.getMessage("INVAITATION");
 		case 2:
-			return "邀请回复";
+			return MessageUtils.getMessage("INVAITATION_REPLAY");
 		case 3:
-			return "房源推送";
+			return MessageUtils.getMessage("RECOMMENDED_HOUSE");
 		default:
-			return "室友私信";
+			return MessageUtils.getMessage("PERSONAL_LETTER");
 		}
 	}
 }
