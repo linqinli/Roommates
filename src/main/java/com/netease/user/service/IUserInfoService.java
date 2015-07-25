@@ -3,7 +3,6 @@ package com.netease.user.service;
 import java.util.List;
 
 import com.netease.exception.ServiceException;
-import com.netease.exception.StorageException;
 import com.netease.roommates.po.Personality;
 import com.netease.roommates.po.User;
 

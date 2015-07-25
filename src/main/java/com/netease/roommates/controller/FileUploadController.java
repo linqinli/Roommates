@@ -39,7 +39,7 @@ public class FileUploadController {
 				return result;
 			}
 		} catch (IOException ioe) {
-			ioe.printStackTrace();
+			logger.error("Error uploading photo, userId:" + userId, ioe);
 		}
 		result.put("state", "failure");
 		return result;
@@ -53,7 +53,7 @@ public class FileUploadController {
 			if (new File(path).exists()) {
 				return photoTransportService.fileDownload(userId, path);
 			} else {
-				
+				//TODO
 			}
 		} catch (FileNotFoundException fnfe) {
 			logger.warn("photo not found fot target user, userId" + userId, fnfe);
