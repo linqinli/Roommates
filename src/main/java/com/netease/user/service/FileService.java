@@ -7,5 +7,5 @@ import org.springframework.http.ResponseEntity;
 public interface FileService {
 	public void fildUpload(String name, byte[] file) throws IOException;
 	
-	public ResponseEntity<byte[]> fileDownload(int userId, String fileName) throws IOException;
+	public ResponseEntity<byte[]> fileDownload(String fileName) throws IOException;
 }

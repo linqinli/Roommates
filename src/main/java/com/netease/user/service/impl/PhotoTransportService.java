@@ -39,7 +39,7 @@ public class PhotoTransportService implements FileService {
 	}
 
 	@Override
-	public ResponseEntity<byte[]> fileDownload(int userId, String fileName) throws IOException {
+	public ResponseEntity<byte[]> fileDownload(String fileName) throws IOException {
 		File file = new File(fileName);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentDispositionFormData("attachment", file.getName());
@@ -63,6 +63,6 @@ public class PhotoTransportService implements FileService {
 
 	private String getSmallPicturePath(String path) {
 		int idx = path.lastIndexOf('.');
-		return path.substring(0, idx) + "_small_" + path.substring(idx);
+		return path.substring(0, idx) + "_small" + path.substring(idx);
 	}
 }

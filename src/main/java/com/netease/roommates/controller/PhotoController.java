@@ -20,10 +20,10 @@ import com.netease.user.service.FileService;
 
 @Controller
 @RequestMapping("/api/photo")
-public class FileUploadController {
-	private Logger logger = LoggerFactory.getLogger(FileUploadController.class);
-	private final static String PREFIX = "D:\\photo\\";
-	private final static String SUFFIX = "_photo.jpg";
+public class PhotoController {
+	private Logger logger = LoggerFactory.getLogger(PhotoController.class);
+	private final static String PREFIX = "D:\\photo\\photo";
+	private final static String SUFFIX = ".jpg";
 	@Autowired
 	FileService photoTransportService;
 
@@ -45,13 +45,13 @@ public class FileUploadController {
 		return result;
 	}
 
-	@RequestMapping("/download")
+	@RequestMapping("/downloadBig")
 	@ResponseBody
-	public ResponseEntity<byte[]> download(int userId) {
+	public ResponseEntity<byte[]> downloadBigImage(int userId) {
 		try {
 			String path = generatePathByUserId(userId);
 			if (new File(path).exists()) {
-				return photoTransportService.fileDownload(userId, path);
+				return photoTransportService.fileDownload(path);
 			} else {
 				//TODO
 			}
@@ -62,8 +62,30 @@ public class FileUploadController {
 		}
 		return null;
 	}
-
+	
+	@RequestMapping("/downloadSmall")
+	@ResponseBody
+	public ResponseEntity<byte[]> downloadSmallImage(int userId) {
+		try {
+			String path = generateSPICPathByUserId(userId);
+			if (new File(path).exists()) {
+				return photoTransportService.fileDownload(path);
+			} else {
+				//TODO
+			}
+		} catch (FileNotFoundException fnfe) {
+			logger.warn("photo not found fot target user, userId" + userId, fnfe);
+		} catch (IOException ioe) {
+			logger.error("IOException when download photo for user, userId=" + userId, ioe);
+		}
+		return null;
+	}
+	
 	private String generatePathByUserId(int userId) {
-		return PREFIX + userId + SUFFIX;
+		return PREFIX + '_' +  userId + SUFFIX;
+	}
+	
+	private String generateSPICPathByUserId(int userId) {
+		return PREFIX + '_' + userId + '_'+ "small" + SUFFIX;
 	}
 }
