@@ -4,7 +4,7 @@
 
 <mapper namespace="com.netease.roommates.mapper.UserMapper">
 	
-	<insert id="insertUser" parameterType="user">
+	<insert id="insertUser" useGeneratedKeys="true" keyProperty="userId" parameterType="user">
 		insert into sys_user(userName, pwdMD5Hash, nickName, gender, companyEmail, phoneNumber,
 			birthday, address, updateTime, weChat, yixin, QQ, photoId, company, position)
 		values(#{userName}, #{pwdMD5Hash}, #{nickName}, #{gender}, #{companyEmail}, #{phoneNumber},
