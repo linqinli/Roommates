@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.netease.exception.ServiceException;
+import com.netease.roommates.match.MatchPersonality;
 import com.netease.roommates.po.Personality;
 import com.netease.roommates.po.User;
+import com.netease.roommates.vo.MatchUserInfo;
 import com.netease.user.service.IUserInfoService;
 
 @Controller
@@ -45,11 +47,12 @@ public class UserController {
 
 	@RequestMapping(value = "/matchable")
 	@ResponseBody
-	public User matchable() throws ServiceException {
+	public List<MatchUserInfo> matchable() throws ServiceException {
 		User user = new User();
 		user.setAddress("hangzhou");
 		user.setCompany("NetEase");
-		return user;
+		MatchPersonality matchPernality = new MatchPersonality(user);
+		return matchPernality.matchResultTest();
 	}
 
 	@RequestMapping(value = "/getUserPersonality", method = RequestMethod.GET)

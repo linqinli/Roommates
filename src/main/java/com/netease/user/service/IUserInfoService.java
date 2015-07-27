@@ -24,4 +24,6 @@ public interface IUserInfoService {
 	public List<User> getUserListByCompany(String company) throws ServiceException;
 
 	public User getUserByName(String name) throws ServiceException; 
+	
+	public User getUserByEmail(String email) throws ServiceException;
 }

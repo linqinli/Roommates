@@ -107,4 +107,8 @@
 	<select id="getUserByName" parameterType="String" resultType="user">
 		select * from sys_user where userName=#{name}
 	</select>
+	
+	<select id="getUserByEmail" parameterType="String" resultType="user">
+		select * from sys_user where companyEmail=#{email}
+	</select>
 </mapper>
