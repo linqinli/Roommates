@@ -113,4 +113,15 @@ public class UserInfoService implements IUserInfoService {
 		}
 	}
 	
+	@Override
+	public User getUserByEmail(String email) throws ServiceException {
+		try {
+			return userMapper.getUserByName(email);
+		} catch (StorageException se) {
+			log.error("error get user by email:" + email, se);
+			throw new ServiceException(se);
+		}
+	}
+	
+	
 }

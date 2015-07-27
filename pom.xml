@@ -10,7 +10,7 @@
 
 	<properties>
 		<spring.version>4.1.5.RELEASE</spring.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<repositories>
@@ -30,12 +30,19 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>6.8.8</version>
 			<scope>test</scope>
 		</dependency>
-
+		
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>1.9.5</version>
+			<scope>test</scope>
+		</dependency>
+		
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
@@ -189,7 +196,7 @@
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
-					<encoding>${project.build.sourceEncoding}</encoding>  
+					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
 		</plugins>

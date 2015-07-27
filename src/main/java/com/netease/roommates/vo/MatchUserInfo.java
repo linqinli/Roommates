@@ -1,4 +1,4 @@
-package com.netease.roommates.match;
+package com.netease.roommates.vo;
 
 public class MatchUserInfo {
 	private int userId;
@@ -7,6 +7,7 @@ public class MatchUserInfo {
 	private byte gender;
 	private String nickName;
 	private String company;
+	private String job;
 	private int matchScore;
 	private String matchMessage;
 	
@@ -60,13 +61,18 @@ public class MatchUserInfo {
 	}
 	
 	// public List<User> userList = getUserByAddress(address);
+	public String getJob() {
+		return job;
+	}
+	public void setJob(String job) {
+		this.job = job;
+	}
 	
 	@Override
 	public String toString() {
 		return "MatchUserInfo [userId=" + userId + ", userName=" + userName + ", photoId=" + photoId + ", gender=" + gender
 				+ ", nickName=" + nickName + "company="+ company + "matchScore=" + matchScore + "matchMessage=" + 
-				matchMessage + "]";
+				matchMessage + "job=" + "]";
 	}
-	
 	
 }
