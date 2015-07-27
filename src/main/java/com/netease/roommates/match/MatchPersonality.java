@@ -86,7 +86,7 @@ public class MatchPersonality {
 			userTmpInfo.setCompany(user.getCompany());
 			userTmpInfo.setGender(user.getGender());
 			userTmpInfo.setNickName(user.getNickName());
-			userTmpInfo.setPhotoId(user.getPhotoId());
+			//userTmpInfo.setPhotoId(user.getPhotoId());
 			userTmpInfo.setUserId(user.getUserId());
 			userTmpInfo.setUserName(user.getUserName());
 			userTmpInfo.setMatchScore(matchScoreAndMessage.matchScore);
@@ -116,7 +116,7 @@ public class MatchPersonality {
 			userTmpInfo.setCompany(user.getCompany());
 			userTmpInfo.setGender(user.getGender());
 			userTmpInfo.setNickName(user.getNickName());
-			userTmpInfo.setPhotoId(user.getPhotoId());
+			//userTmpInfo.setPhotoId(user.getPhotoId());
 			userTmpInfo.setUserId(user.getUserId());
 			userTmpInfo.setUserName(user.getUserName());
 			userTmpInfo.setMatchScore(matchScoreAndMessage.matchScore);
@@ -150,7 +150,7 @@ public class MatchPersonality {
 			userTmpInfo.setCompany(user.getCompany());
 			userTmpInfo.setGender(user.getGender());
 			userTmpInfo.setNickName(user.getNickName());
-			userTmpInfo.setPhotoId(user.getPhotoId());
+			//userTmpInfo.setPhotoId(user.getPhotoId());
 			userTmpInfo.setUserId(user.getUserId());
 			userTmpInfo.setUserName(user.getUserName());
 			userTmpInfo.setMatchScore(matchScoreAndMessage.matchScore);
