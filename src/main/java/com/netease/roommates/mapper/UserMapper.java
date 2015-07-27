@@ -24,4 +24,6 @@ public interface UserMapper {
 	public List<User> getUserListByCompany(String company) throws StorageException;
 
 	public User getUserByName(String name) throws StorageException;
+	
+	public User getUSerByEmail(String email) throws StorageException;
 }
