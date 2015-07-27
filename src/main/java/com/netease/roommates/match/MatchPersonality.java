@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.netease.exception.ServiceException;
 import com.netease.roommates.po.User;
+import com.netease.roommates.vo.MatchUserInfo;
 import com.netease.roommates.po.Personality;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.netease.user.service.IUserInfoService;
@@ -17,6 +18,17 @@ public class MatchPersonality {
 	
 	public MatchPersonality(User user){
 		setCurUser(user);
+		Personality per1 = new Personality();
+		
+		per1.setCleanliness(1);
+		per1.setConstellation("狮子座");
+		per1.setDailySchedule(1);
+		per1.setPersonCharacter(1);
+		per1.setPet(1);
+		per1.setSmoking(1);
+		per1.setVisitor(1);
+		
+		this.curUser.setPersonality(per1);
 	}
 	
 	static class MatchScoreAndMessage{
@@ -24,9 +36,48 @@ public class MatchPersonality {
 		String matchMessage;
 	}
 	
-	public List<MatchUserInfo> matchResult() throws ServiceException{
+	public List<MatchUserInfo> matchResultTest() throws ServiceException{
 		List<MatchUserInfo> matchUserInfo = new ArrayList<MatchUserInfo>();
-		List<User> userList = userInfoService.getUserListByAddress(this.curUser.getAddress());
+		// List<User> userList = userInfoService.getUserListByAddress(this.curUser.getAddress());
+		// 以下初始化一个UserList测试
+		List<User> userList = new ArrayList<User>();
+		User user1 = new User();
+		Personality per1 = new Personality();
+		
+		per1.setCleanliness(1);
+		per1.setConstellation("狮子座");
+		per1.setDailySchedule(1);
+		per1.setPersonCharacter(1);
+		per1.setPet(1);
+		per1.setSmoking(1);
+		per1.setVisitor(1);
+		
+		user1.setAddress("netease address");
+		user1.setCompany("netease");
+		user1.setGender((byte)0x0000);
+		user1.setUserName("moondark");
+		
+		user1.setPersonality(per1);
+		
+		User user2 = new User();
+		user2.setUserName("liao");
+		user2.setAddress("netease address");
+		user2.setCompany("netease");
+		Personality per2 = new Personality();
+		
+		per2.setCleanliness(2);
+		per2.setConstellation("狮子座");
+		per2.setDailySchedule(1);
+		per2.setPersonCharacter(1);
+		per2.setPet(1);
+		per2.setSmoking(1);
+		per2.setVisitor(1);
+		user2.setPersonality(per2);
+		
+		userList.add(user1);
+		userList.add(user2);
+		
+		
 		for(int i=0; i<userList.size(); ++i){
 			User user = userList.get(i);
 			MatchScoreAndMessage matchScoreAndMessage = getSimilarityBetweenTwoPersonality(
@@ -40,16 +91,83 @@ public class MatchPersonality {
 			userTmpInfo.setUserName(user.getUserName());
 			userTmpInfo.setMatchScore(matchScoreAndMessage.matchScore);
 			userTmpInfo.setMatchMessage(matchScoreAndMessage.matchMessage);
+			
+			matchUserInfo.add(userTmpInfo);
 		}
+		// 按分数高低进行排序
 		Collections.sort(matchUserInfo,new Comparator<MatchUserInfo>(){
 			@Override
 			public int compare(MatchUserInfo matchUserInfo1, MatchUserInfo matchUserInfo2){
-				return matchUserInfo1.getMatchScore()-matchUserInfo2.getMatchScore();
+				return matchUserInfo2.getMatchScore()-matchUserInfo1.getMatchScore();
 			}
 		});
 		return matchUserInfo;
 	}
 
+	public List<MatchUserInfo> matchResultByAddress() throws ServiceException{
+		List<MatchUserInfo> matchUserInfo = new ArrayList<MatchUserInfo>();
+		List<User> userList = userInfoService.getUserListByAddress(this.curUser.getAddress());
+		
+		for(int i=0; i<userList.size(); ++i){
+			User user = userList.get(i);
+			MatchScoreAndMessage matchScoreAndMessage = getSimilarityBetweenTwoPersonality(
+					this.curUser.getPersonality(), user.getPersonality());
+			MatchUserInfo userTmpInfo = new MatchUserInfo();
+			userTmpInfo.setCompany(user.getCompany());
+			userTmpInfo.setGender(user.getGender());
+			userTmpInfo.setNickName(user.getNickName());
+			userTmpInfo.setPhotoId(user.getPhotoId());
+			userTmpInfo.setUserId(user.getUserId());
+			userTmpInfo.setUserName(user.getUserName());
+			userTmpInfo.setMatchScore(matchScoreAndMessage.matchScore);
+			userTmpInfo.setMatchMessage(matchScoreAndMessage.matchMessage);
+			
+			matchUserInfo.add(userTmpInfo);
+		}
+		// 按分数高低进行排序
+		Collections.sort(matchUserInfo,new Comparator<MatchUserInfo>(){
+			@Override
+			public int compare(MatchUserInfo matchUserInfo1, MatchUserInfo matchUserInfo2){
+				return matchUserInfo2.getMatchScore()-matchUserInfo1.getMatchScore();
+			}
+		});
+		return matchUserInfo;
+	}
+	
+	// 按同公司进行用户匹配得分的计算
+	public List<MatchUserInfo> matchResultByCompany() throws ServiceException{
+		// 用来储存匹配用户的结果信息
+		List<MatchUserInfo> matchUserInfo = new ArrayList<MatchUserInfo>();
+		// 选取同一公司的用户进行匹配计算
+		List<User> userList = userInfoService.getUserListByCompany(this.curUser.getAddress());
+		
+		for(int i=0; i<userList.size(); ++i){
+			User user = userList.get(i);
+			// 返回匹配得分及
+			MatchScoreAndMessage matchScoreAndMessage = getSimilarityBetweenTwoPersonality(
+					this.curUser.getPersonality(), user.getPersonality());
+			MatchUserInfo userTmpInfo = new MatchUserInfo();
+			userTmpInfo.setCompany(user.getCompany());
+			userTmpInfo.setGender(user.getGender());
+			userTmpInfo.setNickName(user.getNickName());
+			userTmpInfo.setPhotoId(user.getPhotoId());
+			userTmpInfo.setUserId(user.getUserId());
+			userTmpInfo.setUserName(user.getUserName());
+			userTmpInfo.setMatchScore(matchScoreAndMessage.matchScore);
+			userTmpInfo.setMatchMessage(matchScoreAndMessage.matchMessage);
+			
+			matchUserInfo.add(userTmpInfo);
+		}
+		// 按分数高低进行排序
+		Collections.sort(matchUserInfo,new Comparator<MatchUserInfo>(){
+			@Override
+			public int compare(MatchUserInfo matchUserInfo1, MatchUserInfo matchUserInfo2){
+				return matchUserInfo2.getMatchScore()-matchUserInfo1.getMatchScore();
+			}
+		});
+		return matchUserInfo;
+	}
+	
 	public User getCurUser() {
 		return curUser;
 	}
@@ -58,18 +176,18 @@ public class MatchPersonality {
 		this.curUser = curUser;
 	}
 	
-	
+	// 通过问卷选项，计算两用户行为偏好的匹配得分
 	public MatchScoreAndMessage getSimilarityBetweenTwoPersonality(Personality per1, Personality per2){
 		MatchScoreAndMessage matchScoreAndMessage = new MatchScoreAndMessage();
 		int matchScore = 0;
-		String matchMessage = " ";
+		String matchMessage = "TA";
 		
 		// 权重 分配
-		int zxWeight = 3; // 作息选项权重
-		int cyWeight = 3; // 抽烟选项权重
-		int cwWeight = 2; // 宠物选项权重
-		int fkWeight = 2; // 访客选项权重
-		int grwsWeight = 2; // 个人卫生选项权重
+		int zxWeight = 1; // 作息选项权重
+		int cyWeight = 1; // 抽烟选项权重
+		int cwWeight = 1; // 宠物选项权重
+		int fkWeight = 1; // 访客选项权重
+		int grwsWeight = 1; // 个人卫生选项权重
 		int xgWeight = 1; // 性格选项权重
 		int xzWeight = 1; // 星座选项权重
 
@@ -78,6 +196,7 @@ public class MatchPersonality {
 		int user2DailySchedule = per2.getDailySchedule();
 		if(user1DailySchedule == user2DailySchedule){
 			matchScore += zxWeight*1;
+			matchMessage = matchMessage + " 作息 ";
 		}
 		else matchScore += zxWeight*(-1);
 
@@ -88,6 +207,7 @@ public class MatchPersonality {
 		user2Smoking -= 2;
 		if(user1Smoking == user2Smoking){
 			matchScore += cyWeight*1;
+			matchMessage = matchMessage + " 抽烟 ";
 		}
 		else matchScore += cyWeight*(user1Smoking*user2Smoking);
 
@@ -98,6 +218,7 @@ public class MatchPersonality {
 		user2Pet -= 2;
 		if(user1Pet == user2Pet){
 			matchScore += cwWeight*1;
+			matchMessage = matchMessage + " 宠物 ";
 		}
 		else matchScore += cwWeight*(user1Pet*user2Pet);
 
@@ -108,6 +229,7 @@ public class MatchPersonality {
 		user2Visitor -= 2;
 		if(user1Visitor == user2Visitor){
 			matchScore += fkWeight*1;
+			matchMessage = matchMessage + " 访客 ";
 		}
 		else matchScore += fkWeight*(user1Visitor*user2Visitor);
 
@@ -118,6 +240,7 @@ public class MatchPersonality {
 		user2Sanitation -= 2;
 		if(user1Sanitation == user2Sanitation){
 			matchScore += grwsWeight*1;
+			matchMessage = matchMessage + " 个人卫生 ";
 		}
 		else matchScore += grwsWeight*(user1Sanitation*user2Sanitation);
 
@@ -128,6 +251,7 @@ public class MatchPersonality {
 		user2Character -= 2;
 		if(user1Character == user2Character){
 			matchScore += xgWeight*1;
+			matchMessage = matchMessage + " 性格 ";
 		}
 		else matchScore += xgWeight*(user1Character*user2Character);
 
@@ -156,17 +280,25 @@ public class MatchPersonality {
 		else if(user2Constellation == 7 || user2Constellation == 8 || user2Constellation == 9) user2Constellation=3;
 		else if(user2Constellation == 10 || user2Constellation == 11 || user2Constellation == 12) user2Constellation=4;
 
-		if(user1Constellation == user2Constellation) matchScore += xzWeight*1;
+		if(user1Constellation == user2Constellation){
+			matchScore += xzWeight*1;
+			matchMessage = matchMessage + " 星座 ";
+		}
 
 		// 归一化处理
 		int totalWeight = 2*zxWeight+2*cyWeight+2*cwWeight+2*fkWeight+2*grwsWeight+2*xgWeight+1*xzWeight;
 		matchScore = matchScore+zxWeight+cyWeight+cwWeight+fkWeight+grwsWeight+xgWeight;
 		matchScore = (int)(100*(double)matchScore/(double)totalWeight);
 		
+		if(matchMessage == "TA") matchMessage = " ";
+		else matchMessage += "与您相同！";
+		
 		matchScoreAndMessage.matchScore = matchScore;
 		matchScoreAndMessage.matchMessage = matchMessage;
 		
 		return matchScoreAndMessage;
 	}
+	
+	
 }
 
