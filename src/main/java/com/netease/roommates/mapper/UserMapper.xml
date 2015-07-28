@@ -56,9 +56,9 @@
 	
 	<insert id="insertUserPersonality" parameterType="personality">
 		insert into user_personality(userId, smoking, pet, dailySchedule, visitor, constellation,
-			cleanliness, personCharacter)
+			cleanliness, personCharacter, hasHouse)
 		values(#{userId}, #{smoking}, #{pet}, #{dailySchedule}, #{visitor}, #{constellation},
-		 #{cleanliness}, #{personCharacter} )
+		 #{cleanliness}, #{personCharacter}, #{hasHouse} )
 	</insert>
 	
 	<update id="updateUserPersonality" parameterType="personality">

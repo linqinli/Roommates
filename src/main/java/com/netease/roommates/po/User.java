@@ -18,7 +18,7 @@ public class User implements Serializable{
 	private String company;
 	private String address;
 	private String department;
-	Personality personality;
+	private Personality personality;
 	
 	public User() {
 		// used for serialization.

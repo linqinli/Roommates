@@ -3,6 +3,7 @@ package com.netease.roommates.controller;
 import static org.testng.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,9 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netease.exception.ServiceException;
 import com.netease.roommates.po.Personality;
 import com.netease.roommates.po.User;
@@ -32,10 +36,14 @@ public class UserControllerTest {
 	}
 
 	@Test
-	public void testGetUserById() throws ServiceException {
+	public void testGetUserById() throws ServiceException, JsonParseException, JsonMappingException, IOException {
 		User user = generateUser();
-		when(userInfoService.getUserById(user.getUserId())).thenReturn(user);
-		User user2 = userController.getUserById(user.getUserId());
+		int userId = user.getUserId();
+		when(userInfoService.getUserById(userId)).thenReturn(user);
+		String userStr = userController.getUserById(userId);
+		ObjectMapper mapper = new ObjectMapper();
+		User user2 = mapper.readValue(userStr, User.class);
+		verify(userInfoService).getUserById(userId);
 		assertEqualUser(user, user2);
 	}
 
@@ -45,6 +53,7 @@ public class UserControllerTest {
 		personality.setUserId(1);
 		when(userInfoService.getUserPersonality(1)).thenReturn(personality);
 		Personality personality2 = userController.getUserPersonalityById(1);
+		verify(userInfoService).getUserPersonality(1);
 		assertEquals(personality.getUserId(), personality2.getUserId());
 	}
 
@@ -57,12 +66,12 @@ public class UserControllerTest {
 		}
 		when(userInfoService.getUserListByAddress(address)).thenReturn(users);
 		List<User> userList = userController.getUserListByAddress(address);
-		for(int i = 0; i < users.size(); i++) {
+		for (int i = 0; i < users.size(); i++) {
 			User user1 = users.get(i);
 			User user2 = userList.get(i);
 			assertEqualUser(user1, user2);
 		}
-		
+
 	}
 
 	private void assertEqualUser(User u1, User u2) {
