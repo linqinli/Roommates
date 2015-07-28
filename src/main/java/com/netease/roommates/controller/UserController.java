@@ -116,7 +116,7 @@ public class UserController {
 		return userInfoService.getUserListByAddress(address);
 	}
 
-	@ExceptionHandler(ControllerException.class)
+	@ExceptionHandler(Exception.class)
 	@ResponseBody
 	public String handleError(HttpServletRequest req, Exception exception) {
 		logger.error("Request: " + req.getRequestURL() + " raised " + exception);
