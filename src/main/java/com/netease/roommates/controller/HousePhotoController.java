@@ -22,7 +22,8 @@ import com.netease.roommates.po.BatchPhotoModel;
 @RequestMapping("/api/housePhoto")
 public class HousePhotoController {
 	private Logger logger = LoggerFactory.getLogger(HousePhotoController.class);
-	private final static String PREFIX = "/var/www/lighttpd/roommates/photo/house/";
+	private final static String PREFIX = "/var/www/lighttpd/Roommates/photo/house/";
+	
 //	private final static String PREFIX = "E:/photo/house/";
 	private final static String SUFFIX = ".jpg";
 	
