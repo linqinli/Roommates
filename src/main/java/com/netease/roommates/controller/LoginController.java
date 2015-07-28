@@ -35,7 +35,7 @@ public class LoginController {
 	private IUserInfoService userInfoService;
 	
 	@RequestMapping("/login/page")
-	public String loginPage() throws MessagingException{	
+	public String loginPage() throws MessagingException{
 		return "loginPage";
 	}
 	

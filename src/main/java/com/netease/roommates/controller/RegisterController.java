@@ -37,6 +37,7 @@ public class RegisterController {
 	public String loginPage(){
 		return "register";
 	}
+	
 	@RequestMapping(value="/register/check")
 	@ResponseBody
 	public Map<String, Object> check(HttpServletRequest request, HttpServletResponse response) throws Exception{
@@ -153,11 +154,14 @@ public class RegisterController {
 		info.put("userId", userId);
 		
 		
-		String mailString="这是验证邮件，请访问如下网址：";
-		mailString = mailString + "http://223.252.223.13/Roommates/api/register/usercheck";
-		mailString = mailString + "?checkid=" + (userId+"");
-		mailString = mailString + "&checkemail=" + p_email;
-		mailString = mailString + "&checkname=" + HashGeneratorUtils.generateSaltMD5(p_name);
+		StringBuffer mailstring = new StringBuffer("这是验证邮件，请访问如下网址：<br/><a href=");
+		StringBuffer stringbuffer = new StringBuffer("http://223.252.223.13/Roommates/api/register/usercheck");
+		stringbuffer.append("?checkid=" + userId);
+		stringbuffer.append("&checkemail=" + p_email);
+		stringbuffer.append("&checkname=" + HashGeneratorUtils.generateSaltMD5(p_name));
+		mailstring.append(stringbuffer+">"+stringbuffer+"</a>");
+		String mailString = mailstring.toString();
+		
 		MailSender mailsender = new DefaultMailSender();
 		mailsender.setReceiver(p_email);
 		mailsender.setSubject("验证邮件");
