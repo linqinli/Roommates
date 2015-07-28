@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.netease.user.service.IUserInfoService;
 import com.netease.utils.HashGeneratorUtils;
+import com.netease.common.service.MailSender;
 import com.netease.common.service.impl.CheckWord;
+import com.netease.common.service.impl.DefaultMailSender;
 import com.netease.common.service.impl.emailAddress;
 import com.netease.exception.HashGenerationException;
 import com.netease.exception.ServiceException;
@@ -30,13 +33,13 @@ import com.netease.roommates.po.User;
 public class LoginController {
 	@Autowired
 	private IUserInfoService userInfoService;
-
+	
 	@RequestMapping("/login/page")
-	public String loginPage(){
+	public String loginPage() throws MessagingException{	
 		return "loginPage";
 	}
 	
-	@RequestMapping(value="/logout", method = RequestMethod.POST)
+	@RequestMapping(value="/logout")
 	@ResponseBody
 	public Map<String, Object> logout(HttpServletRequest request, HttpServletResponse response){
 		Map<String, Object> info = new HashMap<String, Object>();		
@@ -46,7 +49,7 @@ public class LoginController {
 	}
 	
 	
-	@RequestMapping(value="/login", method = RequestMethod.POST)
+	@RequestMapping(value="/login")
 	@ResponseBody
 	public Map<String, Object> loginCheck(HttpServletRequest request, HttpServletResponse response) throws HashGenerationException, ServiceException{
 		Map<String, Object> info=new HashMap<String, Object>();

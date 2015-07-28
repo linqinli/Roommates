@@ -19,7 +19,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netease.exception.ControllerException;
 import com.netease.exception.ServiceException;
-import com.netease.roommates.match.MatchPersonality;
+import com.netease.match.service.impl.MatchPersonality;
 import com.netease.roommates.po.Personality;
 import com.netease.roommates.po.User;
 import com.netease.roommates.vo.MatchUserInfo;

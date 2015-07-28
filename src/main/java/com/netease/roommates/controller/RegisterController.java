@@ -37,8 +37,7 @@ public class RegisterController {
 	public String loginPage(){
 		return "register";
 	}
-	
-	@RequestMapping(value="/register/check", method = RequestMethod.POST)
+	@RequestMapping(value="/register/check")
 	@ResponseBody
 	public Map<String, Object> check(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		Map<String, Object> info = new HashMap<String, Object>();
@@ -67,7 +66,7 @@ public class RegisterController {
 	}
 	
 	
-	@RequestMapping(value="/register/usercheck", method = RequestMethod.POST)
+	@RequestMapping(value="/register/usercheck")
 	public void userCheck(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		request.setCharacterEncoding("utf-8"); 
 		String p_userId = request.getParameter("checkid");
@@ -83,7 +82,7 @@ public class RegisterController {
 	}
 	
 	
-	@RequestMapping(value="/register", method = RequestMethod.POST)
+	@RequestMapping(value="/register")
 	@ResponseBody
 	public Map<String, Object> registercheck(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		Map<String, Object> info = new HashMap<String, Object>();
@@ -155,7 +154,7 @@ public class RegisterController {
 		
 		
 		String mailString="这是验证邮件，请访问如下网址：";
-		mailString = mailString + "localhost:8080/Roommates/api/register/usercheck";
+		mailString = mailString + "http://223.252.223.13/Roommates/api/register/usercheck";
 		mailString = mailString + "?checkid=" + (userId+"");
 		mailString = mailString + "&checkemail=" + p_email;
 		mailString = mailString + "&checkname=" + HashGeneratorUtils.generateSaltMD5(p_name);

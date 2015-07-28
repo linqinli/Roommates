@@ -23,17 +23,22 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <body>
       更多内容 <a href="http://liutime.com">欢迎访问遛时间</a>
   
-  	<form action="api/login"  method="post">
+  	<form action="api/register"  method="post">
   	<table>
   		<tr>
   			 
-  			<th>email</th>
-  			<td><input type="text"  name="email" /> </td>
+  			<th>账号</th>
+  			<td><input type="text"  name="nickname" /> </td>
   		</tr>
   		<tr>
   			 
-  			<th>password</th>
+  			<th>密码</th>
   			<td><input type="text"  name="password" /></td>
+  		</tr>
+  		<tr>
+  			 
+  			<th>邮箱</th>
+  			<td><input type="text"  name="email" /></td>
   		</tr>
   		<tr>
   			<td colspan="2"><input type="submit" value="添加"> </td>
