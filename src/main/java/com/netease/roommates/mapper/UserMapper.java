@@ -23,7 +23,7 @@ public interface UserMapper {
 
 	public List<User> getUserListByCompany(String company) throws StorageException;
 
-	public User getUserByName(String name) throws StorageException;
+	public List<User> getUserByName(String name) throws StorageException;
 	
-	public User getUSerByEmail(String email) throws StorageException;
+	public User getUserByEmail(String email) throws StorageException;
 }

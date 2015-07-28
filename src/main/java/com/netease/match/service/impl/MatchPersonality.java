@@ -1,7 +1,6 @@
-package com.netease.roommates.match;
+package com.netease.match.service.impl;
 
 import java.util.*;
-import java.util.ArrayList;
 
 import com.netease.exception.ServiceException;
 import com.netease.roommates.po.User;
@@ -14,6 +13,7 @@ public class MatchPersonality {
 	@Autowired
 	private IUserInfoService userInfoService;
 	private User curUser;
+	private MatchDataHandler matchDataHandler;
 	
 	public MatchPersonality(User user){
 		setCurUser(user);
@@ -31,9 +31,17 @@ public class MatchPersonality {
 		this.curUser.setPersonality(per1);
 	}
 	
+	
+	
 	static class MatchScoreAndMessage{
 		int matchScore;
 		String matchMessage;
+	}
+	
+	public List<User> selectUserByCondition(int xb, int f, int gs, int cy, int cw,
+			int zx, int ws, int xg, int fk){
+		matchDataHandler = new MatchDataHandler();
+		return matchDataHandler.selectUserByCondition(xb, f, gs, cy, cw, zx, ws, xg, fk);
 	}
 	
 	public List<MatchUserInfo> matchResultTest() throws ServiceException{
@@ -84,14 +92,7 @@ public class MatchPersonality {
 			User user = userList.get(i);
 			MatchScoreAndMessage matchScoreAndMessage = getSimilarityBetweenTwoPersonality(
 					this.curUser.getPersonality(), user.getPersonality());
-			MatchUserInfo userTmpInfo = new MatchUserInfo();
-			userTmpInfo.setCompany(user.getCompany());
-			userTmpInfo.setJob(user.getCompany()+user.getPosition());
-			userTmpInfo.setGender(user.getGender());
-			userTmpInfo.setNickName(user.getNickName());
-			userTmpInfo.setPhotoId(user.getUserId(), 0);
-			userTmpInfo.setUserId(user.getUserId());
-			userTmpInfo.setUserName(user.getUserName());
+			MatchUserInfo userTmpInfo = userInfoToMatchUserInfo(user);
 			userTmpInfo.setMatchScore(matchScoreAndMessage.matchScore);
 			userTmpInfo.setMatchMessage(matchScoreAndMessage.matchMessage);
 			
@@ -115,14 +116,7 @@ public class MatchPersonality {
 			User user = userList.get(i);
 			MatchScoreAndMessage matchScoreAndMessage = getSimilarityBetweenTwoPersonality(
 					this.curUser.getPersonality(), user.getPersonality());
-			MatchUserInfo userTmpInfo = new MatchUserInfo();
-			userTmpInfo.setCompany(user.getCompany());
-			userTmpInfo.setJob(user.getCompany()+user.getPosition());
-			userTmpInfo.setGender(user.getGender());
-			userTmpInfo.setNickName(user.getNickName());
-			userTmpInfo.setPhotoId(user.getUserId(), 0);
-			userTmpInfo.setUserId(user.getUserId());
-			userTmpInfo.setUserName(user.getUserName());
+			MatchUserInfo userTmpInfo = userInfoToMatchUserInfo(user);
 			userTmpInfo.setMatchScore(matchScoreAndMessage.matchScore);
 			userTmpInfo.setMatchMessage(matchScoreAndMessage.matchMessage);
 			
@@ -150,14 +144,7 @@ public class MatchPersonality {
 			// 返回匹配得分及
 			MatchScoreAndMessage matchScoreAndMessage = getSimilarityBetweenTwoPersonality(
 					this.curUser.getPersonality(), user.getPersonality());
-			MatchUserInfo userTmpInfo = new MatchUserInfo();
-			userTmpInfo.setCompany(user.getCompany());
-			userTmpInfo.setJob(user.getCompany()+user.getPosition());
-			userTmpInfo.setGender(user.getGender());
-			userTmpInfo.setNickName(user.getNickName());
-			userTmpInfo.setPhotoId(user.getUserId(), 0);
-			userTmpInfo.setUserId(user.getUserId());
-			userTmpInfo.setUserName(user.getUserName());
+			MatchUserInfo userTmpInfo = userInfoToMatchUserInfo(user);
 			userTmpInfo.setMatchScore(matchScoreAndMessage.matchScore);
 			userTmpInfo.setMatchMessage(matchScoreAndMessage.matchMessage);
 			
@@ -382,6 +369,19 @@ public class MatchPersonality {
 		grwsWeight = 1; // 个人卫生选项权重
 		xgWeight = 1; // 性格选项权重
 		xzWeight = 1; // 星座选项权重
+	}
+	
+	// 将需要显示再前端的用户信息保存在一个MatchUserInfo结构体中
+	public MatchUserInfo userInfoToMatchUserInfo(User user){
+		MatchUserInfo matchUserInfo = new MatchUserInfo();
+		matchUserInfo.setCompany(user.getCompany());
+		matchUserInfo.setJob(user.getCompany()+user.getPosition());
+		matchUserInfo.setGender(user.getGender());
+		matchUserInfo.setNickName(user.getNickName());
+		matchUserInfo.setPhotoId(user.getUserId(), 0);
+		matchUserInfo.setUserId(user.getUserId());
+		matchUserInfo.setUserName(user.getUserName());
+		return matchUserInfo;
 	}
 	
 }

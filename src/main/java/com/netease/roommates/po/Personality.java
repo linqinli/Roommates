@@ -6,13 +6,14 @@ public class Personality implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private int userId;
-	private int smoking;
-	private int pet;
-	private int dailySchedule;
-	private int visitor;
+	private int smoking = 1;
+	private int pet = 1;
+	private int dailySchedule = 1;
+	private int visitor = 1;
 	private String constellation;
-	private int cleanliness;
-	private int personCharacter;
+	private int cleanliness = 1;
+	private int personCharacter = 1;
+	private int hasHouse = 1;
 	
 	public Personality() {
 	
@@ -93,6 +94,14 @@ public class Personality implements Serializable {
 
 	public void setPersonCharacter(int personCharacter) {
 		this.personCharacter = personCharacter;
+	}
+
+	public int getHasHouse() {
+		return hasHouse;
+	}
+
+	public void setHasHouse(int hasHouse) {
+		this.hasHouse = hasHouse;
 	}
 	
 }

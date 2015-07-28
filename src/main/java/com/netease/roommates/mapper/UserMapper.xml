@@ -34,7 +34,7 @@
 				phoneNumber = #{phoneNumber, jdbcType=VARCHAR},
 			</if>
 			<if test="companyEmail != null">
-				companyMail = #{companyMail, jdbcType=VARCHAR},
+				companyEmail = #{companyEmail, jdbcType=VARCHAR},
 			</if>
 			<if test="company != null">
 				company = #{company, jdbcType=VARCHAR},
@@ -56,9 +56,9 @@
 	
 	<insert id="insertUserPersonality" parameterType="personality">
 		insert into user_personality(userId, smoking, pet, dailySchedule, visitor, constellation,
-			cleanliness, personCharacter)
+			cleanliness, personCharacter, hasHouse)
 		values(#{userId}, #{smoking}, #{pet}, #{dailySchedule}, #{visitor}, #{constellation},
-		 #{cleanliness}, #{personCharacter} )
+		 #{cleanliness}, #{personCharacter}, #{hasHouse} )
 	</insert>
 	
 	<update id="updateUserPersonality" parameterType="personality">
@@ -96,7 +96,7 @@
 
 
 	<select id="getUserByName" parameterType="String" resultType="user">
-		select * from sys_user where userName=#{name}
+		select * from sys_user where nickName=#{name}
 	</select>
 	
 	<select id="getUserByEmail" parameterType="String" resultType="user">
