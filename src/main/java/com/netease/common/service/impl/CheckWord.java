@@ -13,7 +13,7 @@ public class CheckWord{
 	{ 
 		if (parms == null) 
 			return false; 		
-		List<String> pattern = new ArrayList();
+		List<String> pattern = new ArrayList<String>();
 		pattern.add("sp_");
 		pattern.add("create");
 		pattern.add("'");
@@ -24,7 +24,6 @@ public class CheckWord{
 		pattern.add("xp_");
 		pattern.add("insert");
 		pattern.add("update");
-		pattern.remove("update");
 		
 		for(String keyWord : pattern)
 			if(parms.indexOf(keyWord)!=-1)
