@@ -8,7 +8,6 @@ public class User implements Serializable{
 	
 	private int userId;
 	private String userName;
-	private int photoId;
 	private byte gender;
 	private String nickName;
 	private Date birthday;
@@ -18,10 +17,8 @@ public class User implements Serializable{
 	private String companyEmail;
 	private String company;
 	private String address;
-	private String weChat;
-	private String QQ;
-	private String yixin;
-	private Personality personality;
+	private String department;
+	Personality personality;
 	
 	public User() {
 		// used for serialization.
@@ -33,10 +30,6 @@ public class User implements Serializable{
 
 	public void setUserId(int userId) {
 		this.userId = userId;
-	}
-
-	public int getPhotoId() {
-		return photoId;
 	}
 
 	public String getUserName() {
@@ -69,10 +62,6 @@ public class User implements Serializable{
 
 	public void setGender(byte gender) {
 		this.gender = gender;
-	}
-
-	public void setPhotoId(int photoId) {
-		this.photoId = photoId;
 	}
 
 	public String getNickName() {
@@ -123,28 +112,12 @@ public class User implements Serializable{
 		this.address = address;
 	}
 
-	public String getWeChat() {
-		return weChat;
+	public String getDepartment() {
+		return department;
 	}
 
-	public void setWeChat(String weChat) {
-		this.weChat = weChat;
-	}
-
-	public String getQQ() {
-		return QQ;
-	}
-
-	public void setQQ(String QQ) {
-		this.QQ = QQ;
-	}
-
-	public String getYixin() {
-		return yixin;
-	}
-
-	public void setYixin(String yixin) {
-		this.yixin = yixin;
+	public void setDepartment(String department) {
+		this.department = department;
 	}
 
 	public Personality getPersonality() {
@@ -157,10 +130,10 @@ public class User implements Serializable{
 
 	@Override
 	public String toString() {
-		return "User [userId=" + userId + ", userName=" + userName + ", photoId=" + photoId + ", gender=" + gender
-				+ ", nickName=" + nickName + ", pwdMD5Hash=" + pwdMD5Hash + ", phoneNumber=" + phoneNumber
-				+ ", companyEmail=" + companyEmail + ", weChat=" + weChat + ", QQ=" + QQ + ", yixin=" + yixin
-				+ ", personality=" + personality + "]";
+		return "User [userId=" + userId + ", userName=" + userName + ", gender=" + gender + ", nickName=" + nickName
+				+ ", birthday=" + birthday + ", position=" + position + ", pwdMD5Hash=" + pwdMD5Hash + ", phoneNumber="
+				+ phoneNumber + ", companyEmail=" + companyEmail + ", company=" + company + ", address=" + address
+				+ ", department=" + department + "]";
 	}
 	
 }

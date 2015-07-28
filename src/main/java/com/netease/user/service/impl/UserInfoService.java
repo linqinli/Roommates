@@ -104,7 +104,7 @@ public class UserInfoService implements IUserInfoService {
 	}
 	
 	@Override
-	public User getUserByName(String name) throws ServiceException {
+	public List<User> getUserByName(String name) throws ServiceException {
 		try {
 			return userMapper.getUserByName(name);
 		} catch (StorageException se) {
@@ -116,7 +116,7 @@ public class UserInfoService implements IUserInfoService {
 	@Override
 	public User getUserByEmail(String email) throws ServiceException {
 		try {
-			return userMapper.getUserByName(email);
+			return userMapper.getUserByEmail(email);
 		} catch (StorageException se) {
 			log.error("error get user by email:" + email, se);
 			throw new ServiceException(se);
