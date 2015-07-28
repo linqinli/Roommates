@@ -36,7 +36,7 @@ public class LoginController {
 		return "loginPage";
 	}
 	
-	@RequestMapping(value="/logout", method = RequestMethod.POST)
+	@RequestMapping(value="/logout")
 	@ResponseBody
 	public Map<String, Object> logout(HttpServletRequest request, HttpServletResponse response){
 		Map<String, Object> info = new HashMap<String, Object>();		

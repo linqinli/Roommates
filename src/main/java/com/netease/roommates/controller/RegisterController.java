@@ -38,7 +38,7 @@ public class RegisterController {
 		return "register";
 	}
 	
-	@RequestMapping(value="/register/check", method = RequestMethod.POST)
+	@RequestMapping(value="/register/check")
 	@ResponseBody
 	public Map<String, Object> check(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		Map<String, Object> info = new HashMap<String, Object>();
@@ -67,7 +67,7 @@ public class RegisterController {
 	}
 	
 	
-	@RequestMapping(value="/register/usercheck", method = RequestMethod.POST)
+	@RequestMapping(value="/register/usercheck")
 	public void userCheck(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		request.setCharacterEncoding("utf-8"); 
 		String p_userId = request.getParameter("checkid");
