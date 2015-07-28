@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.netease.exception.ServiceException;
-import com.netease.roommates.match.MatchPersonality;
+import com.netease.match.service.impl.MatchPersonality;
 import com.netease.roommates.po.Personality;
 import com.netease.roommates.po.User;
 import com.netease.roommates.vo.MatchUserInfo;
