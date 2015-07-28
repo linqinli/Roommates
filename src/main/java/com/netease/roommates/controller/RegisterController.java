@@ -48,7 +48,7 @@ public class RegisterController {
 			info.put("info", "超时");
 		}
 		else{
-			int p_userId = (int)session.getAttribute("userId");
+			int p_userId = (Integer)session.getAttribute("userId");
 			System.out.println(p_userId+"");
 			User user = userInfoService.getUserById(p_userId);
 			if(user==null ||  user.getCompanyEmail()==null || user.getCompanyEmail().isEmpty()){
