@@ -17,6 +17,7 @@ public class MatchPersonality {
 	
 	public MatchPersonality(User user){
 		setCurUser(user);
+		this.curUser.setUserId(1);
 		Personality per1 = new Personality();
 		
 		per1.setCleanliness(1);
@@ -41,6 +42,7 @@ public class MatchPersonality {
 		// 以下初始化一个UserList测试
 		List<User> userList = new ArrayList<User>();
 		User user1 = new User();
+		user1.setUserId(2);
 		Personality per1 = new Personality();
 		
 		per1.setCleanliness(1);
@@ -59,6 +61,7 @@ public class MatchPersonality {
 		user1.setPersonality(per1);
 		
 		User user2 = new User();
+		user2.setUserId(3);
 		user2.setUserName("liao");
 		user2.setAddress("netease address");
 		user2.setCompany("netease");
@@ -79,13 +82,14 @@ public class MatchPersonality {
 		
 		for(int i=0; i<userList.size(); ++i){
 			User user = userList.get(i);
-			MatchScoreAndMessage matchScoreAndMessage = getVectorSimilarityBetweenTwoPersonality(
+			MatchScoreAndMessage matchScoreAndMessage = getSimilarityBetweenTwoPersonality(
 					this.curUser.getPersonality(), user.getPersonality());
 			MatchUserInfo userTmpInfo = new MatchUserInfo();
 			userTmpInfo.setCompany(user.getCompany());
+			userTmpInfo.setJob(user.getCompany()+user.getPosition());
 			userTmpInfo.setGender(user.getGender());
 			userTmpInfo.setNickName(user.getNickName());
-			userTmpInfo.setPhotoId(user.getPhotoId());
+			userTmpInfo.setPhotoId(user.getUserId(), 0);
 			userTmpInfo.setUserId(user.getUserId());
 			userTmpInfo.setUserName(user.getUserName());
 			userTmpInfo.setMatchScore(matchScoreAndMessage.matchScore);
@@ -113,9 +117,10 @@ public class MatchPersonality {
 					this.curUser.getPersonality(), user.getPersonality());
 			MatchUserInfo userTmpInfo = new MatchUserInfo();
 			userTmpInfo.setCompany(user.getCompany());
+			userTmpInfo.setJob(user.getCompany()+user.getPosition());
 			userTmpInfo.setGender(user.getGender());
 			userTmpInfo.setNickName(user.getNickName());
-			userTmpInfo.setPhotoId(user.getPhotoId());
+			userTmpInfo.setPhotoId(user.getUserId(), 0);
 			userTmpInfo.setUserId(user.getUserId());
 			userTmpInfo.setUserName(user.getUserName());
 			userTmpInfo.setMatchScore(matchScoreAndMessage.matchScore);
@@ -147,9 +152,10 @@ public class MatchPersonality {
 					this.curUser.getPersonality(), user.getPersonality());
 			MatchUserInfo userTmpInfo = new MatchUserInfo();
 			userTmpInfo.setCompany(user.getCompany());
+			userTmpInfo.setJob(user.getCompany()+user.getPosition());
 			userTmpInfo.setGender(user.getGender());
 			userTmpInfo.setNickName(user.getNickName());
-			userTmpInfo.setPhotoId(user.getPhotoId());
+			userTmpInfo.setPhotoId(user.getUserId(), 0);
 			userTmpInfo.setUserId(user.getUserId());
 			userTmpInfo.setUserName(user.getUserName());
 			userTmpInfo.setMatchScore(matchScoreAndMessage.matchScore);
@@ -379,4 +385,3 @@ public class MatchPersonality {
 	}
 	
 }
-

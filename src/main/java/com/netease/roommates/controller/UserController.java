@@ -22,13 +22,17 @@ import com.netease.user.service.IUserInfoService;
 public class UserController {
 	@Autowired
 	private IUserInfoService userInfoService;
-	
+
 	@RequestMapping(value = "/getUser", method = RequestMethod.GET)
 	@ResponseBody
-	public User getUserById(int id) throws ServiceException {
-		User user = userInfoService.getUserById(id);
-		System.out.println(user);
-		return user;
+	public User getUserById(int id) {
+		try {
+			User user = userInfoService.getUserById(id);
+			System.out.println(user);
+			return user;
+		} catch (ServiceException se) {
+			return null;
+		}
 	}
 
 	@RequestMapping(value = "/addUser", method = RequestMethod.POST)
@@ -40,7 +44,7 @@ public class UserController {
 	public void updateUser(@RequestBody User user) throws ServiceException {
 		userInfoService.updateUserBasicInfo(user);
 	}
-	
+
 	@RequestMapping(value = "/matchable")
 	@ResponseBody
 	public List<MatchUserInfo> matchable() throws ServiceException {
@@ -50,7 +54,7 @@ public class UserController {
 		MatchPersonality matchPernality = new MatchPersonality(user);
 		return matchPernality.matchResultTest();
 	}
-	
+
 	@RequestMapping(value = "/getUserPersonality", method = RequestMethod.GET)
 	@ResponseBody
 	public Personality getUserPersonalityById(int id) throws ServiceException {
@@ -66,7 +70,7 @@ public class UserController {
 	public void updateUserPersonality(@RequestBody Personality personality) throws ServiceException {
 		userInfoService.updateUserPersonality(personality);
 	}
-	
+
 	@RequestMapping(value = "/getUserListByAddress", method = RequestMethod.GET)
 	@ResponseBody
 	public List<User> getUserListByAddress(String address) throws ServiceException, UnsupportedEncodingException {
