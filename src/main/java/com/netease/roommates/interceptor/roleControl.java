@@ -39,11 +39,11 @@ public class roleControl extends HandlerInterceptorAdapter {
 	  
 	  request.setCharacterEncoding("utf-8");  
 	  role user;
-	  if(request.getSession().getAttribute("isChecked")!=null && (boolean)request.getSession().getAttribute("isChecked"))
+	  if(request.getSession().getAttribute("isChecked")!=null && (Boolean)request.getSession().getAttribute("isChecked"))
 		  user = role.checked;
-	  else if(request.getSession().getAttribute("isRegister")!=null && (boolean) request.getSession().getAttribute("isRegister"))
+	  else if(request.getSession().getAttribute("isRegister")!=null && (Boolean) request.getSession().getAttribute("isRegister"))
 		  user = role.register;
-	  else if(request.getSession().getAttribute("isLogin")!=null && (boolean) request.getSession().getAttribute("isLogin"))
+	  else if(request.getSession().getAttribute("isLogin")!=null && (Boolean) request.getSession().getAttribute("isLogin"))
 		  user = role.out_user;
 	  else
 		  user = role.vistor;
