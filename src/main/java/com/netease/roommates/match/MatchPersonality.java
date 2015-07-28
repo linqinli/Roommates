@@ -13,7 +13,6 @@ import com.netease.user.service.IUserInfoService;
 public class MatchPersonality {
 	@Autowired
 	private IUserInfoService userInfoService;
-	
 	private User curUser;
 	
 	public MatchPersonality(User user){
@@ -80,7 +79,7 @@ public class MatchPersonality {
 		
 		for(int i=0; i<userList.size(); ++i){
 			User user = userList.get(i);
-			MatchScoreAndMessage matchScoreAndMessage = getSimilarityBetweenTwoPersonality(
+			MatchScoreAndMessage matchScoreAndMessage = getVectorSimilarityBetweenTwoPersonality(
 					this.curUser.getPersonality(), user.getPersonality());
 			MatchUserInfo userTmpInfo = new MatchUserInfo();
 			userTmpInfo.setCompany(user.getCompany());
@@ -256,30 +255,8 @@ public class MatchPersonality {
 		else matchScore += xgWeight*(user1Character*user2Character);
 
 		// 星座选项匹配得分计算
-		Map<String, Integer> constellationMap = new HashMap<String, Integer>();
-		constellationMap.put("白羊座", 1);
-		constellationMap.put("金牛座", 2);
-		constellationMap.put("双子座", 3);
-		constellationMap.put("巨蟹座", 4);
-		constellationMap.put("狮子座", 5);
-		constellationMap.put("处女座", 6);
-		constellationMap.put("天秤座", 7);
-		constellationMap.put("天蝎座", 8);
-		constellationMap.put("射手座", 9);
-		constellationMap.put("摩羯座", 10);
-		constellationMap.put("水瓶座", 11);
-		constellationMap.put("双鱼座", 12);
-		int user1Constellation = constellationMap.get(per1.getConstellation());
-		int user2Constellation = constellationMap.remove(per2.getConstellation());
-		if(user1Constellation == 1 || user1Constellation == 2 || user1Constellation == 3) user1Constellation=1;
-		else if(user1Constellation == 4 || user1Constellation == 5 || user1Constellation == 6) user1Constellation=2;
-		else if(user1Constellation == 7 || user1Constellation == 8 || user1Constellation == 9) user1Constellation=3;
-		else if(user1Constellation == 10 || user1Constellation == 11 || user1Constellation == 12) user1Constellation=4;
-		if(user2Constellation == 1 || user2Constellation == 2 || user2Constellation == 3) user2Constellation=1;
-		else if(user2Constellation == 4 || user2Constellation == 5 || user2Constellation == 6) user2Constellation=2;
-		else if(user2Constellation == 7 || user2Constellation == 8 || user2Constellation == 9) user2Constellation=3;
-		else if(user2Constellation == 10 || user2Constellation == 11 || user2Constellation == 12) user2Constellation=4;
-
+		int user1Constellation = this.queryConstellation(per1.getConstellation());
+		int user2Constellation = this.queryConstellation(per2.getConstellation());
 		if(user1Constellation == user2Constellation){
 			matchScore += xzWeight*1;
 			matchMessage = matchMessage + " 星座 ";
@@ -299,6 +276,107 @@ public class MatchPersonality {
 		return matchScoreAndMessage;
 	}
 	
+	public MatchScoreAndMessage getVectorSimilarityBetweenTwoPersonality(Personality per1, Personality per2){
+		MatchScoreAndMessage matchScoreAndMessage = new MatchScoreAndMessage();
+		
+		ArrayList<Integer> vec1 = new ArrayList<Integer>();
+		ArrayList<Integer> vec2 = new ArrayList<Integer>();
+		
+		/*int zxWeight = 1; // 作息选项权重
+		int cyWeight = 1; // 抽烟选项权重
+		int cwWeight = 1; // 宠物选项权重
+		int fkWeight = 1; // 访客选项权重
+		int grwsWeight = 1; // 个人卫生选项权重
+		int xgWeight = 1; // 性格选项权重
+		int xzWeight = 1; // 星座选项权重*/
+		int zxWeight=1, cyWeight=1, cwWeight=1, fkWeight=1, grwsWeight=1, xgWeight=1, xzWeight=1;
+		
+		
+		setEvaluateWeight(zxWeight, cyWeight, cwWeight, fkWeight, grwsWeight, xgWeight, xzWeight);
+		
+		// 作息
+		if(per1.getDailySchedule() == 1) vec1.add(-1*zxWeight); else vec1.add(1*zxWeight);
+		if(per2.getDailySchedule() == 1) vec2.add(-1*zxWeight); else vec2.add(1*zxWeight);
+		
+		// 抽烟
+		vec1.add((per1.getSmoking()-2)*cyWeight);
+		vec2.add((per2.getSmoking()-2)*cyWeight);
+		
+		//  宠物
+		vec1.add((per1.getPet()-2)*cwWeight);
+		vec2.add((per2.getPet()-2)*cwWeight);
+		
+		// 访客
+		vec1.add((per1.getVisitor()-2)*fkWeight);
+		vec2.add((per2.getVisitor()-2)*fkWeight);
+		
+		// 个人卫生
+		vec1.add((per1.getCleanliness()-2)*grwsWeight);
+		vec2.add((per2.getCleanliness()-2)*grwsWeight);
+		
+		// 性格
+		vec1.add((per1.getPersonCharacter()-2)*xgWeight);
+		vec2.add((per2.getPersonCharacter()-2)*xgWeight);
+		
+		matchScoreAndMessage.matchScore = this.cosinAngleOfTwoVector(vec1, vec2);
+		
+		return matchScoreAndMessage;
+	}
+	
+	// 查询星座
+	public int queryConstellation(String constellation){
+		Map<String, Integer> constellationMap = new HashMap<String, Integer>();
+		// 1，火象星座；2，土象星座；3，风象星座；4，水象星座
+		constellationMap.put("白羊座", 1);
+		constellationMap.put("金牛座", 2);
+		constellationMap.put("双子座", 3);
+		constellationMap.put("巨蟹座", 4);
+		constellationMap.put("狮子座", 1);
+		constellationMap.put("处女座", 2);
+		constellationMap.put("天秤座", 3);
+		constellationMap.put("天蝎座", 4);
+		constellationMap.put("射手座", 1);
+		constellationMap.put("摩羯座", 2);
+		constellationMap.put("水瓶座", 3);
+		constellationMap.put("双鱼座", 4);
+		return constellationMap.get(constellation);
+	}
+	
+	public int cosinAngleOfTwoVector(ArrayList<Integer> v1, ArrayList<Integer> v2){
+		int length = v1.size();
+		// 计算两个向量的叉积
+		double crossProduct = 0;
+		// 计算两个向量的模长
+		double m1Length = 0, m2Length = 0;
+		
+		for(int i=0; i<length; i++){
+			crossProduct += v1.get(i)*v2.get(i);
+			m1Length += v1.get(i)*v1.get(i);
+			m2Length += v2.get(i)*v2.get(i);
+		}
+		
+		m1Length = Math.sqrt(m1Length);
+		m2Length = Math.sqrt(m2Length);
+		double cosinValue = crossProduct/(m1Length*m2Length);
+		if(cosinValue > 1.0000) cosinValue = 1.0000;
+		if(cosinValue < -1.0000) cosinValue = -1.0000;
+		double vectorAngle = Math.acos(cosinValue);
+		int Simlarity = (int)(100*(1-vectorAngle/Math.PI));
+		
+		return Simlarity;
+	}
+	
+	// 设置各个选项的权重值
+	public void setEvaluateWeight(Integer zxWeight, Integer cyWeight, Integer cwWeight,
+			Integer fkWeight, Integer grwsWeight, Integer xgWeight, Integer xzWeight){
+		zxWeight = 2; // 作息选项权重
+		cyWeight = 2; // 抽烟选项权重
+		cwWeight = 1; // 宠物选项权重
+		fkWeight = 1; // 访客选项权重
+		grwsWeight = 1; // 个人卫生选项权重
+		xgWeight = 1; // 性格选项权重
+		xzWeight = 1; // 星座选项权重
+	}
 	
 }
 
