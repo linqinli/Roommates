@@ -32,12 +32,11 @@ public class RegisterController {
 	@Autowired
 	private IUserInfoService userInfoService;
 	
-	/*
+	
 	@RequestMapping("/register/page")
 	public String loginPage(){
 		return "register";
 	}
-	*/
 	@RequestMapping(value="/register/check")
 	@ResponseBody
 	public Map<String, Object> check(HttpServletRequest request, HttpServletResponse response) throws Exception{
@@ -83,7 +82,7 @@ public class RegisterController {
 	}
 	
 	
-	@RequestMapping(value="/register", method = RequestMethod.POST)
+	@RequestMapping(value="/register")
 	@ResponseBody
 	public Map<String, Object> registercheck(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		Map<String, Object> info = new HashMap<String, Object>();

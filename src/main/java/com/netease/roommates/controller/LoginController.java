@@ -33,12 +33,12 @@ import com.netease.roommates.po.User;
 public class LoginController {
 	@Autowired
 	private IUserInfoService userInfoService;
-	/*
+	
 	@RequestMapping("/login/page")
-	public String loginPage() throws MessagingException{
+	public String loginPage() throws MessagingException{	
 		return "loginPage";
 	}
-	*/
+	
 	@RequestMapping(value="/logout")
 	@ResponseBody
 	public Map<String, Object> logout(HttpServletRequest request, HttpServletResponse response){
@@ -49,7 +49,7 @@ public class LoginController {
 	}
 	
 	
-	@RequestMapping(value="/login", method = RequestMethod.POST)
+	@RequestMapping(value="/login")
 	@ResponseBody
 	public Map<String, Object> loginCheck(HttpServletRequest request, HttpServletResponse response) throws HashGenerationException, ServiceException{
 		Map<String, Object> info=new HashMap<String, Object>();
