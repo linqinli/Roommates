@@ -37,7 +37,7 @@ public class LoginController {
 	public Map<String, Object> logout(HttpServletRequest request, HttpServletResponse response){
 		Map<String, Object> info = new HashMap<String, Object>();		
 		request.getSession().invalidate();
-		info.put("result",true);
+		info.put("result",1);
 		return info;
 	}
 	
@@ -55,19 +55,19 @@ public class LoginController {
 		String p_email=request.getParameter("email");
 		String p_password=request.getParameter("password");
 		if(CheckWord.check(p_email) || CheckWord.check(p_password)){
-			info.put("result", false);
-			info.put("info", "word is illegal");
+			info.put("result", 0);
+			info.put("info", "包含非法字符");
 			return info;
 		}
 		
 		if(p_email==null || p_email.isEmpty()){
-			info.put("result", false);
-			info.put("info","email is empty");
+			info.put("result", 0);
+			info.put("info","邮件为空");
 			return info;
 		}
 		if(p_password==null || p_password.isEmpty()){
-			info.put("result", false);
-			info.put("info", "password is empty");
+			info.put("result", 0);
+			info.put("info", "密码为空");
 			return info;
 		}
 		
@@ -81,8 +81,8 @@ public class LoginController {
 		}
 		
 		if(!flag){
-			info.put("result", false);
-			info.put("info", "email tyep is wrong");
+			info.put("result", 0);
+			info.put("info", "邮件格式错误");
 			return info;
 		}
 		
@@ -90,8 +90,8 @@ public class LoginController {
 		
 		if(user!=null){
 			if(user.getPwdMD5Hash().equals(HashGeneratorUtils.generateSaltMD5(p_password))){
-				info.put("result", true);
-				info.put("info", "login success");
+				info.put("result", 1);
+				info.put("info", "登录成功");
 				info.put("userId", user.getUserId());
 				request.getSession(true);
 				request.getSession().setAttribute("userId",user.getUserId());
@@ -100,14 +100,14 @@ public class LoginController {
 				return info;
 			}
 			else{
-				info.put("result", false);
-				info.put("info", "not fit");
+				info.put("result", 0);
+				info.put("info", "邮件与密码不匹配");
 				return info;
 			}
 		}
 		else{
-			info.put("result",false);
-			info.put("info", "no this email");
+			info.put("result",0);
+			info.put("info", "该邮件未注册");
 			return info;
 		}
 	}

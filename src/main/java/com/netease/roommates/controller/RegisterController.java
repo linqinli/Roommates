@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,21 +38,23 @@ public class RegisterController {
 	@ResponseBody
 	public Map<String, Object> check(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		Map<String, Object> info = new HashMap<String, Object>();
-		int p_userId = (int)request.getSession().getAttribute("userId");
-		System.out.println(p_userId+"");
-		if(p_userId==0){
-			info.put("result", false);
-			info.put("info", "id is not exist");
+		HttpSession session= request.getSession();
+		if(session==null){
+			info.put("result", 0);
+			info.put("info", "超时");
 		}
 		else{
+			int p_userId = (int)session.getAttribute("userId");
+			System.out.println(p_userId+"");
 			User user = userInfoService.getUserById(p_userId);
 			if(user==null ||  user.getCompanyEmail()==null || user.getCompanyEmail().isEmpty()){
-				info.put("result", false);
-				info.put("info", "check fail");
+				info.put("result", 0);
+				info.put("info", "邮件未验证成功");
 			}
 			else{
-				info.put("result", true);
-				info.put("info", "check success");
+				info.put("result", 1);
+				info.put("info", "验证成功");
+				info.put("userId", p_userId);
 				request.getSession().setAttribute("isChecked",true);
 			}
 				
@@ -82,35 +85,35 @@ public class RegisterController {
 		Map<String, Object> info = new HashMap<String, Object>();
 		request.setCharacterEncoding("utf-8");
 		
-		String p_name=request.getParameter("username");
+		String p_name=request.getParameter("nickname");
 		String p_password=request.getParameter("password");
 		String p_email=request.getParameter("email");
 		System.out.println(p_name+"+"+p_email);
 		if(CheckWord.check(p_name) || CheckWord.check(p_password) || CheckWord.check(p_email)){		
-			info.put("result", false);
-			info.put("info", "word is illegal");
+			info.put("result", 0);
+			info.put("info", "包含非法字符");
 			return info;
 		}
 		
 		if(p_name==null || p_name.isEmpty()){
-			info.put("result", false);
-			info.put("info", "name is empty");
+			info.put("result", 0);
+			info.put("info", "昵称为空");
 			return info;
 		}
 		if(p_password==null || p_password.isEmpty()){
-			info.put("result", false);
-			info.put("info", "password is empty");
+			info.put("result", 0);
+			info.put("info", "密码为空");
 			return info;
 		}
-		if(p_email.isEmpty() || p_email==null){
-			info.put("result", false);
-			info.put("info", "email is empty");
+		if(p_email==null || p_email.isEmpty()){
+			info.put("result", 0);
+			info.put("info", "邮件为空");
 			return info;
 		}
 		
 		if(userInfoService.getUserByEmail(p_email)!= null){
-			info.put("result", false);
-			info.put("info", "user exist");
+			info.put("result", 0);
+			info.put("info", "该邮件已被注册");
 			return info;
 		}
 		boolean flag = false;
@@ -123,8 +126,8 @@ public class RegisterController {
 		}
 		
 		if(!flag){
-			info.put("result", false);
-			info.put("info", "email tyep is wrong");
+			info.put("result", 0);
+			info.put("info", "邮件格式错误");
 			return info;
 		}
 		
@@ -142,16 +145,16 @@ public class RegisterController {
 				break;
 			}
 		if(registerUser == null){
-			info.put("result", false);
-			info.put("info", "insert wrong");
+			info.put("result", 0);
+			info.put("info", "注册失败");
 			return info;
 		}
 		int userId = registerUser.getUserId();
 		request.getSession(true);
 		request.getSession().setAttribute("userId",userId);
 		request.getSession().setAttribute("isRegister",true);
-		info.put("result", true);
-		info.put("info", "register success");
+		info.put("result", 1);
+		info.put("info", "注册成功");
 		info.put("userId", userId);
 		
 		
