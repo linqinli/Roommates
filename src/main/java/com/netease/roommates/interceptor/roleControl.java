@@ -49,11 +49,11 @@ public class roleControl extends HandlerInterceptorAdapter {
 		  user = role.vistor;
 	  
 	  System.out.println("role is "+user);
-	  List<String> allowAddress = userAllow(user);
 	  /*
+	  List<String> allowAddress = userAllow(user);
 	  boolean flag = false;
 	  if(user == role.checked)
-		  flag=true;
+		  flag = true;
 	  for(String address : allowAddress){
 		  if(request.getServletPath().startsWith(address)){
 			  	flag = true;

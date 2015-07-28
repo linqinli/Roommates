@@ -13,14 +13,18 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.netease.common.service.MailSender;
 import com.netease.common.service.impl.CheckWord;
 import com.netease.common.service.impl.DefaultMailSender;
+import com.netease.common.service.impl.emailAddress;
 import com.netease.roommates.po.User;
 import com.netease.user.service.IUserInfoService;
 import com.netease.utils.HashGeneratorUtils;
-import com.netease.roommates.po.emailAddress;
+
+
+
 
 @Controller
 @RequestMapping("/api")
@@ -34,7 +38,7 @@ public class RegisterController {
 		return "register";
 	}
 	
-	@RequestMapping("/register/check")
+	@RequestMapping(value="/register/check", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> check(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		Map<String, Object> info = new HashMap<String, Object>();
@@ -49,7 +53,7 @@ public class RegisterController {
 			User user = userInfoService.getUserById(p_userId);
 			if(user==null ||  user.getCompanyEmail()==null || user.getCompanyEmail().isEmpty()){
 				info.put("result", 0);
-				info.put("info", "邮件未验证成功");
+				info.put("info", "邮箱未验证成功");
 			}
 			else{
 				info.put("result", 1);
@@ -63,7 +67,7 @@ public class RegisterController {
 	}
 	
 	
-	@RequestMapping("/register/usercheck")
+	@RequestMapping(value="/register/usercheck", method = RequestMethod.POST)
 	public void userCheck(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		request.setCharacterEncoding("utf-8"); 
 		String p_userId = request.getParameter("checkid");
@@ -79,7 +83,7 @@ public class RegisterController {
 	}
 	
 	
-	@RequestMapping("/register")
+	@RequestMapping(value="/register", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> registercheck(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		Map<String, Object> info = new HashMap<String, Object>();
@@ -107,27 +111,19 @@ public class RegisterController {
 		}
 		if(p_email==null || p_email.isEmpty()){
 			info.put("result", 0);
-			info.put("info", "邮件为空");
+			info.put("info", "邮箱为空");
 			return info;
 		}
 		
 		if(userInfoService.getUserByEmail(p_email)!= null){
 			info.put("result", 0);
-			info.put("info", "该邮件已被注册");
+			info.put("info", "该邮箱已被注册");
 			return info;
 		}
-		boolean flag = false;
-		for(Pattern pattern : emailAddress.emailPattern){
-			Matcher matcher = pattern.matcher(p_email);
-			if(matcher.matches()){
-				flag=true;
-				break;
-			}
-		}
 		
-		if(!flag){
+		if(!emailAddress.emailCheck(p_email)){
 			info.put("result", 0);
-			info.put("info", "邮件格式错误");
+			info.put("info", "邮箱格式错误");
 			return info;
 		}
 		
