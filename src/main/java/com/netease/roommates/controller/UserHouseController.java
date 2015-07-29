@@ -55,25 +55,27 @@ public class UserHouseController {
 		
 		HashMap<String,Object> result = new HashMap<String,Object>();
 		
-		if(!"".equals(id)){
-			UserHouse uHouse = userHouseService.getUserHouseById(id);
-			List<String> picLst = new ArrayList<String>();
-			
-			if(uHouse.getPictures().contains(".jpg")){
-				String[] pics = uHouse.getPictures().split("\n");
-				for(String pic:pics){
-					picLst.add(PREFIX + pic);
-				}
-			}
-			uHouse.setPicList(picLst);
-			
-			result.put("errno", "0");
-			result.put("data", uHouse);
-			
-		}else{
+		UserHouse uHouse = userHouseService.getUserHouseById(id);
+		if(uHouse == null) {
 			result.put("errno", "1");
-			result.put("data", new HashMap());
+//			result.put("message", "The user does not have house info.");
+			result.put("message", "当前用户不存在房源信息");
+			return result;
 		}
+		
+		List<String> picLst = new ArrayList<String>();
+		
+		if(uHouse.getPictures()!=null && uHouse.getPictures().contains(".jpg")){
+			String[] pics = uHouse.getPictures().split("\n");
+			for(String pic:pics){
+				picLst.add(PREFIX + pic);
+			}
+		}
+		uHouse.setPicList(picLst);
+		
+		result.put("errno", "0");
+		result.put("data", uHouse);
+			
 		return result;
 	}
 	
@@ -114,7 +116,8 @@ public class UserHouseController {
 		} catch (IOException ioe) {
 			logger.error("Error uploading photo, userId:" + userId, ioe);
 			
-			result.put("state", "failure");
+			result.put("errno", "1");
+			result.put("message", "上传图片失败");
 			
 			return result;
 		}
@@ -134,14 +137,15 @@ public class UserHouseController {
 		
 		try{
 			userHouseService.insertUserHouse(uhouse);
-			result.put("state", "success");
+			result.put("errno", "0");
 			return result;
 			
 		}catch(Exception e){
 			logger.error("Error insert house, userId:" + userId, e);
+			
+			result.put("errno", "1");
+			result.put("message", "保存用户信息失败");
 		}
-		result.put("state", "failure");
-		
 		return result;
 	}
 	
@@ -160,7 +164,8 @@ public class UserHouseController {
 		
 		Integer userId = model.getUserId();
 		if("".equals(userId)||userId==null){
-			result.put("state", "failure");
+			result.put("errno", "1");
+			result.put("message", "用户id为空");
 			return result;
 		}
 		
@@ -176,14 +181,16 @@ public class UserHouseController {
 		
 		try{
 			userHouseService.updateUserHouseInfo(uhouse);
-			result.put("state", "success");
+			result.put("errno", "0");
 			return result;
 			
 		}catch(Exception e){
-			logger.error("Error insert house, userId:" + userId, e);
+			logger.error("Error update house, userId:" + userId, e);
+			
+			result.put("errno", "1");
+			result.put("message", "更新房源信息失败");
+			
 		}
-		result.put("state", "failure");
-		
 		return result;
 	}
 	
@@ -201,13 +208,15 @@ public class UserHouseController {
 		Map<String, String> result = new HashMap<String, String>();
 		try{
 			userHouseService.deleteUserHouse(id);
-			result.put("state", "success");
+			result.put("errno", "0");
 			return result;
 			
 		}catch(Exception e){
-			logger.error("Error insert house, userId:" + id, e);
+			logger.error("Error delete house, userId:" + id, e);
+			result.put("errno", "1");
+			result.put("message", "删除房源信息失败");
 		}
-		result.put("state", "failure");
+		
 		return result;
 	}
 	
