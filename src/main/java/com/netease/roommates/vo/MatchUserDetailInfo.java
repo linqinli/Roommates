@@ -2,7 +2,7 @@ package com.netease.roommates.vo;
 
 import java.util.List;
 
-import com.netease.roommates.po.House;
+import com.netease.roommates.po.UserHouse;
 
 public class MatchUserDetailInfo {
 	private int userId;
@@ -14,7 +14,7 @@ public class MatchUserDetailInfo {
 	private String gender;
 	private List<String> tags;
 	private String tel;
-	private House house;
+	private UserHouse house;
 	public int getUserId() {
 		return userId;
 	}
@@ -24,8 +24,11 @@ public class MatchUserDetailInfo {
 	public String getPhotoId() {
 		return photoId;
 	}
-	public void setPhotoId(String photoId) {
-		this.photoId = photoId;
+	public void setPhotoId(int userid, int mode) {
+		String prefix = "http://223.252.223.13/Roommates/photo/photo_";
+		String smallSuffix = "_small.jpg";
+		String suffix = ".jpg";
+		this.photoId = prefix + userid + suffix;
 	}
 	public String getNickName() {
 		return nickName;
@@ -54,8 +57,9 @@ public class MatchUserDetailInfo {
 	public String getGender() {
 		return gender;
 	}
-	public void setGender(String gender) {
-		this.gender = gender;
+	public void setGender(byte byteGender) {
+		if(byteGender == 0) this.gender = "男";
+		else this.gender = "女";
 	}
 	public List<String> getTags() {
 		return tags;
@@ -69,10 +73,10 @@ public class MatchUserDetailInfo {
 	public void setTel(String tel) {
 		this.tel = tel;
 	}
-	public House getHouse() {
+	public UserHouse getHouse() {
 		return house;
 	}
-	public void setHouse(House house) {
+	public void setHouse(UserHouse house) {
 		this.house = house;
 	}
 }
