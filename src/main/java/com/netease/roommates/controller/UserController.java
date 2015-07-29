@@ -22,7 +22,7 @@ import com.netease.exception.ServiceException;
 import com.netease.match.service.impl.MatchPersonality;
 import com.netease.roommates.po.Personality;
 import com.netease.roommates.po.User;
-import com.netease.roommates.vo.MatchUserInfo;
+import com.netease.roommates.vo.MatchUserSimpleInfo;
 import com.netease.roommates.vo.QuestionnaireVO;
 import com.netease.user.service.IUserInfoService;
 import com.netease.utils.JsonBuilder;
@@ -62,16 +62,6 @@ public class UserController {
 	@RequestMapping(value = "/updateUserBasicInfo", method = RequestMethod.POST)
 	public void updateUser(@RequestBody User user) throws ServiceException {
 		userInfoService.updateUserBasicInfo(user);
-	}
-
-	@RequestMapping(value = "/matchable")
-	@ResponseBody
-	public List<MatchUserInfo> matchable() throws ServiceException {
-		User user = new User();
-		user.setAddress("hangzhou");
-		user.setCompany("NetEase");
-		MatchPersonality matchPernality = new MatchPersonality(user);
-		return matchPernality.matchResultTest();
 	}
 
 	@RequestMapping(value = "/getUserPersonality", method = RequestMethod.GET)

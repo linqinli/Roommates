@@ -4,168 +4,180 @@ import java.util.*;
 
 import com.netease.exception.ServiceException;
 import com.netease.roommates.po.User;
-import com.netease.roommates.vo.MatchUserInfo;
+import com.netease.roommates.vo.MatchUserSimpleInfo;
 import com.netease.roommates.po.Personality;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.netease.user.service.IUserInfoService;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 public class MatchPersonality {
-	@Autowired
-	private IUserInfoService userInfoService;
 	private User curUser;
-	private MatchDataHandler matchDataHandler;
 	
 	public MatchPersonality(User user){
 		setCurUser(user);
-		this.curUser.setUserId(1);
-		Personality per1 = new Personality();
-		
-		per1.setCleanliness(1);
-		per1.setConstellation("狮子座");
-		per1.setDailySchedule(1);
-		per1.setPersonCharacter(1);
-		per1.setPet(1);
-		per1.setSmoking(1);
-		per1.setVisitor(1);
-		
-		this.curUser.setPersonality(per1);
 	}
-	
-	
 	
 	static class MatchScoreAndMessage{
 		int matchScore;
 		String matchMessage;
 	}
 	
-	public List<User> selectUserByCondition(int xb, int f, int gs, int cy, int cw,
-			int zx, int ws, int xg, int fk){
-		matchDataHandler = new MatchDataHandler();
-		return matchDataHandler.selectUserByCondition(xb, f, gs, cy, cw, zx, ws, xg, fk);
-	}
-	
-	public List<MatchUserInfo> matchResultTest() throws ServiceException{
-		List<MatchUserInfo> matchUserInfo = new ArrayList<MatchUserInfo>();
-		// List<User> userList = userInfoService.getUserListByAddress(this.curUser.getAddress());
-		// 以下初始化一个UserList测试
-		List<User> userList = new ArrayList<User>();
-		User user1 = new User();
-		user1.setUserId(2);
-		Personality per1 = new Personality();
+	public List<MatchUserSimpleInfo> matchResultSimpleInfo(List<User> users) throws ServiceException{
+		List<MatchUserSimpleInfo> matchUserInfo = new ArrayList<MatchUserSimpleInfo>();
 		
-		per1.setCleanliness(1);
-		per1.setConstellation("狮子座");
-		per1.setDailySchedule(1);
-		per1.setPersonCharacter(1);
-		per1.setPet(1);
-		per1.setSmoking(1);
-		per1.setVisitor(1);
-		
-		user1.setAddress("netease address");
-		user1.setCompany("netease");
-		user1.setGender((byte)0x0000);
-		user1.setUserName("moondark");
-		
-		user1.setPersonality(per1);
-		
-		User user2 = new User();
-		user2.setUserId(3);
-		user2.setUserName("liao");
-		user2.setAddress("netease address");
-		user2.setCompany("netease");
-		Personality per2 = new Personality();
-		
-		per2.setCleanliness(2);
-		per2.setConstellation("狮子座");
-		per2.setDailySchedule(1);
-		per2.setPersonCharacter(1);
-		per2.setPet(1);
-		per2.setSmoking(1);
-		per2.setVisitor(1);
-		user2.setPersonality(per2);
-		
-		userList.add(user1);
-		userList.add(user2);
-		
-		
-		for(int i=0; i<userList.size(); ++i){
-			User user = userList.get(i);
-			MatchScoreAndMessage matchScoreAndMessage = getSimilarityBetweenTwoPersonality(
-					this.curUser.getPersonality(), user.getPersonality());
-			MatchUserInfo userTmpInfo = userInfoToMatchUserInfo(user);
+		for(int i=0; i<users.size(); ++i){
+			User user = users.get(i);
+			MatchScoreAndMessage matchScoreAndMessage = new MatchScoreAndMessage();
+			if(this.curUser.getPersonality()!=null && user.getPersonality()!=null){
+				matchScoreAndMessage = getSimilarityBetweenTwoPersonality(
+						this.curUser.getPersonality(), user.getPersonality());
+			}
+			MatchUserSimpleInfo userTmpInfo = userInfoToMatchUserSimpleInfo(user);
 			userTmpInfo.setMatchScore(matchScoreAndMessage.matchScore);
 			userTmpInfo.setMatchMessage(matchScoreAndMessage.matchMessage);
-			
 			matchUserInfo.add(userTmpInfo);
 		}
 		// 按分数高低进行排序
-		Collections.sort(matchUserInfo,new Comparator<MatchUserInfo>(){
+		Collections.sort(matchUserInfo,new Comparator<MatchUserSimpleInfo>(){
 			@Override
-			public int compare(MatchUserInfo matchUserInfo1, MatchUserInfo matchUserInfo2){
+			public int compare(MatchUserSimpleInfo matchUserInfo1, MatchUserSimpleInfo matchUserInfo2){
 				return matchUserInfo2.getMatchScore()-matchUserInfo1.getMatchScore();
 			}
 		});
 		return matchUserInfo;
 	}
 
-	public List<MatchUserInfo> matchResultByAddress() throws ServiceException{
-		List<MatchUserInfo> matchUserInfo = new ArrayList<MatchUserInfo>();
-		List<User> userList = userInfoService.getUserListByAddress(this.curUser.getAddress());
-		
-		for(int i=0; i<userList.size(); ++i){
-			User user = userList.get(i);
-			MatchScoreAndMessage matchScoreAndMessage = getSimilarityBetweenTwoPersonality(
-					this.curUser.getPersonality(), user.getPersonality());
-			MatchUserInfo userTmpInfo = userInfoToMatchUserInfo(user);
-			userTmpInfo.setMatchScore(matchScoreAndMessage.matchScore);
-			userTmpInfo.setMatchMessage(matchScoreAndMessage.matchMessage);
-			
-			matchUserInfo.add(userTmpInfo);
-		}
-		// 按分数高低进行排序
-		Collections.sort(matchUserInfo,new Comparator<MatchUserInfo>(){
-			@Override
-			public int compare(MatchUserInfo matchUserInfo1, MatchUserInfo matchUserInfo2){
-				return matchUserInfo2.getMatchScore()-matchUserInfo1.getMatchScore();
-			}
-		});
-		return matchUserInfo;
-	}
-	
-	// 按同公司进行用户匹配得分的计算
-	public List<MatchUserInfo> matchResultByCompany() throws ServiceException{
-		// 用来储存匹配用户的结果信息
-		List<MatchUserInfo> matchUserInfo = new ArrayList<MatchUserInfo>();
-		// 选取同一公司的用户进行匹配计算
-		List<User> userList = userInfoService.getUserListByCompany(this.curUser.getAddress());
-		
-		for(int i=0; i<userList.size(); ++i){
-			User user = userList.get(i);
-			// 返回匹配得分及
-			MatchScoreAndMessage matchScoreAndMessage = getSimilarityBetweenTwoPersonality(
-					this.curUser.getPersonality(), user.getPersonality());
-			MatchUserInfo userTmpInfo = userInfoToMatchUserInfo(user);
-			userTmpInfo.setMatchScore(matchScoreAndMessage.matchScore);
-			userTmpInfo.setMatchMessage(matchScoreAndMessage.matchMessage);
-			
-			matchUserInfo.add(userTmpInfo);
-		}
-		// 按分数高低进行排序
-		Collections.sort(matchUserInfo,new Comparator<MatchUserInfo>(){
-			@Override
-			public int compare(MatchUserInfo matchUserInfo1, MatchUserInfo matchUserInfo2){
-				return matchUserInfo2.getMatchScore()-matchUserInfo1.getMatchScore();
-			}
-		});
-		return matchUserInfo;
-	}
-	
 	public User getCurUser() {
 		return curUser;
 	}
 
 	public void setCurUser(User curUser) {
 		this.curUser = curUser;
+	}
+	
+	public List<Integer> selectUserIdByCondition(int xb, int f, int gs, int cy, int cw,
+			int zx, int ws, int xg, int fk){
+		String selectSqlString = "";
+		
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+		dataSource.setUrl("jdbc:mysql://223.252.223.13:3306/roommates");
+		dataSource.setUsername("hznetease");
+		dataSource.setPassword("hz12345");
+		JdbcTemplate jdbcTemplate = new JdbcTemplate();
+		jdbcTemplate.setDataSource(dataSource);
+		if(xb*f*gs*cy*cw*zx*ws*xg*fk == 1){
+			selectSqlString = "select userId from sys_user";
+		}
+		else if(cy*cw*zx*ws*xg*fk == 1){
+			selectSqlString = "select userId from sys_user where";
+			switch(xb){
+			case 2: selectSqlString += " gender=0 and"; break;
+			case 3: selectSqlString += " gender=1 and"; break;
+			default: break;
+			}
+			
+			switch(f){
+			case 2: selectSqlString += " house=2 and"; break;
+			case 3: selectSqlString += " house=3 and"; break;
+			default: break;
+			}
+			
+			switch(gs){
+			case 2: selectSqlString += " company=2 and"; break;
+			case 3: selectSqlString += " company=3 and"; break;
+			case 4: selectSqlString += " company=4 and"; break;
+			case 5: selectSqlString += " company=5 and"; break;
+			case 6: selectSqlString += " company=6 and"; break;
+			default: break;
+			}
+			
+			String suffix = selectSqlString.substring(selectSqlString.length()-4, 
+					selectSqlString.length());
+			
+			if(suffix.equals(" and")){
+				selectSqlString = selectSqlString.substring(0, 
+						selectSqlString.length()-4);
+			}
+			
+		}
+		else{
+			selectSqlString = "select s.userId from sys_user s join user_personality p "
+					+ "on s.userId = p.userId where";
+			
+			switch(xb){
+			case 2: selectSqlString += " gender=0 and"; break;
+			case 3: selectSqlString += " gender=1 and"; break;
+			default: break;
+			}
+			
+			switch(f){
+			case 2: selectSqlString += " house=2 and"; break;
+			case 3: selectSqlString += " house=3 and"; break;
+			default: break;
+			}
+			
+			switch(gs){
+			case 2: selectSqlString += " company=2 and"; break;
+			case 3: selectSqlString += " company=3 and"; break;
+			case 4: selectSqlString += " company=4 and"; break;
+			case 5: selectSqlString += " company=5 and"; break;
+			case 6: selectSqlString += " company=6 and"; break;
+			default: break;
+			}
+			switch(cy){
+			case 2: selectSqlString += " smoking=1 and"; break;
+			case 3: selectSqlString += " smoking=2 and"; break;
+			case 4: selectSqlString += " smoking=3 and"; break;
+			default: break;
+			}
+
+			switch(cw){
+			case 2: selectSqlString += " pet=1 and"; break;
+			case 3: selectSqlString += " pet=2 and"; break;
+			case 4: selectSqlString += " pet=3 and"; break;
+			default: break;
+			}
+
+			switch(zx){
+			case 2: selectSqlString += " dailySchedule=1 and"; break;
+			case 3: selectSqlString += " dailySchedule=2 and"; break;
+			case 4: selectSqlString += " dailySchedule=3 and"; break;
+			default: break;
+			}
+			switch(ws){
+			case 2: selectSqlString += " cleanliness=1 and"; break;
+			case 3: selectSqlString += " cleanliness=2 and"; break;
+			case 4: selectSqlString += " cleanliness=3 and"; break;
+			default: break;
+			}
+			switch(xg){
+			case 2: selectSqlString += " personCharacter=1 and"; break;
+			case 3: selectSqlString += " personCharacter=2 and"; break;
+			case 4: selectSqlString += " personCharacter=3 and"; break;
+			default: break;
+			}
+			switch(fk){
+			case 2: selectSqlString += " visitor=1 and"; break;
+			case 3: selectSqlString += " visitor=2 and"; break;
+			case 4: selectSqlString += " visitor=3 and"; break;
+			default: break;
+			}
+			
+			String suffix = selectSqlString.substring(selectSqlString.length()-4, 
+					selectSqlString.length());
+			
+			if(suffix.equals(" and")){
+				selectSqlString = selectSqlString.substring(0, 
+						selectSqlString.length()-4);
+			}
+		}
+		
+		// userList = (List<User>)jdbcTemplate.queryForList(selectSqlString,User.class);
+		
+		List<Integer> userIdList= (List<Integer>)jdbcTemplate.queryForList(selectSqlString, Integer.class);
+		
+		
+		return userIdList;
 	}
 	
 	// 通过问卷选项，计算两用户行为偏好的匹配得分
@@ -372,16 +384,25 @@ public class MatchPersonality {
 	}
 	
 	// 将需要显示再前端的用户信息保存在一个MatchUserInfo结构体中
-	public MatchUserInfo userInfoToMatchUserInfo(User user){
-		MatchUserInfo matchUserInfo = new MatchUserInfo();
-		matchUserInfo.setCompany(user.getCompany());
+	public MatchUserSimpleInfo userInfoToMatchUserSimpleInfo(User user){
+		MatchUserSimpleInfo matchUserInfo = new MatchUserSimpleInfo();
 		matchUserInfo.setJob(user.getCompany()+user.getPosition());
 		matchUserInfo.setGender(user.getGender());
 		matchUserInfo.setNickName(user.getNickName());
 		matchUserInfo.setPhotoId(user.getUserId(), 0);
 		matchUserInfo.setUserId(user.getUserId());
-		matchUserInfo.setUserName(user.getUserName());
+		matchUserInfo.setAge(dateToAge(user.getBirthday()));
 		return matchUserInfo;
+	}
+	
+	public int dateToAge(Date date){
+		int age = 0;
+		if(date==null) return age;
+		Date curDate = new Date();
+		int curYear = curDate.getYear();
+		int birYear = date.getYear();
+		age = curYear-birYear;
+		return age;
 	}
 	
 }
