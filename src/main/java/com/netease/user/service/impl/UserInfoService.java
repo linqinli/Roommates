@@ -124,4 +124,25 @@ public class UserInfoService implements IUserInfoService {
 	}
 	
 	
+	@Override
+	public int isInfoAll(int userId) throws ServiceException {
+		try {
+			return userMapper.isInfoAll(userId);
+		} catch (StorageException se) {
+			log.error("error check user information is complete:" + userId, se);
+			throw new ServiceException(se);
+		}
+	}
+	
+	@Override
+	public int isQuestionnaireAll(int userId) throws ServiceException {
+		try {
+			return userMapper.isQuestionnaireAll(userId);
+		} catch (StorageException se) {
+			log.error("error check Questionnaire is complete:" + userId, se);
+			throw new ServiceException(se);
+		}
+	}
+	
+	
 }

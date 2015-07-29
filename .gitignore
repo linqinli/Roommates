@@ -17,3 +17,12 @@ hs_err_pid*
 #target file
 target
 
+# Eclipse Settings
+.classpath
+.settings/
+
+src/main/webapp/
+!src/main/webapp/WEB-INF/web.xml
+
+# DB Settings
+src/main/resources/db.properties

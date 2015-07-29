@@ -9,6 +9,7 @@ public class User implements Serializable{
 	private int userId;
 	private String userName;
 	private byte gender;
+	private byte status;
 	private String nickName;
 	private Date birthday;
 	private String position;
@@ -17,7 +18,6 @@ public class User implements Serializable{
 	private String companyEmail;
 	private String company;
 	private String address;
-	private String department;
 	private Personality personality;
 	
 	public User() {
@@ -62,6 +62,14 @@ public class User implements Serializable{
 
 	public void setGender(byte gender) {
 		this.gender = gender;
+	}
+
+	public byte getStatus() {
+		return status;
+	}
+
+	public void setStatus(byte status) {
+		this.status = status;
 	}
 
 	public String getNickName() {
@@ -112,28 +120,12 @@ public class User implements Serializable{
 		this.address = address;
 	}
 
-	public String getDepartment() {
-		return department;
-	}
-
-	public void setDepartment(String department) {
-		this.department = department;
-	}
-
 	public Personality getPersonality() {
 		return personality;
 	}
 
 	public void setPersonality(Personality personality) {
 		this.personality = personality;
-	}
-
-	@Override
-	public String toString() {
-		return "User [userId=" + userId + ", userName=" + userName + ", gender=" + gender + ", nickName=" + nickName
-				+ ", birthday=" + birthday + ", position=" + position + ", pwdMD5Hash=" + pwdMD5Hash + ", phoneNumber="
-				+ phoneNumber + ", companyEmail=" + companyEmail + ", company=" + company + ", address=" + address
-				+ ", department=" + department + "]";
 	}
 	
 }

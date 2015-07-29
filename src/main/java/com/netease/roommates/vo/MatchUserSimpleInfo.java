@@ -9,6 +9,7 @@ public class MatchUserSimpleInfo {
 	private String job;
 	private int age;
 	private String matchMessage;
+	private boolean hasHouse;
 	
 	public int getUserId() {
 		return userId;
@@ -70,6 +71,12 @@ public class MatchUserSimpleInfo {
 	}
 	public void setAge(int age) {
 		this.age = age;
+	}
+	public boolean isHasHouse() {
+		return hasHouse;
+	}
+	public void setHasHouse(boolean hasHouse) {
+		this.hasHouse = hasHouse;
 	}
 	
 }

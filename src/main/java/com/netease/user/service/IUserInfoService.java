@@ -3,6 +3,7 @@ package com.netease.user.service;
 import java.util.List;
 
 import com.netease.exception.ServiceException;
+import com.netease.exception.StorageException;
 import com.netease.roommates.po.Personality;
 import com.netease.roommates.po.User;
 
@@ -26,4 +27,8 @@ public interface IUserInfoService {
 	public List<User> getUserByName(String name) throws ServiceException; 
 	
 	public User getUserByEmail(String email) throws ServiceException;
+	
+	public int isInfoAll(int userId) throws ServiceException;
+	
+	public int isQuestionnaireAll(int userId) throws ServiceException; 
 }
