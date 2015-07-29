@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netease.exception.ControllerException;
 import com.netease.exception.ServiceException;
 import com.netease.match.service.impl.MatchPersonality;
@@ -24,6 +23,7 @@ import com.netease.roommates.po.Personality;
 import com.netease.roommates.po.User;
 import com.netease.roommates.vo.MatchUserSimpleInfo;
 import com.netease.roommates.vo.QuestionnaireVO;
+import com.netease.roommates.vo.UserBasicInfoVO;
 import com.netease.user.service.IUserInfoService;
 import com.netease.utils.JsonBuilder;
 
@@ -38,30 +38,32 @@ public class UserController {
 
 	@RequestMapping(value = "/getUser", method = RequestMethod.GET)
 	@ResponseBody
-	public String getUserById(int userId) {
+	public User getUserById(int userId) {
 		try {
-			ObjectMapper mapper = new ObjectMapper();
 			User user = userInfoService.getUserById(userId);
-			return mapper.writeValueAsString(user);
+			return user;
 		} catch (ServiceException se) {
 			return null;
-		} catch (JsonProcessingException jpe) {
-			return null;
-		}
-	}
-
-	@RequestMapping(value = "/addUser", method = RequestMethod.POST)
-	public void addUser(@RequestBody User user) {
-		try {
-			userInfoService.insertUser(user);
-		} catch (ServiceException se) {
-
-		}
+		} 
 	}
 
 	@RequestMapping(value = "/updateUserBasicInfo", method = RequestMethod.POST)
-	public void updateUser(@RequestBody User user) throws ServiceException {
-		userInfoService.updateUserBasicInfo(user);
+	@ResponseBody
+	public String updateUserBasicInfo(HttpServletRequest request, @RequestBody UserBasicInfoVO userBasicInfoVO)
+			throws ControllerException {
+		request.setAttribute(USER_ID, 1);
+		try {
+			JsonBuilder result = new JsonBuilder();
+			User user = new User();
+			user.setUserId((Integer) request.getAttribute(USER_ID));
+			userBasicInfoVO.populateUser(user);
+			userInfoService.updateUserBasicInfo(user);
+			result.append("errno", 0);
+			return result.build();
+		} catch (ServiceException se) {
+			logger.error("error updating basic info for target user, userId:" + request.getAttribute(USER_ID), se);
+			throw new ControllerException("error updating basic info for target user", se);
+		}
 	}
 
 	@RequestMapping(value = "/getUserPersonality", method = RequestMethod.GET)
@@ -74,24 +76,19 @@ public class UserController {
 	@ResponseBody
 	public String addUserPersonality(HttpServletRequest request, @RequestBody QuestionnaireVO questionnaireVO)
 			throws ControllerException, JsonProcessingException {
-		JsonBuilder result = new JsonBuilder();
 		request.setAttribute(USER_ID, 1);
 		try {
+			JsonBuilder result = new JsonBuilder();
 			Personality personality = new Personality();
 			personality.setUserId((Integer) request.getAttribute(USER_ID));
 			questionnaireVO.populatePersonality(personality);
 			userInfoService.insertUserPersonality(personality);
 			result.append("errno", 0);
-			
+			return result.build();
 		} catch (ServiceException se) {
 			logger.error("error add user personality", se);
 			throw new ControllerException("Can not upload questionnaire", se);
-			/*
-			 * result.put("errno", 1); result.put("message",
-			 * "Can not upload questionnaire, " + se.getMessage());
-			 */
 		}
-		return result.build();
 	}
 
 	@RequestMapping(value = "/updateUserPersonality", method = RequestMethod.POST)
@@ -112,6 +109,6 @@ public class UserController {
 		logger.error("Request: " + req.getRequestURL() + " raised " + exception);
 		JsonBuilder result = new JsonBuilder();
 		result.append("errno", 1).append("message", exception.getMessage());
-		return result.build(); 
+		return result.build();
 	}
 }

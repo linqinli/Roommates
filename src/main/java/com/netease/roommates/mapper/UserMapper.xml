@@ -39,11 +39,11 @@
 			<if test="company != null">
 				company = #{company, jdbcType=VARCHAR},
 			</if>
-			<if test="address != null">
-				address = #{address, jdbcType=VARCHAR},
+			<if test="birthday != null">
+				birthday = #{birthday, jdbcType=DATE},
 			</if>
-			<if test="department != null">
-				department = #{department, jdbcType=VARCHAR},
+			<if test="status != null">
+				status = #{status, jdbcType=BIT},
 			</if>
 			updateTime = now()
 		</set>

@@ -3,15 +3,13 @@ package com.netease.roommates.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,6 +18,7 @@ import com.netease.common.service.impl.CheckWord;
 import com.netease.common.service.impl.DefaultMailSender;
 import com.netease.common.service.impl.emailAddress;
 import com.netease.roommates.po.User;
+import com.netease.roommates.vo.LoginAndRegisterUserVO;
 import com.netease.user.service.IUserInfoService;
 import com.netease.utils.HashGeneratorUtils;
 
@@ -40,7 +39,7 @@ public class RegisterController {
 	
 	@RequestMapping(value="/register/check")
 	@ResponseBody
-	public Map<String, Object> check(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public Map<String, Object> check(HttpServletRequest request, HttpServletResponse response) throws Exception{		
 		Map<String, Object> info = new HashMap<String, Object>();
 		HttpSession session= request.getSession();
 		if(session==null){
@@ -83,15 +82,15 @@ public class RegisterController {
 	}
 	
 	
-	@RequestMapping(value="/register")
+	@RequestMapping(value="/register", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> registercheck(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public Map<String, Object> registercheck(HttpServletRequest request, @RequestBody LoginAndRegisterUserVO g_user) throws Exception{
 		Map<String, Object> info = new HashMap<String, Object>();
 		request.setCharacterEncoding("utf-8");
 		
-		String p_name=request.getParameter("nickname");
-		String p_password=request.getParameter("password");
-		String p_email=request.getParameter("email");
+		String p_name = g_user.getNickname();
+		String p_email = g_user.getEmail();
+		String p_password = g_user.getPassword();
 		System.out.println(p_name+"+"+p_email);
 		if(CheckWord.check(p_name) || CheckWord.check(p_password) || CheckWord.check(p_email)){		
 			info.put("result", 0);
