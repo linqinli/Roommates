@@ -21,7 +21,6 @@ import com.netease.roommates.vo.MatchUserDetailInfo;
 import com.netease.roommates.vo.MatchUserSimpleInfo;
 import com.netease.user.service.IUserHouseService;
 import com.netease.user.service.IUserInfoService;
-import com.netease.user.service.impl.UserHouseService;
 
 @Controller
 @RequestMapping("/api")
@@ -49,7 +48,11 @@ public class MatchController {
 		User user = userInfoService.getUserById(id);
 		MatchPersonality matchPersonality = new MatchPersonality(user);
 		// matchPernality.selectUserByCondition(xb, f, gs, cy, cw, zx, ws, xg, fk);
-		List<Integer> userIdList = matchPersonality.selectUserIdByCondition(xb, f, gs, cy, cw, zx, ws, xg, fk);
+		String sqlString = matchPersonality.generateSqlStringByCondition(xb, f, gs, cy, cw, zx, ws, xg, fk);
+		
+		// List<Integer> userIdList = matchPersonality.selectUserIdByCondition(xb, f, gs, cy, cw, zx, ws, xg, fk);
+		List<Integer> userIdList = (List<Integer>)jdbcTemplate.queryForList(sqlString, Integer.class);;
+		
 		List<User> users = new ArrayList<User>();
 		for( int i=0; i<userIdList.size(); ++i){
 			User tempUser = userInfoService.getUserById(userIdList.get(i));
@@ -57,14 +60,6 @@ public class MatchController {
 		}
 		List<MatchUserSimpleInfo> userMatchList = matchPersonality.matchResultSimpleInfo(users);
 		
-		for(int i=0; i<userMatchList.size(); ++i){
-			if(userHouseService.getUserHouseById(userMatchList.get(i).getUserId()) != null){
-				userMatchList.get(i).setHasHouse(true);
-			}
-			else userMatchList.get(i).setHasHouse(false);
-		}
-		// matchDataHandler = new MatchDataHandler();
-		// matchDataHandler.selectUserByCondition(xb, f, gs, cy, cw, zx, ws, xg, fk);
 		Map resultMap = new HashMap<String, Object >();
 		
 		resultMap.put("data", userMatchList);
@@ -75,15 +70,14 @@ public class MatchController {
 	@RequestMapping(value = "/people/all")
 	@ResponseBody
 	public List showAllPeople() throws ServiceException {
-		List userList = jdbcTemplate.queryForList("select * from sys_user");
+		List userList = jdbcTemplate.queryForList("select * from user_personality");
 		return userList;//matchPernality.matchResultTest();
 	}
 	
 	@RequestMapping(value = "/people/detail/{id}")
 	@ResponseBody
-	public MatchUserDetailInfo matchPeopleList(@PathVariable int id) throws ServiceException {
+	public Map matchPeopleList(@PathVariable int id) throws ServiceException {
 		User user = userInfoService.getUserById(id);
-		UserHouse userHouse = userHouseService.getUserHouseById(id);
 		MatchUserDetailInfo matchUserDetailInfo =  new MatchUserDetailInfo();
 		
 		matchUserDetailInfo.setUserId(user.getUserId());
@@ -91,13 +85,21 @@ public class MatchController {
 		matchUserDetailInfo.setNickName(user.getNickName());
 		matchUserDetailInfo.setGender(user.getGender());
 		matchUserDetailInfo.setCompany(user.getCompany());
-		matchUserDetailInfo.setHouse(userHouse);
 		matchUserDetailInfo.setTel(user.getPhoneNumber());
+		if(user.getPersonality()!=null){
+			if(user.getPersonality().getHasHouse()==1){
+				matchUserDetailInfo.setHasHouse(true);
+				UserHouse userHouse = userHouseService.getUserHouseById(user.getUserId());
+				matchUserDetailInfo.setHouse(userHouse);
+			}
+			else matchUserDetailInfo.setHasHouse(true);
+		}
 		
-		if(userHouse==null) matchUserDetailInfo.setHasHouse(false);
-		else matchUserDetailInfo.setHasHouse(true);
+		Map matchDetailMap = new HashMap<String, Object>();
+		matchDetailMap.put("data", matchUserDetailInfo);
+		matchDetailMap.put("errno", 0);
 		
-		return matchUserDetailInfo;//matchPernality.matchResultTest();
+		return matchDetailMap;//matchPernality.matchResultTest();
 	}
 
 	

@@ -6,8 +6,6 @@ import com.netease.exception.ServiceException;
 import com.netease.roommates.po.User;
 import com.netease.roommates.vo.MatchUserSimpleInfo;
 import com.netease.roommates.po.Personality;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 public class MatchPersonality {
 	private User curUser;
@@ -27,11 +25,15 @@ public class MatchPersonality {
 		for(int i=0; i<users.size(); ++i){
 			User user = users.get(i);
 			MatchScoreAndMessage matchScoreAndMessage = new MatchScoreAndMessage();
+			MatchUserSimpleInfo userTmpInfo = userInfoToMatchUserSimpleInfo(user);
+			userTmpInfo.setHasHouse(false);
 			if(this.curUser.getPersonality()!=null && user.getPersonality()!=null){
+				
 				matchScoreAndMessage = getSimilarityBetweenTwoPersonality(
 						this.curUser.getPersonality(), user.getPersonality());
 			}
-			MatchUserSimpleInfo userTmpInfo = userInfoToMatchUserSimpleInfo(user);
+			if(user.getPersonality()!=null) userTmpInfo.setHasHouse(user.getPersonality().getHasHouse()==1);
+			
 			userTmpInfo.setMatchScore(matchScoreAndMessage.matchScore);
 			userTmpInfo.setMatchMessage(matchScoreAndMessage.matchMessage);
 			matchUserInfo.add(userTmpInfo);
@@ -54,31 +56,18 @@ public class MatchPersonality {
 		this.curUser = curUser;
 	}
 	
-	public List<Integer> selectUserIdByCondition(int xb, int f, int gs, int cy, int cw,
+	public String generateSqlStringByCondition(int xb, int f, int gs, int cy, int cw,
 			int zx, int ws, int xg, int fk){
 		String selectSqlString = "";
 		
-		DriverManagerDataSource dataSource = new DriverManagerDataSource();
-		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-		dataSource.setUrl("jdbc:mysql://223.252.223.13:3306/roommates");
-		dataSource.setUsername("hznetease");
-		dataSource.setPassword("hz12345");
-		JdbcTemplate jdbcTemplate = new JdbcTemplate();
-		jdbcTemplate.setDataSource(dataSource);
 		if(xb*f*gs*cy*cw*zx*ws*xg*fk == 1){
 			selectSqlString = "select userId from sys_user";
 		}
-		else if(cy*cw*zx*ws*xg*fk == 1){
+		else if(f*cy*cw*zx*ws*xg*fk == 1){
 			selectSqlString = "select userId from sys_user where";
 			switch(xb){
 			case 2: selectSqlString += " gender=0 and"; break;
 			case 3: selectSqlString += " gender=1 and"; break;
-			default: break;
-			}
-			
-			switch(f){
-			case 2: selectSqlString += " house=2 and"; break;
-			case 3: selectSqlString += " house=3 and"; break;
 			default: break;
 			}
 			
@@ -105,61 +94,61 @@ public class MatchPersonality {
 					+ "on s.userId = p.userId where";
 			
 			switch(xb){
-			case 2: selectSqlString += " gender=0 and"; break;
-			case 3: selectSqlString += " gender=1 and"; break;
+			case 2: selectSqlString += " s.gender=0 and"; break;
+			case 3: selectSqlString += " s.gender=1 and"; break;
 			default: break;
 			}
 			
 			switch(f){
-			case 2: selectSqlString += " house=2 and"; break;
-			case 3: selectSqlString += " house=3 and"; break;
+			case 2: selectSqlString += " p.hasHouse=1 and"; break;
+			case 3: selectSqlString += " p.hasHouse=0 and"; break;
 			default: break;
 			}
 			
 			switch(gs){
-			case 2: selectSqlString += " company=2 and"; break;
-			case 3: selectSqlString += " company=3 and"; break;
-			case 4: selectSqlString += " company=4 and"; break;
-			case 5: selectSqlString += " company=5 and"; break;
-			case 6: selectSqlString += " company=6 and"; break;
+			case 2: selectSqlString += " s.company=2 and"; break;
+			case 3: selectSqlString += " s.company=3 and"; break;
+			case 4: selectSqlString += " s.company=4 and"; break;
+			case 5: selectSqlString += " s.company=5 and"; break;
+			case 6: selectSqlString += " s.company=6 and"; break;
 			default: break;
 			}
 			switch(cy){
-			case 2: selectSqlString += " smoking=1 and"; break;
-			case 3: selectSqlString += " smoking=2 and"; break;
-			case 4: selectSqlString += " smoking=3 and"; break;
+			case 2: selectSqlString += " p.smoking=1 and"; break;
+			case 3: selectSqlString += " p.smoking=2 and"; break;
+			case 4: selectSqlString += " p.smoking=3 and"; break;
 			default: break;
 			}
 
 			switch(cw){
-			case 2: selectSqlString += " pet=1 and"; break;
-			case 3: selectSqlString += " pet=2 and"; break;
-			case 4: selectSqlString += " pet=3 and"; break;
+			case 2: selectSqlString += " p.pet=1 and"; break;
+			case 3: selectSqlString += " p.pet=2 and"; break;
+			case 4: selectSqlString += " p.pet=3 and"; break;
 			default: break;
 			}
 
 			switch(zx){
-			case 2: selectSqlString += " dailySchedule=1 and"; break;
-			case 3: selectSqlString += " dailySchedule=2 and"; break;
-			case 4: selectSqlString += " dailySchedule=3 and"; break;
+			case 2: selectSqlString += " p.dailySchedule=1 and"; break;
+			case 3: selectSqlString += " p.dailySchedule=2 and"; break;
+			case 4: selectSqlString += " p.dailySchedule=3 and"; break;
 			default: break;
 			}
 			switch(ws){
-			case 2: selectSqlString += " cleanliness=1 and"; break;
-			case 3: selectSqlString += " cleanliness=2 and"; break;
-			case 4: selectSqlString += " cleanliness=3 and"; break;
+			case 2: selectSqlString += " p.cleanliness=1 and"; break;
+			case 3: selectSqlString += " p.cleanliness=2 and"; break;
+			case 4: selectSqlString += " p.cleanliness=3 and"; break;
 			default: break;
 			}
 			switch(xg){
-			case 2: selectSqlString += " personCharacter=1 and"; break;
-			case 3: selectSqlString += " personCharacter=2 and"; break;
-			case 4: selectSqlString += " personCharacter=3 and"; break;
+			case 2: selectSqlString += " p.personCharacter=1 and"; break;
+			case 3: selectSqlString += " p.personCharacter=2 and"; break;
+			case 4: selectSqlString += " p.personCharacter=3 and"; break;
 			default: break;
 			}
 			switch(fk){
-			case 2: selectSqlString += " visitor=1 and"; break;
-			case 3: selectSqlString += " visitor=2 and"; break;
-			case 4: selectSqlString += " visitor=3 and"; break;
+			case 2: selectSqlString += " p.visitor=1 and"; break;
+			case 3: selectSqlString += " p.visitor=2 and"; break;
+			case 4: selectSqlString += " p.visitor=3 and"; break;
 			default: break;
 			}
 			
@@ -172,12 +161,7 @@ public class MatchPersonality {
 			}
 		}
 		
-		// userList = (List<User>)jdbcTemplate.queryForList(selectSqlString,User.class);
-		
-		List<Integer> userIdList= (List<Integer>)jdbcTemplate.queryForList(selectSqlString, Integer.class);
-		
-		
-		return userIdList;
+		return selectSqlString;
 	}
 	
 	// 通过问卷选项，计算两用户行为偏好的匹配得分
