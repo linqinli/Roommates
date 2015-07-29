@@ -1,22 +1,22 @@
 package com.netease.common.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class emailAddress {
-	private static List<Pattern> emailPattern = new ArrayList<Pattern>();
+	private static Map<Pattern, String> emailPattern = new HashMap<Pattern, String>();
 	static{
 		Pattern neteaseEmail = Pattern.compile(".*@corp.netease.com");
 		Pattern alibabaEmail = Pattern.compile(".*@alibaba-inc.com");
-		emailPattern.add(neteaseEmail);
-		emailPattern.add(alibabaEmail);
+		emailPattern.put(neteaseEmail, "网易");
+		emailPattern.put(alibabaEmail, "阿里巴巴");
 	}
 	
 	public static boolean emailCheck(String email){
 		boolean flag = false;
-		for(Pattern pattern : emailPattern){
+		for(Pattern pattern : emailPattern.keySet()){
 			Matcher matcher = pattern.matcher(email);
 			if(matcher.matches()){
 				flag=true;
@@ -25,5 +25,16 @@ public class emailAddress {
 		}
 		
 		return flag;
+	}
+	
+	public static String getCompany(String email){
+		for(Pattern pattern : emailPattern.keySet()){
+			Matcher matcher = pattern.matcher(email);
+			if(matcher.matches()){
+				return emailPattern.get(pattern);
+			}
+		}
+		
+		return null;
 	}
 }

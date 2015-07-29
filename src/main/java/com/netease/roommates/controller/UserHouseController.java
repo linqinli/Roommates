@@ -87,9 +87,9 @@ public class UserHouseController {
 	 */
 	@RequestMapping(value = "/insert", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,String> insertUserHouse(BatchPhotoModel model) throws ServiceException {
+	public Map<String,Object> insertUserHouse(BatchPhotoModel model) throws ServiceException {
 		
-		Map<String, String> result = new HashMap<String, String>();//
+		Map<String, Object> result = new HashMap<String, Object>();//
 		
 		Integer userId = model.getUserId();
 		
@@ -101,7 +101,7 @@ public class UserHouseController {
 			if(!path.exists()){
 				path.mkdirs();
 			}
-			for(int i=0;i<files.size();i++){
+			for(int i=0; files!=null && i<files.size();i++){
 				
 				MultipartFile file = files.get(i);
 				if (!file.isEmpty()) {
@@ -144,7 +144,8 @@ public class UserHouseController {
 			logger.error("Error insert house, userId:" + userId, e);
 			
 			result.put("errno", "1");
-			result.put("message", "保存用户信息失败");
+			result.put("message", "保存用户信息失败" + e.getMessage());
+			result.put("data", uhouse);
 		}
 		return result;
 	}

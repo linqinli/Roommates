@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,19 +48,19 @@ public class UserController {
 
 	@ResponseBody
 	@RequestMapping(value = "/updateUserBasicInfo", method = RequestMethod.POST)
-	public String updateUserBasicInfo(HttpServletRequest request, @RequestBody UserBasicInfoVO userBasicInfoVO)
+	public String updateUserBasicInfo(HttpSession session, @RequestBody UserBasicInfoVO userBasicInfoVO)
 			throws ControllerException {
-		request.setAttribute(USER_ID, 1);
+		session.setAttribute(USER_ID, 1);
 		try {
 			JsonBuilder result = new JsonBuilder();
 			User user = new User();
-			user.setUserId((Integer) request.getAttribute(USER_ID));
+			user.setUserId((Integer) session.getAttribute(USER_ID));
 			userBasicInfoVO.populateUser(user);
 			userInfoService.updateUserBasicInfo(user);
 			result.append("errno", 0);
 			return result.build();
 		} catch (ServiceException se) {
-			logger.error("error updating basic info for target user, userId:" + request.getAttribute(USER_ID), se);
+			logger.error("error updating basic info for target user, userId:" + session.getAttribute(USER_ID), se);
 			throw new ControllerException("error updating basic info for target user", se);
 		}
 	}
@@ -72,13 +73,13 @@ public class UserController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/quiz", method = RequestMethod.POST)
-	public String addUserPersonality(HttpServletRequest request, @RequestBody QuestionnaireVO questionnaireVO)
+	public String addUserPersonality(HttpSession session, @RequestBody QuestionnaireVO questionnaireVO)
 			throws ControllerException, JsonProcessingException {
-		request.setAttribute(USER_ID, 1);
+		session.setAttribute(USER_ID, 1);
 		try {
 			JsonBuilder result = new JsonBuilder();
 			Personality personality = new Personality();
-			personality.setUserId((Integer) request.getAttribute(USER_ID));
+			personality.setUserId((Integer) session.getAttribute(USER_ID));
 			questionnaireVO.populatePersonality(personality);
 			userInfoService.insertUserPersonality(personality);
 			result.append("errno", 0);
