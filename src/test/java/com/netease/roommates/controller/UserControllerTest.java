@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.servlet.http.HttpSession;
 
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -17,10 +18,14 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.netease.exception.ControllerException;
 import com.netease.exception.ServiceException;
 import com.netease.roommates.po.Personality;
 import com.netease.roommates.po.User;
+import com.netease.roommates.vo.QuestionnaireVO;
+import com.netease.roommates.vo.UserBasicInfoVO;
 import com.netease.user.service.IUserInfoService;
 
 public class UserControllerTest {
@@ -54,7 +59,15 @@ public class UserControllerTest {
 		verify(userInfoService).getUserPersonality(1);
 		assertEquals(personality.getUserId(), personality2.getUserId());
 	}
-
+	
+	@Test
+	public void testUpdateUserBasicInfo() throws ControllerException {
+		HttpSession session = mock(HttpSession.class);
+		when(session.getAttribute("userId")).thenReturn(1);
+		String result = userController.updateUserBasicInfo(session, new UserBasicInfoVO());
+		assertEquals(result, "{\"errno\":0}");
+	}
+	
 	@Test
 	public void testGetUserListByAddress() throws ServiceException, UnsupportedEncodingException {
 		String address = "Address:Wall Street";
@@ -70,6 +83,14 @@ public class UserControllerTest {
 			assertEqualUser(user1, user2);
 		}
 
+	}
+	
+	@Test
+	public void testAddUserPersonality() throws JsonProcessingException, ControllerException {
+		HttpSession session = mock(HttpSession.class);
+		when(session.getAttribute("userId")).thenReturn(1);
+		String result = userController.addUserPersonality(session, new QuestionnaireVO());
+		assertEquals(result, "{\"errno\":0}");
 	}
 	
 	private void assertEqualUser(User u1, User u2) {

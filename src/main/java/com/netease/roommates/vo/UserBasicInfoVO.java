@@ -76,10 +76,12 @@ public class UserBasicInfoVO {
 	public void populateUser(User user) {
 		user.setStatus(lookstatus);
 		user.setNickName(name);
-		user.setGender((byte) (sex.equals("男") ? 0 : 1));
 		user.setBirthday(birth);
 		user.setPhoneNumber(phone);
 		user.setCompany(company);
 		user.setPosition(job);
+		if(sex != null) {
+			user.setGender((byte) (sex.equals("男") ? 0 : 1));
+		}
 	}
 }
