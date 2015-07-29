@@ -159,9 +159,9 @@ public class UserHouseController {
 	 */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,String> updateUserHouse(BatchPhotoModel model) throws ServiceException {
+	public Map<String,Object> updateUserHouse(BatchPhotoModel model) throws ServiceException {
 		
-		Map<String, String> result = new HashMap<String, String>();
+		Map<String, Object> result = new HashMap<String, Object>();
 		
 		Integer userId = model.getUserId();
 		if("".equals(userId)||userId==null){
@@ -183,6 +183,7 @@ public class UserHouseController {
 		try{
 			userHouseService.updateUserHouseInfo(uhouse);
 			result.put("errno", "0");
+			result.put("data", uhouse);
 			return result;
 			
 		}catch(Exception e){
@@ -190,7 +191,6 @@ public class UserHouseController {
 			
 			result.put("errno", "1");
 			result.put("message", "更新房源信息失败");
-			
 		}
 		return result;
 	}
