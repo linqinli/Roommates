@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.netease.common.service.impl.CheckWord;
 import com.netease.common.service.impl.emailAddress;
+import com.netease.roommates.po.Personality;
 import com.netease.roommates.po.User;
 import com.netease.roommates.vo.LoginAndRegisterUserVO;
 import com.netease.user.service.IUserInfoService;
@@ -89,25 +90,42 @@ public class LoginController {
 			if(user.getPwdMD5Hash().equals(HashGeneratorUtils.generateSaltMD5(p_password))){
 				info.put("result", 1);
 				info.put("info", "登录成功");
-				info.put("userId", user.getUserId());
 				request.getSession(true);
 				request.getSession().setAttribute("userId",user.getUserId());
 				request.getSession().setAttribute("isChecked",true);
 				boolean isInfoAll = (user.getUserName()!=null&&user.getPhoneNumber()!=null&&user.getBirthday()!=null&&user.getAddress()!=null&&user.getPosition()!=null);
-				if(isInfoAll)
-					info.put("isInfoAll", 1);
-				else
-					info.put("isInfoAll", 0);
 				int isQuestionnaireAll = userInfoService.isQuestionnaireAll(user.getUserId());
 				String credit = "低等信用";
 				String headImgUrl = "http://223.252.223.13/Roommates/photo/photo_" + user.getUserId() + "_small.jpg";
-				info.put("isQuestionnaireAll", isQuestionnaireAll);
-				info.put("credit", credit);
-				info.put("headImgUrl", headImgUrl);
-				System.out.println(user);
+				Personality personality = userInfoService.getUserPersonality(user.getUserId());
 				
-				Map<String, String> dataMap = new HashMap<String, String>();
-				dataMap.put("lookStatus", "");
+				
+				Map<String, Object> dataMap = new HashMap<String, Object>();
+				dataMap.put("userId", user.getUserId());
+				dataMap.put("lookStatus",user.getStatus());
+				dataMap.put("birth", user.getBirthday());
+				dataMap.put("name", user.getNickName());
+				dataMap.put("sex", user.getGender());
+				dataMap.put("company", user.getCompany());
+				dataMap.put("job", user.getPosition());
+				dataMap.put("phone", user.getPhoneNumber());
+				dataMap.put("completeAsk", isQuestionnaireAll);
+				dataMap.put("credit", credit);
+				dataMap.put("headUrl", headImgUrl);
+				if(personality==null)
+					dataMap.put("hasHouse",0);
+				else{
+					if(personality.getHasHouse()==2)
+						dataMap.put("hasHouse",1);
+					else
+						dataMap.put("hasHouse",0);
+				}
+				if(isInfoAll)
+					dataMap.put("completeInfo", 1);
+				else
+					dataMap.put("completeInfo", 0);
+				
+				info.put("data", dataMap);
 			
 				return info;
 			}
