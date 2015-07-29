@@ -6,9 +6,9 @@
 	
 	<insert id="insertUser" useGeneratedKeys="true" keyProperty="userId" parameterType="user">
 		insert into sys_user(userName, pwdMD5Hash, nickName, gender, companyEmail, phoneNumber,
-			birthday, address, updateTime, company, position, department)
+			birthday, address, updateTime, company, position)
 		values(#{userName}, #{pwdMD5Hash}, #{nickName}, #{gender}, #{companyEmail}, #{phoneNumber},
-		 	#{birthday}, #{address}, now(), #{company}, #{position}, #{department})
+		 	#{birthday}, #{address}, now(), #{company}, #{position})
 	</insert>
 	
 	<select id="getUserById" parameterType="int" resultType="user">
@@ -41,9 +41,6 @@
 			</if>
 			<if test="address != null">
 				address = #{address, jdbcType=VARCHAR},
-			</if>
-			<if test="department != null">
-				department = #{department, jdbcType=VARCHAR},
 			</if>
 			updateTime = now()
 		</set>
@@ -95,11 +92,23 @@
 	</select>
 
 
-	<select id="getUserByName" parameterType="String" resultType="user">
+	<select id = "getUserByName" parameterType = "String" resultType = "user">
 		select * from sys_user where nickName=#{name}
 	</select>
 	
-	<select id="getUserByEmail" parameterType="String" resultType="user">
+	<select id = "getUserByEmail" parameterType = "String" resultType = "user">
 		select * from sys_user where companyEmail=#{email}
 	</select>
+	
+	<select id = "isInfoAll" parameterType = "int" resultType = "int">
+		select count(*) from sys_user where userId=#{userId} and userName!=null and phoneNumber!=null 
+		and birthday!=null and address!=null and company!=null and position!=null
+
+	</select>
+	
+	<select id = "isQuestionnaireAll" parameterType = "int" resultType = "int">
+		select count(*) from user_personality where userId=#{userId} and (hasHouse!=1 or smoking!=1
+		and pet!=1 or dailySchedule!=1 or visitor!=1 or cleanliness!=1 or personCharacter!=1)
+	</select>
+	
 </mapper>
