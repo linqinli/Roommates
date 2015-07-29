@@ -49,7 +49,7 @@
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<!-- 设置上传文件的最大尺寸为100KB -->
 		<property name="maxUploadSize">
-			<value>102400</value>
+			<value>1024000</value>
 		</property>
 	</bean>
 	
