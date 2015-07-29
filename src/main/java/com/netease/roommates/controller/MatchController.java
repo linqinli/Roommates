@@ -57,6 +57,12 @@ public class MatchController {
 		}
 		List<MatchUserSimpleInfo> userMatchList = matchPersonality.matchResultSimpleInfo(users);
 		
+		for(int i=0; i<userMatchList.size(); ++i){
+			if(userHouseService.getUserHouseById(userMatchList.get(i).getUserId()) != null){
+				userMatchList.get(i).setHasHouse(true);
+			}
+			else userMatchList.get(i).setHasHouse(false);
+		}
 		// matchDataHandler = new MatchDataHandler();
 		// matchDataHandler.selectUserByCondition(xb, f, gs, cy, cw, zx, ws, xg, fk);
 		Map resultMap = new HashMap<String, Object >();
