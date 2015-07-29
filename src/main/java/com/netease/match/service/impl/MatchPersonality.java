@@ -389,7 +389,9 @@ public class MatchPersonality {
 		matchUserInfo.setJob(user.getCompany()+user.getPosition());
 		matchUserInfo.setGender(user.getGender());
 		matchUserInfo.setNickName(user.getNickName());
-		matchUserInfo.setPhotoId(user.getUserId(), 0);
+		
+		// matchUserInfo.setPhotoId(user.getUserId(), 0);
+		matchUserInfo.setPhotoId(123, 0);
 		matchUserInfo.setUserId(user.getUserId());
 		matchUserInfo.setAge(dateToAge(user.getBirthday()));
 		return matchUserInfo;

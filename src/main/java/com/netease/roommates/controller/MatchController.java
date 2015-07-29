@@ -92,6 +92,10 @@ public class MatchController {
 		matchUserDetailInfo.setGender(user.getGender());
 		matchUserDetailInfo.setCompany(user.getCompany());
 		matchUserDetailInfo.setHouse(userHouse);
+		matchUserDetailInfo.setTel(user.getPhoneNumber());
+		
+		if(userHouse==null) matchUserDetailInfo.setHasHouse(false);
+		else matchUserDetailInfo.setHasHouse(true);
 		
 		return matchUserDetailInfo;//matchPernality.matchResultTest();
 	}

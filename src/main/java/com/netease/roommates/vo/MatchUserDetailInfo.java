@@ -14,6 +14,7 @@ public class MatchUserDetailInfo {
 	private String gender;
 	private List<String> tags;
 	private String tel;
+	private boolean hasHouse;
 	private UserHouse house;
 	public int getUserId() {
 		return userId;
@@ -78,5 +79,11 @@ public class MatchUserDetailInfo {
 	}
 	public void setHouse(UserHouse house) {
 		this.house = house;
+	}
+	public boolean isHasHouse() {
+		return hasHouse;
+	}
+	public void setHasHouse(boolean hasHouse) {
+		this.hasHouse = hasHouse;
 	}
 }
