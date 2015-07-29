@@ -1,8 +1,11 @@
 package com.netease.roommates.po;
 
+import java.util.List;
+
 public class UserHouse {
 	private int userId;
 	private String pictures;
+	private List<String> picList;//
 	private String title;
 	private String price;
 	private String community;
@@ -57,5 +60,11 @@ public class UserHouse {
 	}
 	public void setUpdateTime(String updateTime) {
 		this.updateTime = updateTime;
+	}
+	public List<String> getPicList() {
+		return picList;
+	}
+	public void setPicList(List<String> picList) {
+		this.picList = picList;
 	}
 }

@@ -40,4 +40,7 @@
 		</set>
 		where userId = #{userId}
 	</update>
+	<delete id="deleteUserHouse" parameterType="int">
+		delete from fn_house where userId = #{id}
+	</delete>
 </mapper>
