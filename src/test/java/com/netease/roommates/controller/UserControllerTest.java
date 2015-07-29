@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import javax.servlet.http.HttpServletRequest;
 
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -18,14 +17,10 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.netease.exception.ControllerException;
 import com.netease.exception.ServiceException;
 import com.netease.roommates.po.Personality;
 import com.netease.roommates.po.User;
-import com.netease.roommates.vo.QuestionnaireVO;
 import com.netease.user.service.IUserInfoService;
 
 public class UserControllerTest {
@@ -45,9 +40,7 @@ public class UserControllerTest {
 		User user = generateUser();
 		int userId = user.getUserId();
 		when(userInfoService.getUserById(userId)).thenReturn(user);
-		String userStr = userController.getUserById(userId);
-		ObjectMapper mapper = new ObjectMapper();
-		User user2 = mapper.readValue(userStr, User.class);
+		User user2 = userController.getUserById(userId);
 		verify(userInfoService).getUserById(userId);
 		assertEqualUser(user, user2);
 	}
