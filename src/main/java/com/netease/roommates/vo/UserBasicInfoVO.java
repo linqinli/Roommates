@@ -12,9 +12,9 @@ public class UserBasicInfoVO {
 	private String phone;
 	private String company;
 	private String job;
-	
+
 	public UserBasicInfoVO() {
-		
+
 	}
 
 	public byte getLookstatus() {
@@ -72,11 +72,11 @@ public class UserBasicInfoVO {
 	public void setJob(String job) {
 		this.job = job;
 	}
-	
+
 	public void populateUser(User user) {
 		user.setStatus(lookstatus);
 		user.setNickName(name);
-		user.setGender((byte)(sex.equals('男') ? 0 : 1));
+		user.setGender((byte) (sex.equals('男') ? 0 : 1));
 		user.setBirthday(birth);
 		user.setPhoneNumber(phone);
 		user.setCompany(company);
