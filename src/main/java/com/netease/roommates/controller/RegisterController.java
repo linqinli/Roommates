@@ -45,6 +45,7 @@ public class RegisterController {
 		if(session==null){
 			info.put("result", 0);
 			info.put("info", "超时");
+			return info;
 		}
 		else{
 			int p_userId = (Integer)session.getAttribute("userId");
@@ -129,13 +130,15 @@ public class RegisterController {
 		User user =new User();
 		user.setNickName(p_name);
 		user.setPwdMD5Hash(HashGeneratorUtils.generateSaltMD5(p_password));
+		user.setCompany(emailAddress.getCompany(p_email));
+		
 		
 		userInfoService.insertUser(user);
 		request.getSession(true);
 		List<User> userList = userInfoService.getUserByName(p_name);
 		User registerUser = null;
 		for(User n_user : userList)
-			if(HashGeneratorUtils.generateSaltMD5(p_password).equals(n_user.getPwdMD5Hash())){
+			if(HashGeneratorUtils.generateSaltMD5(p_password).equals(n_user.getPwdMD5Hash()) && emailAddress.getCompany(p_email).equals(n_user.getCompany())){
 				registerUser = n_user;
 				break;
 			}

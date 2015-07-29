@@ -1,7 +1,5 @@
 package com.netease.roommates.controller;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
@@ -95,7 +93,22 @@ public class LoginController {
 				request.getSession(true);
 				request.getSession().setAttribute("userId",user.getUserId());
 				request.getSession().setAttribute("isChecked",true);
-
+				boolean isInfoAll = (user.getUserName()!=null&&user.getPhoneNumber()!=null&&user.getBirthday()!=null&&user.getAddress()!=null&&user.getPosition()!=null);
+				if(isInfoAll)
+					info.put("isInfoAll", 1);
+				else
+					info.put("isInfoAll", 0);
+				int isQuestionnaireAll = userInfoService.isQuestionnaireAll(user.getUserId());
+				String credit = "低等信用";
+				String headImgUrl = "http://223.252.223.13/Roommates/photo/photo_" + user.getUserId() + "_small.jpg";
+				info.put("isQuestionnaireAll", isQuestionnaireAll);
+				info.put("credit", credit);
+				info.put("headImgUrl", headImgUrl);
+				System.out.println(user);
+				
+				Map<String, String> dataMap = new HashMap<String, String>();
+				dataMap.put("lookStatus", "");
+			
 				return info;
 			}
 			else{
