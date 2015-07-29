@@ -1,28 +1,20 @@
 package com.netease.roommates.vo;
 
-public class MatchUserInfo {
+public class MatchUserSimpleInfo {
 	private int userId;
-	private String userName;
 	private String photoId;
-	private byte gender;
 	private String nickName;
-	private String company;
-	private String job;
+	private String gender;
 	private int matchScore;
-	private String matchMessage;
+	private String job;
 	private int age;
+	private String matchMessage;
 	
 	public int getUserId() {
 		return userId;
 	}
 	public void setUserId(int userId) {
 		this.userId = userId;
-	}
-	public String getUserName() {
-		return userName;
-	}
-	public void setUserName(String userName) {
-		this.userName = userName;
 	}
 	public String getPhotoId() {
 		return photoId;
@@ -33,23 +25,18 @@ public class MatchUserInfo {
 		String suffix = ".jpg";
 		this.photoId = prefix + userid + suffix;
 	}
-	public byte getGender() {
+	public String getGender() {
 		return gender;
 	}
-	public void setGender(byte gender) {
-		this.gender = gender;
+	public void setGender(byte byteGender) {
+		if(byteGender == 0) this.gender = "男";
+		else this.gender = "女";
 	}
 	public String getNickName() {
 		return nickName;
 	}
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
-	}
-	public String getCompany() {
-		return company;
-	}
-	public void setCompany(String company) {
-		this.company = company;
 	}
 	public int getMatchScore() {
 		return matchScore;
@@ -74,9 +61,9 @@ public class MatchUserInfo {
 	
 	@Override
 	public String toString() {
-		return "MatchUserInfo [userId=" + userId + ", userName=" + userName + ", photoId=" + photoId + ", gender=" + gender
-				+ ", nickName=" + nickName + "company="+ company + "matchScore=" + matchScore + "matchMessage=" + 
-				matchMessage + "job=" + "]";
+		return "MatchUserInfo [userId=" + userId + ", photoId=" + photoId + ", gender=" + gender
+				+ ", nickName=" + nickName  + ", matchScore=" + matchScore + ", matchMessage=" + 
+				matchMessage + ", job=" + "]";
 	}
 	public int getAge() {
 		return age;

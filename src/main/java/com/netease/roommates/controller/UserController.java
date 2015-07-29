@@ -21,7 +21,7 @@ import com.netease.exception.ServiceException;
 import com.netease.match.service.impl.MatchPersonality;
 import com.netease.roommates.po.Personality;
 import com.netease.roommates.po.User;
-import com.netease.roommates.vo.MatchUserInfo;
+import com.netease.roommates.vo.MatchUserSimpleInfo;
 import com.netease.roommates.vo.QuestionnaireVO;
 import com.netease.roommates.vo.UserBasicInfoVO;
 import com.netease.user.service.IUserInfoService;
@@ -64,16 +64,6 @@ public class UserController {
 			logger.error("error updating basic info for target user, userId:" + request.getAttribute(USER_ID), se);
 			throw new ControllerException("error updating basic info for target user", se);
 		}
-	}
-
-	@RequestMapping(value = "/matchable")
-	@ResponseBody
-	public List<MatchUserInfo> matchable() throws ServiceException {
-		User user = new User();
-		user.setAddress("hangzhou");
-		user.setCompany("NetEase");
-		MatchPersonality matchPernality = new MatchPersonality(user);
-		return matchPernality.matchResultTest();
 	}
 
 	@RequestMapping(value = "/getUserPersonality", method = RequestMethod.GET)

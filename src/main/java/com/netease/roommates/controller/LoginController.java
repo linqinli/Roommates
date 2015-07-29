@@ -1,10 +1,10 @@
 package com.netease.roommates.controller;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
@@ -12,18 +12,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.netease.common.service.impl.CheckWord;
+import com.netease.common.service.impl.emailAddress;
+import com.netease.roommates.po.User;
+import com.netease.roommates.vo.LoginAndRegisterUserVO;
 import com.netease.user.service.IUserInfoService;
 import com.netease.utils.HashGeneratorUtils;
-import com.netease.common.service.MailSender;
-import com.netease.common.service.impl.CheckWord;
-import com.netease.common.service.impl.DefaultMailSender;
-import com.netease.common.service.impl.emailAddress;
-import com.netease.exception.HashGenerationException;
-import com.netease.exception.ServiceException;
-import com.netease.roommates.po.User;
 
 
 
@@ -35,7 +34,7 @@ public class LoginController {
 	private IUserInfoService userInfoService;
 	
 	@RequestMapping("/login/page")
-	public String loginPage() throws MessagingException{	
+	public String loginPage() throws MessagingException{
 		return "loginPage";
 	}
 	
@@ -49,9 +48,10 @@ public class LoginController {
 	}
 	
 	
-	@RequestMapping(value="/login")
+	@RequestMapping(value="/login", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> loginCheck(HttpServletRequest request, HttpServletResponse response) throws HashGenerationException, ServiceException{
+	public Map<String, Object> loginCheck(HttpServletRequest request, @RequestBody LoginAndRegisterUserVO g_user) throws Exception{
+	
 		Map<String, Object> info=new HashMap<String, Object>();
 		try {
 			request.setCharacterEncoding("utf-8");
@@ -59,8 +59,8 @@ public class LoginController {
 			e.printStackTrace();
 		}
 		
-		String p_email=request.getParameter("email");
-		String p_password=request.getParameter("password");
+		String p_email=g_user.getEmail();
+		String p_password=g_user.getPassword();
 		if(CheckWord.check(p_email) || CheckWord.check(p_password)){
 			info.put("result", 0);
 			info.put("info", "包含非法字符");

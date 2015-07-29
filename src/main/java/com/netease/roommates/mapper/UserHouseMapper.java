@@ -10,5 +10,5 @@ public interface UserHouseMapper {
 
 	public void updateUserHouseInfo(UserHouse user);
 
-	
+	public int deleteUserHouse(int id);
 }

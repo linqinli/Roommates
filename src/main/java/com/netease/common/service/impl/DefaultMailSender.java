@@ -67,7 +67,7 @@ public class DefaultMailSender implements MailSender {
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(receiver));
 
 			message.setSubject(subject);
-			message.setText(content);
+			message.setContent(content,"text/html;charset=UTF-8");
 			Transport.send(message);
 			logger.info("Sent message successfully....");
 		} catch (MessagingException mex) {

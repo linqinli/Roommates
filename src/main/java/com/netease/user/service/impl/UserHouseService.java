@@ -25,4 +25,10 @@ public class UserHouseService implements IUserHouseService {
 	public UserHouse getUserHouseById(int userId) throws ServiceException {
 		return uhouseMapper.getUserHouseById(userId);
 	}
+
+	@Override
+	public boolean deleteUserHouse(int userId) throws ServiceException {
+		uhouseMapper.deleteUserHouse(userId);
+		return true;
+	}
 }

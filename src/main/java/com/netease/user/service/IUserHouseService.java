@@ -10,4 +10,6 @@ public interface IUserHouseService {
 	public void insertUserHouse(UserHouse uhouse) throws ServiceException;
 	
 	public UserHouse getUserHouseById(int userId) throws ServiceException;
+	
+	public boolean deleteUserHouse(int userId) throws ServiceException;
 }

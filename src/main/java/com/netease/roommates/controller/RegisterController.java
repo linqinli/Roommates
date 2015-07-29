@@ -3,15 +3,13 @@ package com.netease.roommates.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,6 +18,7 @@ import com.netease.common.service.impl.CheckWord;
 import com.netease.common.service.impl.DefaultMailSender;
 import com.netease.common.service.impl.emailAddress;
 import com.netease.roommates.po.User;
+import com.netease.roommates.vo.LoginAndRegisterUserVO;
 import com.netease.user.service.IUserInfoService;
 import com.netease.utils.HashGeneratorUtils;
 
@@ -37,9 +36,10 @@ public class RegisterController {
 	public String loginPage(){
 		return "register";
 	}
+	
 	@RequestMapping(value="/register/check")
 	@ResponseBody
-	public Map<String, Object> check(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public Map<String, Object> check(HttpServletRequest request, HttpServletResponse response) throws Exception{		
 		Map<String, Object> info = new HashMap<String, Object>();
 		HttpSession session= request.getSession();
 		if(session==null){
@@ -82,15 +82,15 @@ public class RegisterController {
 	}
 	
 	
-	@RequestMapping(value="/register")
+	@RequestMapping(value="/register", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> registercheck(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public Map<String, Object> registercheck(HttpServletRequest request, @RequestBody LoginAndRegisterUserVO g_user) throws Exception{
 		Map<String, Object> info = new HashMap<String, Object>();
 		request.setCharacterEncoding("utf-8");
 		
-		String p_name=request.getParameter("nickname");
-		String p_password=request.getParameter("password");
-		String p_email=request.getParameter("email");
+		String p_name = g_user.getNickname();
+		String p_email = g_user.getEmail();
+		String p_password = g_user.getPassword();
 		System.out.println(p_name+"+"+p_email);
 		if(CheckWord.check(p_name) || CheckWord.check(p_password) || CheckWord.check(p_email)){		
 			info.put("result", 0);
@@ -153,11 +153,14 @@ public class RegisterController {
 		info.put("userId", userId);
 		
 		
-		String mailString="这是验证邮件，请访问如下网址：";
-		mailString = mailString + "http://223.252.223.13/Roommates/api/register/usercheck";
-		mailString = mailString + "?checkid=" + (userId+"");
-		mailString = mailString + "&checkemail=" + p_email;
-		mailString = mailString + "&checkname=" + HashGeneratorUtils.generateSaltMD5(p_name);
+		StringBuffer mailstring = new StringBuffer("这是验证邮件，请访问如下网址：<br/><a href=");
+		StringBuffer stringbuffer = new StringBuffer("http://223.252.223.13/Roommates/api/register/usercheck");
+		stringbuffer.append("?checkid=" + userId);
+		stringbuffer.append("&checkemail=" + p_email);
+		stringbuffer.append("&checkname=" + HashGeneratorUtils.generateSaltMD5(p_name));
+		mailstring.append(stringbuffer+">"+stringbuffer+"</a>");
+		String mailString = mailstring.toString();
+		
 		MailSender mailsender = new DefaultMailSender();
 		mailsender.setReceiver(p_email);
 		mailsender.setSubject("验证邮件");
