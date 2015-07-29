@@ -26,3 +26,6 @@ src/main/webapp/
 
 # DB Settings
 src/main/resources/db.properties
+
+# Test-Output
+test-output/
