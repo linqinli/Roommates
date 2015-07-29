@@ -32,12 +32,12 @@ public class RegisterController {
 	@Autowired
 	private IUserInfoService userInfoService;
 	
-	/*
+	
 	@RequestMapping("/register/page")
 	public String loginPage(){
 		return "register";
 	}
-	*/
+	
 	@RequestMapping(value="/register/check")
 	@ResponseBody
 	public Map<String, Object> check(HttpServletRequest request, HttpServletResponse response) throws Exception{
@@ -48,7 +48,7 @@ public class RegisterController {
 			info.put("info", "超时");
 		}
 		else{
-			int p_userId = (int)session.getAttribute("userId");
+			int p_userId = (Integer)session.getAttribute("userId");
 			System.out.println(p_userId+"");
 			User user = userInfoService.getUserById(p_userId);
 			if(user==null ||  user.getCompanyEmail()==null || user.getCompanyEmail().isEmpty()){
@@ -83,7 +83,7 @@ public class RegisterController {
 	}
 	
 	
-	@RequestMapping(value="/register", method = RequestMethod.POST)
+	@RequestMapping(value="/register")
 	@ResponseBody
 	public Map<String, Object> registercheck(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		Map<String, Object> info = new HashMap<String, Object>();
@@ -154,11 +154,14 @@ public class RegisterController {
 		info.put("userId", userId);
 		
 		
-		String mailString="这是验证邮件，请访问如下网址：";
-		mailString = mailString + "http://223.252.223.13/Roommates/api/register/usercheck";
-		mailString = mailString + "?checkid=" + (userId+"");
-		mailString = mailString + "&checkemail=" + p_email;
-		mailString = mailString + "&checkname=" + HashGeneratorUtils.generateSaltMD5(p_name);
+		StringBuffer mailstring = new StringBuffer("这是验证邮件，请访问如下网址：<br/><a href=");
+		StringBuffer stringbuffer = new StringBuffer("http://223.252.223.13/Roommates/api/register/usercheck");
+		stringbuffer.append("?checkid=" + userId);
+		stringbuffer.append("&checkemail=" + p_email);
+		stringbuffer.append("&checkname=" + HashGeneratorUtils.generateSaltMD5(p_name));
+		mailstring.append(stringbuffer+">"+stringbuffer+"</a>");
+		String mailString = mailstring.toString();
+		
 		MailSender mailsender = new DefaultMailSender();
 		mailsender.setReceiver(p_email);
 		mailsender.setSubject("验证邮件");

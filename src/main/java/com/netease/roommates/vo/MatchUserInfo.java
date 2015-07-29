@@ -3,13 +3,14 @@ package com.netease.roommates.vo;
 public class MatchUserInfo {
 	private int userId;
 	private String userName;
-	private int photoId;
+	private String photoId;
 	private byte gender;
 	private String nickName;
 	private String company;
 	private String job;
 	private int matchScore;
 	private String matchMessage;
+	private int age;
 	
 	public int getUserId() {
 		return userId;
@@ -23,11 +24,14 @@ public class MatchUserInfo {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	public int getPhotoId() {
+	public String getPhotoId() {
 		return photoId;
 	}
-	public void setPhotoId(int photoId) {
-		this.photoId = photoId;
+	public void setPhotoId(int userid, int mode) {
+		String prefix = "http://223.252.223.13/Roommates/photo/photo_";
+		String smallSuffix = "_small.jpg";
+		String suffix = ".jpg";
+		this.photoId = prefix + userid + suffix;
 	}
 	public byte getGender() {
 		return gender;
@@ -73,6 +77,12 @@ public class MatchUserInfo {
 		return "MatchUserInfo [userId=" + userId + ", userName=" + userName + ", photoId=" + photoId + ", gender=" + gender
 				+ ", nickName=" + nickName + "company="+ company + "matchScore=" + matchScore + "matchMessage=" + 
 				matchMessage + "job=" + "]";
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
 	}
 	
 }
