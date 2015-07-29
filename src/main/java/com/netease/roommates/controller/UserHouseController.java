@@ -101,7 +101,7 @@ public class UserHouseController {
 			if(!path.exists()){
 				path.mkdirs();
 			}
-			for(int i=0;i<files.size();i++){
+			for(int i=0; files!=null && i<files.size();i++){
 				
 				MultipartFile file = files.get(i);
 				if (!file.isEmpty()) {
