@@ -81,7 +81,7 @@ public class UserBasicInfoVO {
 		user.setCompany(company);
 		user.setPosition(job);
 		if(sex != null) {
-			user.setGender((byte) (sex.equals("男") ? 0 : 1));
+			user.setGender((byte) (sex.equals("女") ? 1 : 0));
 		}
 	}
 }
