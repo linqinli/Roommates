@@ -29,7 +29,7 @@ public interface IMatchDataService {
 	
 	public MatchUserSimpleInfo userInfoToMatchUserSimpleInfo(User user) throws ServiceException;
 	
-	public int dateToAge(Date date) throws ServiceException;
+	public String dateToAge(Date date) throws ServiceException;
 	
 	public List<MatchUserSimpleInfo> getMatchUserSimpleInfoByPara(int id, int p, int xb, int f, int gs, int cy, int cw,
 			int zx, int ws, int xg, int fk) throws ServiceException;

@@ -34,7 +34,7 @@ public class MatchDataService implements IMatchDataService {
 	public List selectAllUsers() throws ServiceException {
 		// TODO Auto-generated method stub
 		log.debug("MatchDataService.selectAllUsers");
-		List users = jdbcTemplate.queryForList("select * from sys_user");
+		List users = jdbcTemplate.queryForList("select * from user_personality");
 		return users;
 	}
 	
@@ -402,7 +402,7 @@ public class MatchDataService implements IMatchDataService {
 	@Override
 	public MatchUserSimpleInfo userInfoToMatchUserSimpleInfo(User user){
 		MatchUserSimpleInfo matchUserInfo = new MatchUserSimpleInfo();
-		matchUserInfo.setJob(user.getCompany()+user.getPosition());
+		matchUserInfo.setCompany(user.getCompany());
 		matchUserInfo.setGender(user.getGender());
 		matchUserInfo.setNickName(user.getNickName());
 
@@ -413,13 +413,13 @@ public class MatchDataService implements IMatchDataService {
 		return matchUserInfo;
 	}
 
-	public int dateToAge(Date date){
-		int age = 0;
+	public String dateToAge(Date date){
+		String age = "";
 		if(date==null) return age;
 		Date curDate = new Date();
 		int curYear = curDate.getYear();
 		int birYear = date.getYear();
-		age = curYear-birYear;
+		age = (curYear-birYear)+"岁";
 		return age;
 	}
 
