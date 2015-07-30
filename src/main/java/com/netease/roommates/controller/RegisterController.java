@@ -75,6 +75,7 @@ public class RegisterController {
 	
 	
 	@RequestMapping(value="/register/usercheck")
+	@ResponseBody
 	public Map<String, Object> userCheck(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		Map<String, Object> info = new HashMap<String,Object>();
 		request.setCharacterEncoding("utf-8"); 
@@ -180,7 +181,7 @@ public class RegisterController {
 		
 		
 		StringBuffer mailstring = new StringBuffer("这是验证邮件，请访问如下网址：<br/><a href=");
-		StringBuffer stringbuffer = new StringBuffer("http://223.252.223.13/Roommates/api/register/usercheck");
+		StringBuffer stringbuffer = new StringBuffer("localhost:8080/Roommates/api/register/usercheck");
 		stringbuffer.append("?checkid=" + userId);
 		stringbuffer.append("&checkemail=" + p_email);
 		stringbuffer.append("&checkname=" + HashGeneratorUtils.generateSaltMD5(p_name));
