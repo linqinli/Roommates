@@ -30,4 +30,6 @@ public interface UserMapper {
 	public int isInfoAll(int userId) throws StorageException;
 	
 	public int isQuestionnaireAll(int userId) throws StorageException;
+	
+	public Personality getUserPersonalityById(int userId) throws StorageException;
 }

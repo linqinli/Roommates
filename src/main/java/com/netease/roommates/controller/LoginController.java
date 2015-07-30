@@ -97,7 +97,7 @@ public class LoginController {
 				int isQuestionnaireAll = userInfoService.isQuestionnaireAll(user.getUserId());
 				String credit = "低等信用";
 				String headImgUrl = "http://223.252.223.13/Roommates/photo/photo_" + user.getUserId() + "_small.jpg";
-				Personality personality = userInfoService.getUserPersonality(user.getUserId());
+				Personality personality = userInfoService.getUserPersonalityById(user.getUserId());
 				
 				
 				Map<String, Object> dataMap = new HashMap<String, Object>();
@@ -112,9 +112,13 @@ public class LoginController {
 				dataMap.put("completeAsk", isQuestionnaireAll);
 				dataMap.put("credit", credit);
 				dataMap.put("headUrl", headImgUrl);
-				if(personality==null)
+				System.out.println(personality);
+				if(personality==null){
 					dataMap.put("hasHouse",0);
+					System.out.println("kong");
+				}
 				else{
+					System.out.println(personality.getHasHouse());
 					if(personality.getHasHouse()==2)
 						dataMap.put("hasHouse",1);
 					else
