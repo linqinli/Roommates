@@ -22,7 +22,7 @@ import com.netease.common.service.MailSender;
 public class DefaultMailSender implements MailSender {
 	private Logger logger = LoggerFactory.getLogger(DefaultMailSender.class);
 	private final static String USERNAME = "roommates123";
-	private final static String PASSWORD = "123qwe";
+	private final static String PASSWORD = "12345qwert";
 	private String receiver;
 	private String subject;
 	private String content;
@@ -50,7 +50,7 @@ public class DefaultMailSender implements MailSender {
 	@Override
 	public void send() throws MessagingException {
 		Properties props = new Properties();
-		props.put("mail.smtp.host", "smtp.tom.com");
+		props.put("mail.smtp.host", "smtp.sina.com");
 		props.put("mail.smtp.starttls.enable", "true");
 		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.port", "25");
@@ -63,7 +63,7 @@ public class DefaultMailSender implements MailSender {
 			// Create a default MimeMessage object.
 			Message message = new MimeMessage(session);
 
-			message.setFrom(new InternetAddress("roommates123@tom.com"));
+			message.setFrom(new InternetAddress("roommates123@sina.com"));
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(receiver));
 
 			message.setSubject(subject);
