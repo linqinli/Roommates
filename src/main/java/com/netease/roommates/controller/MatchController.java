@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.netease.exception.ServiceException;
 import com.netease.match.service.IMatchDataService;
+import com.netease.match.service.IMatchDetailService;
 import com.netease.roommates.po.User;
 import com.netease.roommates.po.UserHouse;
 import com.netease.roommates.vo.MatchUserDetailInfo;
@@ -26,14 +29,10 @@ import com.netease.user.service.IUserInfoService;
 @RequestMapping("/api")
 public class MatchController {
 	@Autowired
-	private IUserInfoService userInfoService;
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
-	@Autowired
-	private IUserHouseService userHouseService;
-	
-	@Autowired
 	private IMatchDataService matchDataService;
+	@Autowired
+	private IMatchDetailService matchDetailService;
+	private final static String USER_ID = "userId";
 	
 	@RequestMapping(value = "/people/list")
 	@ResponseBody
@@ -68,25 +67,10 @@ public class MatchController {
 	
 	@RequestMapping(value = "/people/detail/{id}")
 	@ResponseBody
-	public Map matchPeopleList(@PathVariable int id) throws ServiceException {
-		User user = userInfoService.getUserById(id);
-		MatchUserDetailInfo matchUserDetailInfo =  new MatchUserDetailInfo();
+	public Map matchPeopleList(HttpSession session, @PathVariable int id) throws ServiceException {
+		// int curUserId = (Integer) session.getAttribute(USER_ID);
 		
-		matchUserDetailInfo.setUserId(user.getUserId());
-		matchUserDetailInfo.setPhotoId(user.getUserId(), 0);
-		matchUserDetailInfo.setNickName(user.getNickName());
-		matchUserDetailInfo.setGender(user.getGender());
-		matchUserDetailInfo.setCompany(user.getCompany());
-		matchUserDetailInfo.setTel(user.getPhoneNumber());
-		if(user.getPersonality()!=null){
-			if(user.getPersonality().getHasHouse()==1){
-				matchUserDetailInfo.setHasHouse(true);
-				UserHouse userHouse = userHouseService.getUserHouseById(user.getUserId());
-				matchUserDetailInfo.setMatchUserHouse(userHouse);
-			}
-			else matchUserDetailInfo.setHasHouse(true);
-		}
-		
+		MatchUserDetailInfo matchUserDetailInfo =  matchDetailService.getDetailByUser(id);	
 		Map matchDetailMap = new HashMap<String, Object>();
 		matchDetailMap.put("data", matchUserDetailInfo);
 		matchDetailMap.put("errno", 0);
