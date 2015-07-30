@@ -40,8 +40,6 @@ public class UserController {
 	public User getUserById(int userId) {
 		try {
 			User user = userInfoService.getUserById(userId);
-			Personality personality = user.getPersonality();
-			personality.getUserId();
 			return user;
 		} catch (ServiceException se) {
 			return null;
@@ -107,7 +105,7 @@ public class UserController {
 	@ResponseBody
 	@ExceptionHandler(Exception.class)
 	public String handleError(HttpServletRequest req, Exception exception) {
-		logger.error("Request: " + req.getRequestURL() + " raised " + exception);
+		logger.error("Request: " + req.getRequestURL() + " raised " + exception, exception);
 		JsonBuilder result = new JsonBuilder();
 		result.append("errno", 1).append("message", exception.getMessage());
 		return result.build();

@@ -71,8 +71,8 @@ public class MatchDataService implements IMatchDataService {
 		else if(f*cy*cw*zx*ws*xg*fk == 1){
 			selectSqlString = "select userId from sys_user where userId!="+id + " and";
 			switch(xb){
-			case 2: selectSqlString += " gender=0 and"; break;
-			case 3: selectSqlString += " gender=1 and"; break;
+			case 2: selectSqlString += " gender=false and"; break;
+			case 3: selectSqlString += " gender=true and"; break;
 			default: break;
 			}
 			
@@ -96,17 +96,17 @@ public class MatchDataService implements IMatchDataService {
 		}
 		else{
 			selectSqlString = "select s.userId from sys_user s join user_personality p "
-					+ "on s.userId = p.userId where userId!="+id+" and";
+					+ "on s.userId = p.userId where s.userId!="+id+" and";
 			
 			switch(xb){
-			case 2: selectSqlString += " s.gender=0 and"; break;
-			case 3: selectSqlString += " s.gender=1 and"; break;
+			case 2: selectSqlString += " s.gender=false and"; break;
+			case 3: selectSqlString += " s.gender=true and"; break;
 			default: break;
 			}
 			
 			switch(f){
-			case 2: selectSqlString += " p.hasHouse=1 and"; break;
-			case 3: selectSqlString += " p.hasHouse=0 and"; break;
+			case 2: selectSqlString += " p.hasHouse=2 and"; break;
+			case 3: selectSqlString += " p.hasHouse=3 and"; break;
 			default: break;
 			}
 			
@@ -119,41 +119,40 @@ public class MatchDataService implements IMatchDataService {
 			default: break;
 			}
 			switch(cy){
-			case 2: selectSqlString += " p.smoking=1 and"; break;
-			case 3: selectSqlString += " p.smoking=2 and"; break;
-			case 4: selectSqlString += " p.smoking=3 and"; break;
+			case 2: selectSqlString += " p.smoking=2 and"; break;
+			case 3: selectSqlString += " p.smoking=3 and"; break;
+			case 4: selectSqlString += " p.smoking=4 and"; break;
 			default: break;
 			}
 
 			switch(cw){
-			case 2: selectSqlString += " p.pet=1 and"; break;
-			case 3: selectSqlString += " p.pet=2 and"; break;
-			case 4: selectSqlString += " p.pet=3 and"; break;
+			case 2: selectSqlString += " p.pet=2 and"; break;
+			case 3: selectSqlString += " p.pet=3 and"; break;
+			case 4: selectSqlString += " p.pet=4 and"; break;
 			default: break;
 			}
 
 			switch(zx){
-			case 2: selectSqlString += " p.dailySchedule=1 and"; break;
-			case 3: selectSqlString += " p.dailySchedule=2 and"; break;
-			case 4: selectSqlString += " p.dailySchedule=3 and"; break;
+			case 2: selectSqlString += " p.dailySchedule=2 and"; break;
+			case 3: selectSqlString += " p.dailySchedule=3 and"; break;
 			default: break;
 			}
 			switch(ws){
-			case 2: selectSqlString += " p.cleanliness=1 and"; break;
-			case 3: selectSqlString += " p.cleanliness=2 and"; break;
-			case 4: selectSqlString += " p.cleanliness=3 and"; break;
+			case 2: selectSqlString += " p.cleanliness=2 and"; break;
+			case 3: selectSqlString += " p.cleanliness=3 and"; break;
+			case 4: selectSqlString += " p.cleanliness=4 and"; break;
 			default: break;
 			}
 			switch(xg){
-			case 2: selectSqlString += " p.personCharacter=1 and"; break;
-			case 3: selectSqlString += " p.personCharacter=2 and"; break;
-			case 4: selectSqlString += " p.personCharacter=3 and"; break;
+			case 2: selectSqlString += " p.personCharacter=2 and"; break;
+			case 3: selectSqlString += " p.personCharacter=3 and"; break;
+			case 4: selectSqlString += " p.personCharacter=4 and"; break;
 			default: break;
 			}
 			switch(fk){
-			case 2: selectSqlString += " p.visitor=1 and"; break;
-			case 3: selectSqlString += " p.visitor=2 and"; break;
-			case 4: selectSqlString += " p.visitor=3 and"; break;
+			case 2: selectSqlString += " p.visitor=2 and"; break;
+			case 3: selectSqlString += " p.visitor=3 and"; break;
+			case 4: selectSqlString += " p.visitor=4 and"; break;
 			default: break;
 			}
 			
@@ -182,7 +181,7 @@ public class MatchDataService implements IMatchDataService {
 				
 				matchScoreAndMessage = this.getVectorSimilarityBetweenTwoPersonality(curUser.getPersonality(), user.getPersonality());
 			}
-			if(user.getPersonality()!=null) userTmpInfo.setHasHouse(user.getPersonality().getHasHouse()==1);
+			if(user.getPersonality()!=null) userTmpInfo.setHasHouse(user.getPersonality().getHasHouse()==2);
 			
 			userTmpInfo.setMatchScore(matchScoreAndMessage.getMatchScore());
 			userTmpInfo.setMatchMessage(matchScoreAndMessage.getMatchMessage());
