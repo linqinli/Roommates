@@ -83,7 +83,10 @@
 	<update id="updateUserPersonality" parameterType="personality">
 		update user_personality
 		<set>
-			<if test="smoking != 0">
+			<if test="hasHouse != 0" >
+				hasHouse = #{hasHouse, jdbcType=INTEGER},
+			</if>
+			<if test="smoking != 0" >
 				smoking = #{smoking, jdbcType=INTEGER},
 			</if>
 			<if test="pet != 0">
@@ -141,6 +144,10 @@
 		(hasHouse!=1 or smoking!=1
 		and pet!=1 or dailySchedule!=1 or visitor!=1
 		or cleanliness!=1 or personCharacter!=1)
+	</select>
+	
+	<select id="getUserPersonalityById" parameterType="int" resultType="personality">
+		select * from user_personality where userId=#{userId}
 	</select>
 
 </mapper>

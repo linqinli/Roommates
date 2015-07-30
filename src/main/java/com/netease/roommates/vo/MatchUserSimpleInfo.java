@@ -1,5 +1,7 @@
 package com.netease.roommates.vo;
 
+import java.util.Date;
+
 import com.netease.roommates.po.Personality;
 import com.netease.roommates.po.User;
 
@@ -9,8 +11,8 @@ public class MatchUserSimpleInfo {
 	private String nickName;
 	private String gender;
 	private int matchScore;
-	private String job;
-	private int age;
+	private String company;
+	private String age;
 	private String matchMessage;
 	private boolean hasHouse;
 	
@@ -54,25 +56,10 @@ public class MatchUserSimpleInfo {
 	public void setMatchMessage(String matchMessage) {
 		this.matchMessage = matchMessage;
 	}
-	
-	// public List<User> userList = getUserByAddress(address);
-	public String getJob() {
-		return job;
-	}
-	public void setJob(String job) {
-		this.job = job;
-	}
-	
-	@Override
-	public String toString() {
-		return "MatchUserInfo [userId=" + userId + ", photoId=" + photoId + ", gender=" + gender
-				+ ", nickName=" + nickName  + ", matchScore=" + matchScore + ", matchMessage=" + 
-				matchMessage + ", job=" + "]";
-	}
-	public int getAge() {
+	public String getAge() {
 		return age;
 	}
-	public void setAge(int age) {
+	public void setAge(String age) {
 		this.age = age;
 	}
 	public boolean isHasHouse() {
@@ -80,6 +67,12 @@ public class MatchUserSimpleInfo {
 	}
 	public void setHasHouse(boolean hasHouse) {
 		this.hasHouse = hasHouse;
+	}
+	public String getCompany() {
+		return company;
+	}
+	public void setCompany(String company) {
+		this.company = company;
 	}
 	
 }

@@ -145,4 +145,13 @@ public class UserInfoService implements IUserInfoService {
 	}
 	
 	
+	public Personality getUserPersonalityById(int userId) throws ServiceException {
+		try {
+			return userMapper.getUserPersonality(userId);
+		} catch (StorageException se) {
+			log.error("error getting target user personality by userId: " + userId, se);
+			throw new ServiceException(se);
+		}
+	}
+	
 }

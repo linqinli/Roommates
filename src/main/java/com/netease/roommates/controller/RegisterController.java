@@ -39,10 +39,11 @@ public class RegisterController {
 	
 	@RequestMapping(value="/register/check")
 	@ResponseBody
-	public Map<String, Object> check(HttpServletRequest request, HttpServletResponse response) throws Exception{		
+	public Map<String, Object> check(HttpServletRequest request) throws Exception{
+		String userId = request.getParameter("userId");
 		Map<String, Object> info = new HashMap<String, Object>();
 		HttpSession session= request.getSession();
-		if(session==null){
+		if((Integer)session.getAttribute("userId")==null){
 			info.put("result", 0);
 			info.put("info", "超时");
 			return info;
@@ -50,16 +51,22 @@ public class RegisterController {
 		else{
 			int p_userId = (Integer)session.getAttribute("userId");
 			System.out.println(p_userId+"");
-			User user = userInfoService.getUserById(p_userId);
-			if(user==null ||  user.getCompanyEmail()==null || user.getCompanyEmail().isEmpty()){
-				info.put("result", 0);
-				info.put("info", "邮箱未验证成功");
+			if(p_userId==Integer.parseInt(userId)){
+				User user = userInfoService.getUserById(p_userId);
+				if(user==null ||  user.getCompanyEmail()==null || user.getCompanyEmail().isEmpty()){
+					info.put("result", 0);
+					info.put("info", "邮箱未验证成功");
+				}
+				else{
+					info.put("result", 1);
+					info.put("info", "验证成功");
+					info.put("userId", p_userId);
+					request.getSession().setAttribute("isChecked",true);
+				}
 			}
 			else{
-				info.put("result", 1);
-				info.put("info", "验证成功");
-				info.put("userId", p_userId);
-				request.getSession().setAttribute("isChecked",true);
+				info.put("result", 0);
+				info.put("info", "用户错误");
 			}
 				
 		}
@@ -68,7 +75,9 @@ public class RegisterController {
 	
 	
 	@RequestMapping(value="/register/usercheck")
-	public void userCheck(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	@ResponseBody
+	public Map<String, Object> userCheck(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		Map<String, Object> info = new HashMap<String,Object>();
 		request.setCharacterEncoding("utf-8"); 
 		String p_userId = request.getParameter("checkid");
 		String p_email = request.getParameter("checkemail");
@@ -79,7 +88,14 @@ public class RegisterController {
 		if(user!=null && p_name.equals(HashGeneratorUtils.generateSaltMD5(user.getNickName()))){
 			user.setCompanyEmail(p_email);
 			userInfoService.updateUserBasicInfo(user);
+			info.put("result", 1);
+			info.put("info","邮箱验证成功");
+			return info;
 		}
+		info.put("result", 0);
+		info.put("info", "验证失败");
+		return info;
+		
 	}
 	
 	
@@ -133,15 +149,23 @@ public class RegisterController {
 		user.setCompany(emailAddress.getCompany(p_email));
 		
 		
-		userInfoService.insertUser(user);
-		request.getSession(true);
-		List<User> userList = userInfoService.getUserByName(p_name);
+		
+		List<User> existList = userInfoService.getUserByName(p_name);
 		User registerUser = null;
-		for(User n_user : userList)
+		for(User n_user : existList)
 			if(HashGeneratorUtils.generateSaltMD5(p_password).equals(n_user.getPwdMD5Hash()) && emailAddress.getCompany(p_email).equals(n_user.getCompany())){
 				registerUser = n_user;
 				break;
 			}
+		if(registerUser == null){
+			userInfoService.insertUser(user);
+			List<User> userList = userInfoService.getUserByName(p_name);
+			for(User n_user : userList)
+				if(HashGeneratorUtils.generateSaltMD5(p_password).equals(n_user.getPwdMD5Hash()) && emailAddress.getCompany(p_email).equals(n_user.getCompany())){
+					registerUser = n_user;
+					break;
+				}
+		}
 		if(registerUser == null){
 			info.put("result", 0);
 			info.put("info", "注册失败");
@@ -157,7 +181,7 @@ public class RegisterController {
 		
 		
 		StringBuffer mailstring = new StringBuffer("这是验证邮件，请访问如下网址：<br/><a href=");
-		StringBuffer stringbuffer = new StringBuffer("http://223.252.223.13/Roommates/api/register/usercheck");
+		StringBuffer stringbuffer = new StringBuffer("localhost:8080/Roommates/api/register/usercheck");
 		stringbuffer.append("?checkid=" + userId);
 		stringbuffer.append("&checkemail=" + p_email);
 		stringbuffer.append("&checkname=" + HashGeneratorUtils.generateSaltMD5(p_name));

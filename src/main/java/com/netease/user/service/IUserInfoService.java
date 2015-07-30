@@ -31,4 +31,6 @@ public interface IUserInfoService {
 	public int isInfoAll(int userId) throws ServiceException;
 	
 	public int isQuestionnaireAll(int userId) throws ServiceException; 
+	
+	public Personality getUserPersonalityById(int userId) throws ServiceException;
 }
