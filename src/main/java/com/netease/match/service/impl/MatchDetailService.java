@@ -23,7 +23,6 @@ public class MatchDetailService implements IMatchDetailService {
 
 	@Override
 	public MatchUserDetailInfo getDetailByUser(int userId) throws ServiceException {
-		// TODO Auto-generated method stub
 		User user = userInfoService.getUserById(userId);
 		MatchUserDetailInfo matchUserDetailInfo = new MatchUserDetailInfo();
 		matchUserDetailInfo.setUserId(userId);

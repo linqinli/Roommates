@@ -34,8 +34,16 @@ public class MatchDataService implements IMatchDataService {
 	public List selectAllUsers() throws ServiceException {
 		// TODO Auto-generated method stub
 		log.debug("MatchDataService.selectAllUsers");
-		List users = jdbcTemplate.queryForList("select * from user_personality");
+		List users = jdbcTemplate.queryForList("select * from sys_user");
 		return users;
+	}
+	
+	@Override
+	public List selectAllPersonalitys() throws ServiceException {
+		// TODO Auto-generated method stub
+		log.debug("MatchDataService.selectAllUsers");
+		List personalitys = jdbcTemplate.queryForList("select * from user_personality");
+		return personalitys;
 	}
 	
 	@Override
@@ -172,8 +180,7 @@ public class MatchDataService implements IMatchDataService {
 			userTmpInfo.setHasHouse(false);
 			if(curUser.getPersonality()!=null && user.getPersonality()!=null){
 				
-				matchScoreAndMessage = getSimilarityBetweenTwoPersonality(
-						curUser.getPersonality(), user.getPersonality());
+				matchScoreAndMessage = this.getVectorSimilarityBetweenTwoPersonality(curUser.getPersonality(), user.getPersonality());
 			}
 			if(user.getPersonality()!=null) userTmpInfo.setHasHouse(user.getPersonality().getHasHouse()==1);
 			

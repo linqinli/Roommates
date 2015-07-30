@@ -12,6 +12,7 @@ import com.netease.roommates.vo.MatchScoreAndMessage;
 public interface IMatchDataService {
 	
 	public List selectAllUsers() throws ServiceException;
+	public List selectAllPersonalitys() throws ServiceException;
 	
 	public List<Integer> getUserIdListByCondition(int xb, int f, int gs, int cy, int cw,
 			int zx, int ws, int xg, int fk) throws ServiceException;
