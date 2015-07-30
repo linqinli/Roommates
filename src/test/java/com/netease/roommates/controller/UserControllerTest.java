@@ -44,10 +44,10 @@ public class UserControllerTest {
 	public void testGetUserById() throws ServiceException, JsonParseException, JsonMappingException, IOException {
 		User user = generateUser();
 		int userId = user.getUserId();
-		/*when(userInfoService.getUserById(userId)).thenReturn(user);
+		when(userInfoService.getUserById(userId)).thenReturn(user);
 		User user2 = userController.getUserById(userId);
 		verify(userInfoService).getUserById(userId);
-		assertEqualUser(user, user2);*/
+		assertEqualUser(user, user2);
 	}
 
 	@Test
