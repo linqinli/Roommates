@@ -1,5 +1,8 @@
 package com.netease.roommates.vo;
 
+import com.netease.roommates.po.Personality;
+import com.netease.roommates.po.User;
+
 public class MatchUserSimpleInfo {
 	private int userId;
 	private String photoId;
