@@ -49,7 +49,7 @@ public class MatchDataService implements IMatchDataService {
 	@Override
 	public List<MatchUserSimpleInfo> getMatchUserSimpleInfoByPara(int id, int p, int xb, int f, int gs, int cy, int cw,
 			int zx, int ws, int xg, int fk) throws ServiceException{
-		List<Integer> userIdList = getUserIdListByCondition(xb, f, gs, cy, cw, zx, ws, xg, fk);
+		List<Integer> userIdList = getUserIdListByCondition(id, xb, f, gs, cy, cw, zx, ws, xg, fk);
 		List<MatchUserSimpleInfo>  matchUserSimpleInfo = matchResultSimpleInfo(id, userIdList);
 		
 		List<MatchUserSimpleInfo> resultUserSimpleInfo = new ArrayList<MatchUserSimpleInfo>();
@@ -61,15 +61,15 @@ public class MatchDataService implements IMatchDataService {
 	}
 	
 	@Override
-	public List<Integer> getUserIdListByCondition(int xb, int f, int gs, int cy, int cw,
+	public List<Integer> getUserIdListByCondition(int id, int xb, int f, int gs, int cy, int cw,
 			int zx, int ws, int xg, int fk){
 		String selectSqlString = "";
 		
 		if(xb*f*gs*cy*cw*zx*ws*xg*fk == 1){
-			selectSqlString = "select userId from sys_user";
+			selectSqlString = "select userId from sys_user where userId!="+id;
 		}
 		else if(f*cy*cw*zx*ws*xg*fk == 1){
-			selectSqlString = "select userId from sys_user where";
+			selectSqlString = "select userId from sys_user where userId!="+id + " and";
 			switch(xb){
 			case 2: selectSqlString += " gender=0 and"; break;
 			case 3: selectSqlString += " gender=1 and"; break;
@@ -96,7 +96,7 @@ public class MatchDataService implements IMatchDataService {
 		}
 		else{
 			selectSqlString = "select s.userId from sys_user s join user_personality p "
-					+ "on s.userId = p.userId where";
+					+ "on s.userId = p.userId where userId!="+id+" and";
 			
 			switch(xb){
 			case 2: selectSqlString += " s.gender=0 and"; break;
