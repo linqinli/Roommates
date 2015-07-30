@@ -28,7 +28,7 @@ public class LoginAndRegisterUserVO {
 	public int getUserId(){
 		return userId;
 	}
-	public void setUserId(){
+	public void setUserId(int userId){
 		this.userId=userId;
 	}
 
