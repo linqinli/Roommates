@@ -1,5 +1,8 @@
 package com.netease.roommates.vo;
 
+import com.netease.roommates.po.Personality;
+import com.netease.roommates.po.User;
+
 public class MatchUserSimpleInfo {
 	private int userId;
 	private String photoId;
@@ -77,6 +80,10 @@ public class MatchUserSimpleInfo {
 	}
 	public void setHasHouse(boolean hasHouse) {
 		this.hasHouse = hasHouse;
+	}
+	
+	public MatchUserSimpleInfo(User user, Personality personality){
+		
 	}
 	
 }

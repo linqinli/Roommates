@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.netease.exception.ServiceException;
+import com.netease.match.service.IMatchDataService;
 import com.netease.match.service.impl.MatchPersonality;
 import com.netease.roommates.po.User;
 import com.netease.roommates.po.UserHouse;
@@ -31,6 +32,9 @@ public class MatchController {
 	private JdbcTemplate jdbcTemplate;
 	@Autowired
 	private IUserHouseService userHouseService;
+	
+	@Autowired
+	private IMatchDataService matchDataService;
 	
 	@RequestMapping(value = "/people/list")
 	@ResponseBody
@@ -51,8 +55,7 @@ public class MatchController {
 		String sqlString = matchPersonality.generateSqlStringByCondition(xb, f, gs, cy, cw, zx, ws, xg, fk);
 		
 		// List<Integer> userIdList = matchPersonality.selectUserIdByCondition(xb, f, gs, cy, cw, zx, ws, xg, fk);
-		List<Integer> userIdList = (List<Integer>)jdbcTemplate.queryForList(sqlString, Integer.class);;
-		
+		List<Integer> userIdList = matchDataService.getUserIdListByCondition(xb, f, gs, cy, cw, zx, ws, xg, fk);
 		List<User> users = new ArrayList<User>();
 		for( int i=0; i<userIdList.size(); ++i){
 			User tempUser = userInfoService.getUserById(userIdList.get(i));
@@ -70,8 +73,7 @@ public class MatchController {
 	@RequestMapping(value = "/people/all")
 	@ResponseBody
 	public List showAllPeople() throws ServiceException {
-		List userList = jdbcTemplate.queryForList("select * from user_personality");
-		return userList;//matchPernality.matchResultTest();
+		return matchDataService.selectAllUsers();//matchPernality.matchResultTest();
 	}
 	
 	@RequestMapping(value = "/people/detail/{id}")
