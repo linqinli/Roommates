@@ -148,15 +148,23 @@ public class RegisterController {
 		user.setCompany(emailAddress.getCompany(p_email));
 		
 		
-		userInfoService.insertUser(user);
-		request.getSession(true);
-		List<User> userList = userInfoService.getUserByName(p_name);
+		
+		List<User> existList = userInfoService.getUserByName(p_name);
 		User registerUser = null;
-		for(User n_user : userList)
+		for(User n_user : existList)
 			if(HashGeneratorUtils.generateSaltMD5(p_password).equals(n_user.getPwdMD5Hash()) && emailAddress.getCompany(p_email).equals(n_user.getCompany())){
 				registerUser = n_user;
 				break;
 			}
+		if(registerUser == null){
+			userInfoService.insertUser(user);
+			List<User> userList = userInfoService.getUserByName(p_name);
+			for(User n_user : userList)
+				if(HashGeneratorUtils.generateSaltMD5(p_password).equals(n_user.getPwdMD5Hash()) && emailAddress.getCompany(p_email).equals(n_user.getCompany())){
+					registerUser = n_user;
+					break;
+				}
+		}
 		if(registerUser == null){
 			info.put("result", 0);
 			info.put("info", "注册失败");
