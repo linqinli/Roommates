@@ -65,7 +65,13 @@ public class MatchController {
 		
 		Map resultMap = new HashMap<String, Object >();
 		
-		resultMap.put("data", userMatchList);
+		List<MatchUserSimpleInfo> resultUserInfo = new ArrayList<MatchUserSimpleInfo>();
+		
+		for(int i=(page-1)*20; i<page*20 && i<userMatchList.size(); ++i ){
+			resultUserInfo.add(userMatchList.get(i));
+		}
+		
+		resultMap.put("data", resultUserInfo);
 		resultMap.put("errno", 0);
 		return resultMap;//matchPernality.matchResultTest();
 	}

@@ -82,8 +82,4 @@ public class MatchUserSimpleInfo {
 		this.hasHouse = hasHouse;
 	}
 	
-	public MatchUserSimpleInfo(User user, Personality personality){
-		
-	}
-	
 }
