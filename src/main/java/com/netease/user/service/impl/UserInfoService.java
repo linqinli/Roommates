@@ -23,7 +23,7 @@ public class UserInfoService implements IUserInfoService {
 	@Autowired
 	private UserMapper userMapper;
 
-	@Cacheable(value = "userCache", key = "'User' + #id") //Need to be removed since the query sql is same. 
+	//@Cacheable(value = "userCache", key = "'User' + #id") //Need to be removed since the query sql is same. 
 	public User getUserById(int id) throws ServiceException {
 		try {
 			log.debug("UserInfoService.getUserById");
@@ -35,7 +35,7 @@ public class UserInfoService implements IUserInfoService {
 	}
 
 	@Override
-	@CacheEvict(value = "userCache", key = "'User' + #user.getUserId()")
+	//@CacheEvict(value = "userCache", key = "'User' + #user.getUserId()")
 	public void updateUserBasicInfo(User user) throws ServiceException {
 		try {
 			userMapper.updateUserBasicInfo(user);
@@ -56,7 +56,7 @@ public class UserInfoService implements IUserInfoService {
 	}
 
 	@Override
-	@Cacheable(value = "userCache", key = "'personality' + #id")
+	//@Cacheable(value = "userCache", key = "'personality' + #id")
 	public Personality getUserPersonality(int id) throws ServiceException {
 		try {
 			return userMapper.getUserPersonality(id);
@@ -77,7 +77,7 @@ public class UserInfoService implements IUserInfoService {
 	}
 
 	@Override
-	@CacheEvict(value = "userCache", key = "'personality' + #personality.getId()")
+	//@CacheEvict(value = "userCache", key = "'personality' + #personality.getId()")
 	public void updateUserPersonality(Personality personality) throws ServiceException {
 		try {
 			userMapper.updateUserPersonality(personality);
