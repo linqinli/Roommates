@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.netease.roommates.mapper.RoommatesMapper">
+	<insert id="insertHate" parameterType="int">
+		insert into
+		roommates_hate(userId, hate) values(#{userId}, #{hate})
+	</insert>
+
+	<insert id="insertFavorite" parameterType="int">
+		insert into
+		roommates_favorite(userId, favorite) values(#{userId}, #{favorite})
+	</insert>
+
+	<delete id="deleteFavorite" parameterType="int">
+		delete from
+		roommates_favorite where userId=#{userId} and favorite=#{favorite}
+	</delete>
+
+	<select id="selectAllFavorite" parameterType="int" resultType="user">
+		select su.userId, nickName, gender, companyEmail, phoneNumber, birthday, company, position, status
+		from roommates_favorite rf 
+		join sys_user su 
+		on rf.favorite = su.userId 
+		where rf.userId=#{userId}
+	</select>
+</mapper>

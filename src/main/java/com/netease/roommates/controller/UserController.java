@@ -40,6 +40,8 @@ public class UserController {
 	public User getUserById(int userId) {
 		try {
 			User user = userInfoService.getUserById(userId);
+			Personality personality = user.getPersonality();
+			personality.getUserId();
 			return user;
 		} catch (ServiceException se) {
 			return null;
