@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.netease.exception.ServiceException;
 import com.netease.match.service.IMatchDataService;
-import com.netease.match.service.impl.MatchPersonality;
 import com.netease.roommates.po.User;
 import com.netease.roommates.po.UserHouse;
 import com.netease.roommates.vo.MatchUserDetailInfo;
@@ -39,7 +38,7 @@ public class MatchController {
 	@RequestMapping(value = "/people/list")
 	@ResponseBody
 	public Map matchPeopleList(@RequestParam("id")int id,
-			@RequestParam(value="p", defaultValue="1")int page,
+			@RequestParam(value="p", defaultValue="1")int p,
 			@RequestParam(value="xb", defaultValue="1")int xb,
 			@RequestParam(value="f", defaultValue="1")int f,
 			@RequestParam(value="gs", defaultValue="1")int gs,
@@ -49,27 +48,12 @@ public class MatchController {
 			@RequestParam(value="ws", defaultValue="1")int ws,
 			@RequestParam(value="xg", defaultValue="1")int xg,
 			@RequestParam(value="fk", defaultValue="1")int fk) throws ServiceException {
-		User user = userInfoService.getUserById(id);
-		MatchPersonality matchPersonality = new MatchPersonality(user);
-		// matchPernality.selectUserByCondition(xb, f, gs, cy, cw, zx, ws, xg, fk);
-		String sqlString = matchPersonality.generateSqlStringByCondition(xb, f, gs, cy, cw, zx, ws, xg, fk);
-		
-		// List<Integer> userIdList = matchPersonality.selectUserIdByCondition(xb, f, gs, cy, cw, zx, ws, xg, fk);
-		List<Integer> userIdList = matchDataService.getUserIdListByCondition(xb, f, gs, cy, cw, zx, ws, xg, fk);
-		List<User> users = new ArrayList<User>();
-		for( int i=0; i<userIdList.size(); ++i){
-			User tempUser = userInfoService.getUserById(userIdList.get(i));
-			users.add(tempUser);
-		}
-		List<MatchUserSimpleInfo> userMatchList = matchPersonality.matchResultSimpleInfo(users);
 		
 		Map resultMap = new HashMap<String, Object >();
 		
 		List<MatchUserSimpleInfo> resultUserInfo = new ArrayList<MatchUserSimpleInfo>();
 		
-		for(int i=(page-1)*20; i<page*20 && i<userMatchList.size(); ++i ){
-			resultUserInfo.add(userMatchList.get(i));
-		}
+		resultUserInfo = matchDataService.getMatchUserSimpleInfoByPara(id, p, xb, f, gs, cy, cw, zx, ws, xg, fk);
 		
 		resultMap.put("data", resultUserInfo);
 		resultMap.put("errno", 0);
@@ -98,7 +82,7 @@ public class MatchController {
 			if(user.getPersonality().getHasHouse()==1){
 				matchUserDetailInfo.setHasHouse(true);
 				UserHouse userHouse = userHouseService.getUserHouseById(user.getUserId());
-				matchUserDetailInfo.setHouse(userHouse);
+				matchUserDetailInfo.setMatchUserHouse(userHouse);
 			}
 			else matchUserDetailInfo.setHasHouse(true);
 		}

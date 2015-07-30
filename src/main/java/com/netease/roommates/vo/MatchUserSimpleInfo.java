@@ -1,5 +1,7 @@
 package com.netease.roommates.vo;
 
+import java.util.Date;
+
 import com.netease.roommates.po.Personality;
 import com.netease.roommates.po.User;
 
@@ -80,6 +82,15 @@ public class MatchUserSimpleInfo {
 	}
 	public void setHasHouse(boolean hasHouse) {
 		this.hasHouse = hasHouse;
+	}
+	public int dateToAge(Date date){
+		int age = 0;
+		if(date==null) return age;
+		Date curDate = new Date();
+		int curYear = curDate.getYear();
+		int birYear = date.getYear();
+		age = curYear-birYear;
+		return age;
 	}
 	
 }
