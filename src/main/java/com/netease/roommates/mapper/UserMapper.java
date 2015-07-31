@@ -13,7 +13,7 @@ public interface UserMapper {
 
 	public void updateUserBasicInfo(User user) throws StorageException;
 
-	public Personality getUserPersonality(int id) throws StorageException;
+	public Personality getUserPersonality(int userId) throws StorageException;
 
 	public void insertUserPersonality(Personality personality) throws StorageException;
 
@@ -28,6 +28,4 @@ public interface UserMapper {
 	public User getUserByEmail(String email) throws StorageException;
 	
 	public int isQuestionnaireAll(int userId) throws StorageException;
-	
-	public Personality getUserPersonalityById(int userId) throws StorageException;
 }

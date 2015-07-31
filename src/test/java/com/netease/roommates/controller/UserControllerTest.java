@@ -55,9 +55,9 @@ public class UserControllerTest {
 	public void testGetUserPersonalityByUserId() throws ServiceException {
 		Personality personality = new Personality();
 		personality.setUserId(1);
-		when(userInfoService.getUserPersonality(1)).thenReturn(personality);
+		when(userInfoService.getUserPersonalityById(1)).thenReturn(personality);
 		Personality personality2 = userController.getUserPersonalityById(1);
-		verify(userInfoService).getUserPersonality(1);
+		verify(userInfoService).getUserPersonalityById(1);
 		assertEquals(personality.getUserId(), personality2.getUserId());
 	}
 
@@ -70,23 +70,6 @@ public class UserControllerTest {
 		when(userInfoService.getUserById(user.getUserId())).thenReturn(user);
 		String result = userController.updateUserBasicInfo(session, new UserBasicInfoVO());
 		assertEquals(result, "{\"errno\":0,\"finishInfo\":0}");
-	}
-
-	@Test
-	public void testGetUserListByAddress() throws ServiceException, UnsupportedEncodingException {
-		String address = "Address:Wall Street";
-		List<User> users = new ArrayList<User>();
-		for (int i = 0; i < 5; i++) {
-			users.add(generateUser(address));
-		}
-		when(userInfoService.getUserListByAddress(address)).thenReturn(users);
-		List<User> userList = userController.getUserListByAddress(address);
-		for (int i = 0; i < users.size(); i++) {
-			User user1 = users.get(i);
-			User user2 = userList.get(i);
-			assertEqualUser(user1, user2);
-		}
-
 	}
 
 	@Test

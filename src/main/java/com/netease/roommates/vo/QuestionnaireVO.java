@@ -11,8 +11,10 @@ public class QuestionnaireVO {
 	private int fk;
 	private int xg;
 	
-	public QuestionnaireVO() {}
-
+	public QuestionnaireVO() {
+		
+	}
+	
 	public int getYf() {
 		return yf;
 	}
@@ -78,4 +80,5 @@ public class QuestionnaireVO {
 		personality.setVisitor(fk);
 		personality.setPersonCharacter(xg);
 	}
+	
 }

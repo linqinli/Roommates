@@ -70,7 +70,7 @@
 	</update>
 
 	<select id="getUserPersonality" parameterType="int" resultType="personality">
-		select * from user_personality where userId=#{id}
+		select * from user_personality where userId=#{userId}
 	</select>
 
 	<insert id="insertUserPersonality" parameterType="personality">
@@ -119,12 +119,6 @@
 		where id=#{id}
 	</update>
 
-	<select id="getUserListByAddress" parameterType="String"
-		resultType="user">
-		select * from sys_user where address=#{address}
-	</select>
-
-
 	<select id="getUserByName" parameterType="String" resultType="user">
 		select * from sys_user where nickName=#{name}
 	</select>
@@ -138,11 +132,6 @@
 		select count(*) from user_personality where userId=#{userId} and
 		(smoking!=1 or pet!=1 or dailySchedule!=1 or visitor!=1 
 		or cleanliness!=1 or personCharacter!=1)
-	</select>
-	
-	<select id="getUserPersonalityById" parameterType="int"
-		resultType="personality">
-		select * from user_personality where userId=#{userId}
 	</select>
 
 </mapper>

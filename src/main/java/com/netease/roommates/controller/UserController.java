@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.netease.exception.ControllerException;
 import com.netease.exception.ServiceException;
 import com.netease.roommates.po.Personality;
 import com.netease.roommates.po.User;
 import com.netease.roommates.vo.QuestionnaireVO;
+import com.netease.roommates.vo.TagVO;
 import com.netease.roommates.vo.UserBasicInfoVO;
 import com.netease.user.service.IUserInfoService;
 import com.netease.utils.JsonBuilder;
@@ -80,13 +80,13 @@ public class UserController {
 	@ResponseBody
 	@RequestMapping(value = "/getUserPersonality", method = RequestMethod.GET)
 	public Personality getUserPersonalityById(int id) throws ServiceException {
-		return userInfoService.getUserPersonality(id);
+		return userInfoService.getUserPersonalityById(id);
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "/quiz", method = RequestMethod.POST)
 	public String addUserPersonality(HttpSession session, @RequestBody QuestionnaireVO questionnaireVO)
-			throws ControllerException, JsonProcessingException {
+			throws ControllerException {
 		try {
 			JsonBuilder result = new JsonBuilder();
 			Personality personality = new Personality();
@@ -101,16 +101,23 @@ public class UserController {
 		}
 	}
 
+	@ResponseBody
+	@RequestMapping(value = "/getQuiz", method = RequestMethod.GET)
+	public TagVO getUserPersonality(HttpSession session) throws ControllerException {
+		try {
+			int userId = (Integer) session.getAttribute(USER_ID);
+			Personality personality = userInfoService.getUserPersonalityById(userId);
+			return new TagVO(personality);
+		} catch (ServiceException e) {
+			logger.error("Error getting user quiz.", e);
+			throw new ControllerException("Error getting user quiz.", e);
+		}
+
+	}
+
 	@RequestMapping(value = "/updateUserPersonality", method = RequestMethod.POST)
 	public void updateUserPersonality(@RequestBody Personality personality) throws ServiceException {
 		userInfoService.updateUserPersonality(personality);
-	}
-
-	@ResponseBody
-	@RequestMapping(value = "/getUserListByAddress", method = RequestMethod.GET)
-	public List<User> getUserListByAddress(String address) throws ServiceException, UnsupportedEncodingException {
-		address = new String(address.getBytes("ISO-8859-1"), "UTF-8");
-		return userInfoService.getUserListByAddress(address);
 	}
 
 	@ResponseBody

@@ -13,15 +13,9 @@ public interface IUserInfoService {
 	
 	public void insertUser(User user) throws ServiceException;
 	
-	public Personality getUserPersonality(int id) throws ServiceException;
-	
 	public void insertUserPersonality(Personality personality) throws ServiceException;
 	
 	public void updateUserPersonality(Personality personality) throws ServiceException;
-	
-	public List<User> getUserListByAddress(String address) throws ServiceException;
-
-	public List<User> getUserListByCompany(String company) throws ServiceException;
 
 	public List<User> getUserByName(String name) throws ServiceException; 
 	

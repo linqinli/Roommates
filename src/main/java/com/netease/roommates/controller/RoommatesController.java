@@ -45,6 +45,7 @@ public class RoommatesController {
 	@ResponseBody
 	@RequestMapping(value = "/fav", method = RequestMethod.GET)
 	public String getAllFavorite(HttpSession session) {
+		logger.info("Session id:" + session.getId());
 		int userId = (Integer) session.getAttribute(USER_ID);
 		List<MatchUserDetailInfo> matchUserDetailInfoList =  roommatesService.getAllFavorite(userId);
 		JsonBuilder result = new JsonBuilder();
