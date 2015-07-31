@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.netease.common.service.MailSender;
 import com.netease.common.service.impl.CheckWord;
 import com.netease.common.service.impl.DefaultMailSender;
@@ -30,12 +32,6 @@ import com.netease.utils.HashGeneratorUtils;
 public class RegisterController {
 	@Autowired
 	private IUserInfoService userInfoService;
-	
-	
-	@RequestMapping("/register/page")
-	public String loginPage(){
-		return "register";
-	}
 	
 	@RequestMapping(value="/register/check")
 	@ResponseBody
@@ -76,7 +72,7 @@ public class RegisterController {
 	
 	@RequestMapping(value="/register/usercheck")
 	@ResponseBody
-	public Map<String, Object> userCheck(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String userCheck(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		Map<String, Object> info = new HashMap<String,Object>();
 		request.setCharacterEncoding("utf-8"); 
 		String p_userId = request.getParameter("checkid");
@@ -90,11 +86,11 @@ public class RegisterController {
 			userInfoService.updateUserBasicInfo(user);
 			info.put("result", 1);
 			info.put("info","邮箱验证成功");
-			return info;
+			return "邮箱验证成功";
 		}
 		info.put("result", 0);
 		info.put("info", "验证失败");
-		return info;
+		return "邮箱验证失败";
 		
 	}
 	
@@ -181,7 +177,7 @@ public class RegisterController {
 		
 		
 		StringBuffer mailstring = new StringBuffer("这是验证邮件，请访问如下网址：<br/><a href=");
-		StringBuffer stringbuffer = new StringBuffer("http://223.252.223.13/Roommates/api/register/usercheck");
+		StringBuffer stringbuffer = new StringBuffer("223.252.223.13/Roommates/Roommates/api/register/usercheck");
 		stringbuffer.append("?checkid=" + userId);
 		stringbuffer.append("&checkemail=" + p_email);
 		stringbuffer.append("&checkname=" + HashGeneratorUtils.generateSaltMD5(p_name));
