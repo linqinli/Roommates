@@ -36,12 +36,12 @@ public class MatchDetailService implements IMatchDetailService {
 		matchUserDetailInfo.setTel(user.getPhoneNumber());
 		
 		if(user.getPersonality()!=null){
-			if(user.getPersonality().getHasHouse()==1){
+			if(user.getPersonality().getHasHouse()==2){
 				matchUserDetailInfo.setHasHouse(true);
 				UserHouse userHouse = userHouseService.getUserHouseById(user.getUserId());
-				matchUserDetailInfo.setMatchUserHouse(userHouse);
+				if(userHouse!=null) matchUserDetailInfo.setMatchUserHouse(userHouse);
 			}
-			else matchUserDetailInfo.setHasHouse(true);
+			else matchUserDetailInfo.setHasHouse(false);
 		}
 		
 		

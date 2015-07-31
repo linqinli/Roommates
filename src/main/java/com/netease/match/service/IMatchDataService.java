@@ -14,7 +14,7 @@ public interface IMatchDataService {
 	public List selectAllUsers() throws ServiceException;
 	public List selectAllPersonalitys() throws ServiceException;
 	
-	public List<Integer> getUserIdListByCondition(int xb, int f, int gs, int cy, int cw,
+	public List<Integer> getUserIdListByCondition(int id, int xb, int f, int gs, int cy, int cw,
 			int zx, int ws, int xg, int fk) throws ServiceException;
 	
 	public List<MatchUserSimpleInfo> matchResultSimpleInfo(int curUserId, List<Integer> userIdList) throws ServiceException;
