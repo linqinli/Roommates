@@ -41,7 +41,8 @@ public class UserControllerTest {
 	}
 
 	@Test
-	public void testGetUserById() throws ServiceException, JsonParseException, JsonMappingException, IOException {
+	public void testGetUserById()
+			throws ServiceException, JsonParseException, JsonMappingException, IOException, ControllerException {
 		User user = generateUser();
 		int userId = user.getUserId();
 		when(userInfoService.getUserById(userId)).thenReturn(user);
@@ -59,7 +60,7 @@ public class UserControllerTest {
 		verify(userInfoService).getUserPersonality(1);
 		assertEquals(personality.getUserId(), personality2.getUserId());
 	}
-	
+
 	@Test
 	public void testUpdateUserBasicInfo() throws ControllerException {
 		HttpSession session = mock(HttpSession.class);
@@ -67,7 +68,7 @@ public class UserControllerTest {
 		String result = userController.updateUserBasicInfo(session, new UserBasicInfoVO());
 		assertEquals(result, "{\"errno\":0}");
 	}
-	
+
 	@Test
 	public void testGetUserListByAddress() throws ServiceException, UnsupportedEncodingException {
 		String address = "Address:Wall Street";
@@ -84,7 +85,7 @@ public class UserControllerTest {
 		}
 
 	}
-	
+
 	@Test
 	public void testAddUserPersonality() throws JsonProcessingException, ControllerException {
 		HttpSession session = mock(HttpSession.class);
@@ -92,7 +93,7 @@ public class UserControllerTest {
 		String result = userController.addUserPersonality(session, new QuestionnaireVO());
 		assertEquals(result, "{\"errno\":0}");
 	}
-	
+
 	private void assertEqualUser(User u1, User u2) {
 		assertEquals(u1.getUserId(), u2.getUserId());
 		assertEquals(u1.getAddress(), u2.getAddress());
