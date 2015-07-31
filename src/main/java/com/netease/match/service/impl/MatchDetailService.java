@@ -29,6 +29,7 @@ public class MatchDetailService implements IMatchDetailService {
 	public MatchUserDetailInfo getDetailByUser(int userId) throws ServiceException {
 		User user = userInfoService.getUserById(userId);
 		MatchUserDetailInfo matchUserDetailInfo = new MatchUserDetailInfo();
+		if(user == null) return null;
 		matchUserDetailInfo.setUserId(userId);
 		matchUserDetailInfo.setPhotoId(userId, 0);
 		matchUserDetailInfo.setCredit("一般");
@@ -64,6 +65,7 @@ public class MatchDetailService implements IMatchDetailService {
 	public MatchUserDetailInfo getDetailByUser(int curUserId, int userId) throws ServiceException {
 		User user = userInfoService.getUserById(userId);
 		MatchUserDetailInfo matchUserDetailInfo = new MatchUserDetailInfo();
+		if(user == null) return null;
 		matchUserDetailInfo.setUserId(userId);
 		matchUserDetailInfo.setPhotoId(userId, 0);
 		matchUserDetailInfo.setCredit("一般");
