@@ -3,23 +3,22 @@ package com.netease.user.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.netease.exception.ServiceException;
 import com.netease.match.service.IMatchDetailService;
 import com.netease.roommates.mapper.RoommatesMapper;
-import com.netease.roommates.po.User;
 import com.netease.roommates.vo.MatchUserDetailInfo;
 import com.netease.user.service.IRoommatesService;
-import com.netease.user.service.IUserHouseService;
 
 @Service
 public class RoommatesServiceImpl implements IRoommatesService {
+	private final static Logger logger = LoggerFactory.getLogger(RoommatesServiceImpl.class);
 	@Autowired
 	private RoommatesMapper roommatesMapper;
-	@Autowired
-	private IUserHouseService userHouseService;
 	@Autowired
 	private IMatchDetailService matchDetailService;
 
@@ -42,12 +41,11 @@ public class RoommatesServiceImpl implements IRoommatesService {
 	public List<MatchUserDetailInfo> getAllFavorite(int userId) {
 		List<MatchUserDetailInfo> matchUsers = new ArrayList<MatchUserDetailInfo>();
 		try {
-			List<User> userList = roommatesMapper.selectAllFavorite(userId);
-			for (User user : userList) {
-				matchUsers.add(matchDetailService.getDetailByUser(user.getUserId()));
+			for (int favUserId : roommatesMapper.selectAllFavorite(userId)) {
+				matchUsers.add(matchDetailService.getDetailByUser(favUserId));
 			}
 		} catch (ServiceException e) {
-			e.printStackTrace();
+			logger.error("Error getting all favorite.", e);
 		}
 		return matchUsers;
 	}

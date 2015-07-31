@@ -19,6 +19,7 @@ public class User implements Serializable{
 	private String company;
 	private String address;
 	private Personality personality;
+	private UserHouse userHouse;
 	
 	public User() {
 		// used for serialization.
@@ -126,6 +127,14 @@ public class User implements Serializable{
 
 	public void setPersonality(Personality personality) {
 		this.personality = personality;
+	}
+
+	public UserHouse getUserHouse() {
+		return userHouse;
+	}
+
+	public void setUserHouse(UserHouse userHouse) {
+		this.userHouse = userHouse;
 	}
 	
 }

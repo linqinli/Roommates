@@ -27,7 +27,7 @@ import com.netease.user.service.IUserInfoService;
 import com.netease.utils.JsonBuilder;
 
 @Controller
-@RequestMapping("/api/user")
+@RequestMapping(value="/api/user", produces="application/json;charset=UTF-8")
 public class UserController {
 	private static final String USER_ID = "userId";
 	private Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -37,12 +37,12 @@ public class UserController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/getUser", method = RequestMethod.GET)
-	public User getUserById(int userId) {
+	public User getUserById(int userId) throws ControllerException {
 		try {
 			User user = userInfoService.getUserById(userId);
 			return user;
 		} catch (ServiceException se) {
-			return null;
+			throw new ControllerException("Error getting user info.", se);
 		}
 	}
 

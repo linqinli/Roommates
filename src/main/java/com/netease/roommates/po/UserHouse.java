@@ -1,8 +1,10 @@
 package com.netease.roommates.po;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class UserHouse {
+public class UserHouse implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private int userId;
 	private String pictures;
 	private List<String> picList;//

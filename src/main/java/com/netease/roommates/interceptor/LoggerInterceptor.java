@@ -29,7 +29,6 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
-
 		long startTime = (Long) request.getAttribute("startTime");
 		long executeTime = System.currentTimeMillis() - startTime;
 

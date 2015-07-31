@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.netease.roommates.po.User;
-
 public interface RoommatesMapper {
 	public void insertHate(@Param("userId")int userId, @Param("hate")int hate);
 	
@@ -13,5 +11,5 @@ public interface RoommatesMapper {
 	
 	public void deleteFavorite(@Param("userId")int userId, @Param("favorite")int favorite);
 	
-	public List<User> selectAllFavorite(@Param("userId")int userId);
+	public List<Integer> selectAllFavorite(@Param("userId")int userId);
 }

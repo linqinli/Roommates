@@ -18,8 +18,8 @@
 		roommates_favorite where userId=#{userId} and favorite=#{favorite}
 	</delete>
 
-	<select id="selectAllFavorite" parameterType="int" resultType="user">
-		select su.userId, nickName, gender, companyEmail, phoneNumber, birthday, company, position, status
+	<select id="selectAllFavorite" parameterType="int" resultType="int">
+		select su.userId
 		from roommates_favorite rf 
 		join sys_user su 
 		on rf.favorite = su.userId 

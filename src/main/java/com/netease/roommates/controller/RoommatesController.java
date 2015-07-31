@@ -22,7 +22,7 @@ import com.netease.user.service.IRoommatesService;
 import com.netease.utils.JsonBuilder;
 
 @Controller
-@RequestMapping("/api/people")
+@RequestMapping(value="/api/people", produces="application/json;charset=UTF-8")
 public class RoommatesController {
 	private Logger logger = LoggerFactory.getLogger(RoommatesController.class);
 	private final static String USER_ID = "userId";
