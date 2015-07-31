@@ -133,21 +133,13 @@
 		select * from sys_user where companyEmail=#{email}
 	</select>
 
-	<select id="isInfoAll" parameterType="int" resultType="int">
-		select
-		count(*) from sys_user where userId=#{userId} and userName!=null and
-		phoneNumber!=null
-		and birthday!=null and address!=null and
-		company!=null and position!=null
-
-	</select>
 
 	<select id="isQuestionnaireAll" parameterType="int" resultType="int">
 		select count(*) from user_personality where userId=#{userId} and
-		(hasHouse!=1 or smoking!=1
-		and pet!=1 or dailySchedule!=1 or visitor!=1
+		(smoking!=1 or pet!=1 or dailySchedule!=1 or visitor!=1 
 		or cleanliness!=1 or personCharacter!=1)
 	</select>
+	
 	<select id="getUserPersonalityById" parameterType="int"
 		resultType="personality">
 		select * from user_personality where userId=#{userId}

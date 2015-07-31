@@ -27,8 +27,6 @@ public interface UserMapper {
 	
 	public User getUserByEmail(String email) throws StorageException;
 	
-	public int isInfoAll(int userId) throws StorageException;
-	
 	public int isQuestionnaireAll(int userId) throws StorageException;
 	
 	public Personality getUserPersonalityById(int userId) throws StorageException;

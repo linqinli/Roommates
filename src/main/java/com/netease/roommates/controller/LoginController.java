@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,15 +31,10 @@ public class LoginController {
 	@Autowired
 	private IUserInfoService userInfoService;
 	
-	@RequestMapping("/login/page")
-	public String loginPage() throws MessagingException{
-		return "loginPage";
-	}
-	
 	@RequestMapping(value="/logout")
 	@ResponseBody
 	public Map<String, Object> logout(HttpServletRequest request, HttpServletResponse response){
-		Map<String, Object> info = new HashMap<String, Object>();		
+		Map<String, Object> info = new HashMap<String, Object>();
 		request.getSession().invalidate();
 		info.put("result",1);
 		return info;
@@ -93,41 +87,48 @@ public class LoginController {
 				request.getSession(true);
 				request.getSession().setAttribute("userId",user.getUserId());
 				request.getSession().setAttribute("isChecked",true);
-				boolean isInfoAll = (user.getUserName()!=null&&user.getPhoneNumber()!=null&&user.getBirthday()!=null&&user.getAddress()!=null&&user.getPosition()!=null);
+				
+				boolean isInfoAll = (user.getUserName()!=null&&user.getGender()!=2&user.getPhoneNumber()!=null&&user.getBirthday()!=null&&user.getAddress()!=null&&user.getPosition()!=null);
 				int isQuestionnaireAll = userInfoService.isQuestionnaireAll(user.getUserId());
-				String credit = "低等信用";
+				String credit = "一般";
 				String headImgUrl = "http://223.252.223.13/Roommates/photo/photo_" + user.getUserId() + "_small.jpg";
 				Personality personality = userInfoService.getUserPersonalityById(user.getUserId());
+				
+				Map<String, Object> auth= new HashMap<String, Object>();
+				auth.put("email", true);
+				auth.put("tel", false);
+				auth.put("id", false);
+				
+				Map<String, Object> tags = null;
+				if(isQuestionnaireAll==1){
+					tags= new HashMap<String, Object>();
+					tags.put("zx", personality.getDailySchedule());
+					tags.put("cy", personality.getSmoking());
+					tags.put("cw", personality.getPet());
+					tags.put("ws", personality.getCleanliness());
+					tags.put("fk", personality.getVisitor());
+					tags.put("xg", personality.getPersonCharacter());
+				}
 				
 				
 				Map<String, Object> dataMap = new HashMap<String, Object>();
 				dataMap.put("userId", user.getUserId());
+				dataMap.put("nickName", user.getNickName());
+				dataMap.put("avatar", headImgUrl);
 				dataMap.put("lookStatus",user.getStatus());
-				dataMap.put("birth", user.getBirthday());
-				dataMap.put("name", user.getNickName());
-				dataMap.put("sex", user.getGender());
+				dataMap.put("credit", credit);
+				dataMap.put("auth", auth);
+				dataMap.put("hasHouse", (user.getUserHouse() == null) ? false : true);
+				if(user.getGender()==0 || user.getGender()==1)
+					dataMap.put("gender", (user.getGender() == 0) ? "男" : "女");	
+				dataMap.put("birthday", user.getBirthday());
+				dataMap.put("constellation", personality.getConstellation());
 				dataMap.put("company", user.getCompany());
 				dataMap.put("job", user.getPosition());
 				dataMap.put("phone", user.getPhoneNumber());
-				dataMap.put("completeAsk", isQuestionnaireAll);
-				dataMap.put("credit", credit);
-				dataMap.put("headUrl", headImgUrl);
-				System.out.println(personality);
-				if(personality==null){
-					dataMap.put("hasHouse",0);
-					System.out.println("kong");
-				}
-				else{
-					System.out.println(personality.getHasHouse());
-					if(personality.getHasHouse()==2)
-						dataMap.put("hasHouse",1);
-					else
-						dataMap.put("hasHouse",0);
-				}
-				if(isInfoAll)
-					dataMap.put("completeInfo", 1);
-				else
-					dataMap.put("completeInfo", 0);
+				if(tags!=null)
+					dataMap.put("tags", tags);				
+				dataMap.put("completeInfo", isInfoAll);
 				
 				info.put("data", dataMap);
 			
