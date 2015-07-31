@@ -78,15 +78,24 @@ public class MatchController {
 	@RequestMapping(value = "/people/detail/{id}")
 	@ResponseBody
 	public Map matchPeopleList(HttpSession session, @PathVariable int id) throws ServiceException {
-		int curUserId = (Integer) session.getAttribute(USER_ID);
-		
-		if(curUserId == id) return null;
-		
-		MatchUserDetailInfo matchUserDetailInfo =  matchDetailService.getDetailByUser(curUserId,id);
-		
+		MatchUserDetailInfo matchUserDetailInfo = matchDetailService.getDetailByUser(id);
+//		if(session == null){
+//			matchUserDetailInfo =  matchDetailService.getDetailByUser(id);
+//			
+//		}else{
+//			int curUserId = (Integer) session.getAttribute(USER_ID);
+//			if(curUserId == id) return null;
+//			matchUserDetailInfo =  matchDetailService.getDetailByUser(curUserId,id);
+//		}
 		Map matchDetailMap = new HashMap<String, Object>();
-		matchDetailMap.put("data", matchUserDetailInfo);
-		matchDetailMap.put("errno", 0);
+		if(matchUserDetailInfo != null){
+			matchDetailMap.put("data", matchUserDetailInfo);
+			matchDetailMap.put("errno", 0);
+		} else {
+			matchDetailMap.put("data", "用户id不存在");
+			matchDetailMap.put("errno", 1);
+		}
+		
 		
 		return matchDetailMap;//matchPernality.matchResultTest();
 	}

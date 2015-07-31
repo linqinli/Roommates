@@ -72,7 +72,7 @@ public class RegisterController {
 	
 	@RequestMapping(value="/register/usercheck")
 	@ResponseBody
-	public String userCheck(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public Map<String, Object> userCheck(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		Map<String, Object> info = new HashMap<String,Object>();
 		request.setCharacterEncoding("utf-8"); 
 		String p_userId = request.getParameter("checkid");
@@ -84,13 +84,13 @@ public class RegisterController {
 		if(user!=null && p_name.equals(HashGeneratorUtils.generateSaltMD5(user.getNickName()))){
 			user.setCompanyEmail(p_email);
 			userInfoService.updateUserBasicInfo(user);
-			info.put("result", 1);
-			info.put("info","邮箱验证成功");
-			return "邮箱验证成功";
+			//info.put("result", 1);
+			info.put("验证结果","邮箱验证成功");
+			return info;
 		}
-		info.put("result", 0);
-		info.put("info", "验证失败");
-		return "邮箱验证失败";
+		//info.put("result", 0);
+		info.put("验证结果", "验证失败");
+		return info;
 		
 	}
 	

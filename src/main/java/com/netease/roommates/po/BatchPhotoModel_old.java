@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public class BatchPhotoModel {
+public class BatchPhotoModel_old {
 
-	private List<String> files;
+	private List<MultipartFile> files;
 	
 	private int userId;
 	
@@ -64,21 +64,21 @@ public class BatchPhotoModel {
 		this.userId = userId;
 	}
 
-	public List<String> getFiles() {
+	public List<MultipartFile> getFiles() {
 		return files;
 	}
 
-	public void setFiles(List<String> files) {
+	public void setFiles(List<MultipartFile> files) {
 		this.files = files;
 	}
 
-	public BatchPhotoModel(int userId, List<String> files) {
+	public BatchPhotoModel_old(int userId, List<MultipartFile> files) {
 		super();
 		this.files = files;
 		this.userId = userId;
 	}
 
-	public BatchPhotoModel() {
+	public BatchPhotoModel_old() {
 		super();
 	}
 }

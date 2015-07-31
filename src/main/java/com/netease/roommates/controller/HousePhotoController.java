@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.netease.roommates.po.BatchPhotoModel;
+import com.netease.roommates.po.BatchPhotoModel_old;
 
 @Controller
 @RequestMapping("/api/housePhoto")
@@ -53,7 +53,7 @@ public class HousePhotoController {
 	
 	@RequestMapping(value = "/batchUpload", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, String> upload(int userId, BatchPhotoModel model) {
+	public Map<String, String> upload(int userId, BatchPhotoModel_old model) {
 		
 		Map<String, String> result = new HashMap<String, String>();
 		List<MultipartFile> files = model.getFiles();
