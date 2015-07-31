@@ -371,7 +371,7 @@ public class MatchDataService implements IMatchDataService {
 				matchScoreAndMessage = this.getVectorSimilarityBetweenTwoPersonality(curUser.getPersonality(), user.getPersonality());
 				matchScoreAndMessage.setMatchMessage(setDisplayMatchMessage(curUser, user));
 			}
-			if(user.getPersonality()!=null) userTmpInfo.setHasHouse(user.getPersonality().getHasHouse()==2);
+			if(user.getUserHouse()!=null) userTmpInfo.setHasHouse(true);
 			
 			userTmpInfo.setMatchScore(matchScoreAndMessage.getMatchScore());
 			userTmpInfo.setMatchMessage(matchScoreAndMessage.getMatchMessage());
