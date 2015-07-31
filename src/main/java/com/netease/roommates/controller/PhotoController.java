@@ -25,7 +25,7 @@ public class PhotoController {
 	private final static String PREFIX = "/var/www/lighttpd/Roommates/photo/photo";
 	private final static String SUFFIX = ".jpg";
 	@Autowired
-	FileService photoTransportService;
+	private FileService photoTransportService;
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	@ResponseBody

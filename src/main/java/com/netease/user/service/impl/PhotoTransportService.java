@@ -30,7 +30,7 @@ public class PhotoTransportService implements FileService {
 			bos = new BufferedOutputStream(new FileOutputStream(name));
 			bos.write(photo);
 			bos.flush();
-			compressImg(name, getSmallPicturePath(name), 50, 50);
+			compressImg(name, getSmallPicturePath(name), 100, 100);
 		} finally {
 			if (bos != null) {
 				bos.close();
