@@ -62,11 +62,14 @@ public class UserControllerTest {
 	}
 
 	@Test
-	public void testUpdateUserBasicInfo() throws ControllerException {
+	public void testUpdateUserBasicInfo() throws ControllerException, ServiceException {
+		User user = generateUser();
+		user.setUserId(1);
 		HttpSession session = mock(HttpSession.class);
 		when(session.getAttribute("userId")).thenReturn(1);
+		when(userInfoService.getUserById(user.getUserId())).thenReturn(user);
 		String result = userController.updateUserBasicInfo(session, new UserBasicInfoVO());
-		assertEquals(result, "{\"errno\":0}");
+		assertEquals(result, "{\"errno\":0,\"finishInfo\":0}");
 	}
 
 	@Test

@@ -80,8 +80,20 @@ public class UserBasicInfoVO {
 		user.setPhoneNumber(phone);
 		user.setCompany(company);
 		user.setPosition(job);
-		if(sex != null) {
-			user.setGender((byte) (sex.equals("女") ? 1 : 0));
+		if (sex != null) {
+			switch (sex.charAt(0)) {
+			case '男':
+				user.setGender((byte) 0);
+				break;
+			case '女':
+				user.setGender((byte) 1);
+				break;
+			default:
+				user.setGender((byte) 2); // blank
+			}
+		} else {
+			user.setGender((byte) 2);
 		}
 	}
+
 }
