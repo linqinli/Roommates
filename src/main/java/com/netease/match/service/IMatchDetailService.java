@@ -9,6 +9,8 @@ public interface IMatchDetailService {
 	
 	public MatchUserDetailInfo getDetailByUser(int userId) throws ServiceException;
 	
+	public MatchUserDetailInfo getDetailByUser(int curUserId, int userId) throws ServiceException;
+	
 	public String dateToAge(Date date) throws ServiceException;
 	
 }

@@ -16,4 +16,8 @@ public class MatchScoreAndMessage {
 	public void setMatchMessage(String matchMessage) {
 		this.matchMessage = matchMessage;
 	}
+	public MatchScoreAndMessage(){
+		this.setMatchMessage("");
+		this.setMatchScore(0);
+	}
 }

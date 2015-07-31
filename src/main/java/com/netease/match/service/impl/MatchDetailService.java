@@ -1,12 +1,14 @@
 package com.netease.match.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.netease.exception.ServiceException;
 import com.netease.match.service.IMatchDetailService;
+import com.netease.roommates.mapper.RoommatesMapper;
 import com.netease.roommates.po.User;
 import com.netease.roommates.po.UserHouse;
 import com.netease.roommates.vo.MatchUserDetailInfo;
@@ -19,6 +21,8 @@ public class MatchDetailService implements IMatchDetailService {
 	private IUserInfoService userInfoService;
 	@Autowired
 	private IUserHouseService userHouseService;
+	@Autowired
+	private RoommatesMapper roommatesMapper;
 	
 
 	@Override
@@ -34,16 +38,13 @@ public class MatchDetailService implements IMatchDetailService {
 		matchUserDetailInfo.setGender(user.getGender());
 		//tags
 		matchUserDetailInfo.setTel(user.getPhoneNumber());
-		
-		if(user.getPersonality()!=null){
-			if(user.getPersonality().getHasHouse()==2){
-				matchUserDetailInfo.setHasHouse(true);
-				UserHouse userHouse = userHouseService.getUserHouseById(user.getUserId());
-				if(userHouse!=null) matchUserDetailInfo.setMatchUserHouse(userHouse);
-			}
-			else matchUserDetailInfo.setHasHouse(false);
+
+		if(user.getUserHouse()!=null){
+			matchUserDetailInfo.setHasHouse(true);
+			UserHouse userHouse = userHouseService.getUserHouseById(user.getUserId());
+			if(userHouse!=null) matchUserDetailInfo.setMatchUserHouse(userHouse);
 		}
-		
+		else matchUserDetailInfo.setHasHouse(false);
 		
 		return matchUserDetailInfo;
 	}
@@ -57,6 +58,34 @@ public class MatchDetailService implements IMatchDetailService {
 		int birYear = date.getYear();
 		age = (curYear-birYear)+"岁";
 		return age;
+	}
+
+	@Override
+	public MatchUserDetailInfo getDetailByUser(int curUserId, int userId) throws ServiceException {
+		User user = userInfoService.getUserById(userId);
+		MatchUserDetailInfo matchUserDetailInfo = new MatchUserDetailInfo();
+		matchUserDetailInfo.setUserId(userId);
+		matchUserDetailInfo.setPhotoId(userId, 0);
+		matchUserDetailInfo.setCredit("一般");
+		matchUserDetailInfo.setCompany(user.getCompany());
+		matchUserDetailInfo.setJob(user.getPosition());
+		matchUserDetailInfo.setAge(dateToAge(user.getBirthday()));
+		matchUserDetailInfo.setGender(user.getGender());
+		//tags
+		matchUserDetailInfo.setTel(user.getPhoneNumber());
+		
+		if(user.getUserHouse()!=null){
+			matchUserDetailInfo.setHasHouse(true);
+			UserHouse userHouse = userHouseService.getUserHouseById(user.getUserId());
+			if(userHouse!=null) matchUserDetailInfo.setMatchUserHouse(userHouse);
+		}
+		else matchUserDetailInfo.setHasHouse(false);
+		
+		List<Integer> userIds = roommatesMapper.selectAllFavorite(curUserId);
+		if(userIds.indexOf(userId) != -1) matchUserDetailInfo.setFav(true);
+		else matchUserDetailInfo.setFav(false);
+		
+		return matchUserDetailInfo;
 	}
 
 }
