@@ -1,5 +1,6 @@
 package com.netease.user.service.impl;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -48,11 +49,12 @@ public class UserInfoService implements IUserInfoService {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private String getConstellation(Date birth) {
-		int month = birth.getMonth();
-		int day = birth.getDay();
-		return day < dayArr[month - 1] ? constellationArr[month - 1] : constellationArr[month];
+		Calendar calendar=Calendar.getInstance();
+		calendar.setTime(birth);
+		int month = calendar.get(Calendar.MONTH);
+		int day = calendar.get(Calendar.DATE);
+		return day < dayArr[month] ? constellationArr[month] : constellationArr[month + 1];
 	}
 
 	@Override
