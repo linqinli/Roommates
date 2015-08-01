@@ -15,8 +15,10 @@ import javax.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.netease.common.service.MailSender;
+import com.netease.exception.ServiceException;
 
 @Service
 public class DefaultMailSender implements MailSender {
@@ -48,18 +50,23 @@ public class DefaultMailSender implements MailSender {
 	}
 
 	@Override
-	public void send() throws MessagingException {
-		Properties props = new Properties();
-		props.put("mail.smtp.host", "smtp.sina.com");
-		props.put("mail.smtp.starttls.enable", "true");
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.port", "25");
-		Session session = Session.getDefaultInstance(props, new Authenticator() {
-			public PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(USERNAME, PASSWORD);
-			}
-		});
+	public void send() throws ServiceException {
 		try {
+			if (StringUtils.isEmpty(receiver)) {
+				throw new MessagingException("Receiver should not be empty.");
+			}
+			
+			Properties props = new Properties();
+			props.put("mail.smtp.host", "smtp.sina.com");
+			props.put("mail.smtp.starttls.enable", "true");
+			props.put("mail.smtp.auth", "true");
+			props.put("mail.smtp.port", "25");
+			Session session = Session.getDefaultInstance(props, new Authenticator() {
+				public PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(USERNAME, PASSWORD);
+				}
+			});
+
 			// Create a default MimeMessage object.
 			Message message = new MimeMessage(session);
 
@@ -67,12 +74,12 @@ public class DefaultMailSender implements MailSender {
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(receiver));
 
 			message.setSubject(subject);
-			message.setContent(content,"text/html;charset=UTF-8");
+			message.setContent(content, "text/html;charset=UTF-8");
 			Transport.send(message);
-			logger.info("Sent message successfully....");
+			logger.info("Sent message to {} successfully....", receiver);
 		} catch (MessagingException mex) {
-			logger.warn("Can not send mail to target user:" + receiver);
-			throw mex;
+			logger.error("Can not send mail to target user:" + receiver);
+			throw new ServiceException("Can not send mail to target user.", mex);
 		} finally {
 			clearMailStatus();
 		}

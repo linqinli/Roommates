@@ -20,7 +20,7 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 		String userId = String.valueOf(request.getSession().getAttribute("userId"));
 		String url = request.getRequestURI();
 		if (logger.isInfoEnabled()) {
-			logger.info("{} {} {}", ip, userId, url);
+			logger.info("{} {} {} Starting", ip, userId, url);
 		}
 		return true;
 	}
