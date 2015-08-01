@@ -4,9 +4,6 @@ import static org.testng.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import javax.servlet.http.HttpSession;
@@ -18,7 +15,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.netease.exception.ControllerException;
 import com.netease.exception.ServiceException;
@@ -73,9 +69,12 @@ public class UserControllerTest {
 	}
 
 	@Test
-	public void testAddUserPersonality() throws JsonProcessingException, ControllerException {
+	public void testAddUserPersonality() throws ControllerException, ServiceException {
+		User user = generateUser();
+		int userId = user.getUserId();
 		HttpSession session = mock(HttpSession.class);
-		when(session.getAttribute("userId")).thenReturn(1);
+		when(session.getAttribute("userId")).thenReturn(userId);
+		when(userInfoService.getUserById(userId)).thenReturn(user);
 		String result = userController.addUserPersonality(session, new QuestionnaireVO());
 		assertEquals(result, "{\"errno\":0}");
 	}
