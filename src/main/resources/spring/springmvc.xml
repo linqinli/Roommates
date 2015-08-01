@@ -40,24 +40,25 @@
 
 
 	<mvc:interceptors>
-		<bean class="com.netease.roommates.interceptor.roleControl" />
+		<mvc:interceptor>
+			<!-- /**表示所有url包括子url路径 -->
+			<mvc:mapping path="/**" />
+			<bean class="com.netease.roommates.interceptor.LoggerInterceptor" />
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="com.netease.roommates.interceptor.roleControl" />
+		</mvc:interceptor>
 	</mvc:interceptors>
 
 
 	<!-- 文件上传 -->
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-		<!-- 设置上传文件的最大尺寸为100KB -->
+		<!-- 设置上传文件的最大尺寸为1000KB -->
 		<property name="maxUploadSize">
 			<value>1024000</value>
 		</property>
 	</bean>
 
-	<mvc:interceptors>
-		<mvc:interceptor>
-			<!-- /**表示所有url包括子url路径 -->
-			<mvc:mapping path="/**" />
-			<bean class="com.netease.roommates.interceptor.LoggerInterceptor"></bean>
-		</mvc:interceptor>
-	</mvc:interceptors>
 </beans>

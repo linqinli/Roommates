@@ -7,9 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.dao.DataAccessException;
 
 import com.netease.exception.ServiceException;
-import com.netease.exception.StorageException;
 import com.netease.roommates.mapper.UserMapper;
 import com.netease.roommates.po.Personality;
 import com.netease.roommates.po.User;
@@ -30,7 +30,7 @@ public class UserInfoService implements IUserInfoService {
 		try {
 			log.debug("UserInfoService.getUserById");
 			return userMapper.getUserById(id);
-		} catch (StorageException se) {
+		} catch (DataAccessException se) {
 			log.error("error getting target user by id: " + id, se);
 			throw new ServiceException(se);
 		}
@@ -42,7 +42,7 @@ public class UserInfoService implements IUserInfoService {
 		try {
 			user.setConstellation(getConstellation(user.getBirthday()));
 			userMapper.updateUserBasicInfo(user);
-		} catch (StorageException se) {
+		} catch (DataAccessException se) {
 			log.error("error updatting target user: " + user, se);
 			throw new ServiceException(se);
 		}
@@ -59,7 +59,7 @@ public class UserInfoService implements IUserInfoService {
 	public void insertUser(User user) throws ServiceException {
 		try {
 			userMapper.insertUser(user);
-		} catch (StorageException se) {
+		} catch (DataAccessException se) {
 			log.error("error updatting target user: " + user, se);
 			throw new ServiceException(se);
 		}
@@ -69,7 +69,7 @@ public class UserInfoService implements IUserInfoService {
 	public void insertUserPersonality(Personality personality) throws ServiceException {
 		try {
 			userMapper.insertUserPersonality(personality);
-		} catch (StorageException se) {
+		} catch (DataAccessException se) {
 			log.error("error updatting target user personality: " + personality, se);
 			throw new ServiceException(se);
 		}
@@ -81,7 +81,7 @@ public class UserInfoService implements IUserInfoService {
 	public void updateUserPersonality(Personality personality) throws ServiceException {
 		try {
 			userMapper.updateUserPersonality(personality);
-		} catch (StorageException se) {
+		} catch (DataAccessException se) {
 			log.error("error updatting target user personality: " + personality, se);
 			throw new ServiceException(se);
 		}
@@ -91,7 +91,7 @@ public class UserInfoService implements IUserInfoService {
 	public List<User> getUserByName(String name) throws ServiceException {
 		try {
 			return userMapper.getUserByName(name);
-		} catch (StorageException se) {
+		} catch (DataAccessException se) {
 			log.error("error get user by name:" + name, se);
 			throw new ServiceException(se);
 		}
@@ -101,7 +101,7 @@ public class UserInfoService implements IUserInfoService {
 	public User getUserByEmail(String email) throws ServiceException {
 		try {
 			return userMapper.getUserByEmail(email);
-		} catch (StorageException se) {
+		} catch (DataAccessException se) {
 			log.error("error get user by email:" + email, se);
 			throw new ServiceException(se);
 		}
@@ -111,7 +111,7 @@ public class UserInfoService implements IUserInfoService {
 	public int isQuestionnaireAll(int userId) throws ServiceException {
 		try {
 			return userMapper.isQuestionnaireAll(userId);
-		} catch (StorageException se) {
+		} catch (DataAccessException se) {
 			log.error("error check Questionnaire is complete:" + userId, se);
 			throw new ServiceException(se);
 		}
@@ -120,7 +120,7 @@ public class UserInfoService implements IUserInfoService {
 	public Personality getUserPersonalityById(int userId) throws ServiceException {
 		try {
 			return userMapper.getUserPersonality(userId);
-		} catch (StorageException se) {
+		} catch (DataAccessException se) {
 			log.error("error getting target user personality by userId: " + userId, se);
 			throw new ServiceException(se);
 		}

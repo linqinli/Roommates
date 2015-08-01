@@ -1,8 +1,5 @@
 package com.netease.roommates.interceptor;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,16 +10,14 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 public class LoggerInterceptor extends HandlerInterceptorAdapter {
 	private Logger logger = LoggerFactory.getLogger(LoggerInterceptor.class);
-	private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		//request.getSession().setAttribute("userId", 29);
+		// request.getSession().setAttribute("userId", 29);
 		request.setAttribute("startTime", System.currentTimeMillis());
-		String time = format.format(new Date());
-		
-		if (logger.isDebugEnabled()) {
-			logger.debug("{} {} {}", time, request.getRemoteAddr(), request.getPathTranslated());
+
+		if (logger.isInfoEnabled()) {
+			logger.info("{} {}", request.getRemoteAddr(), request.getRequestURI());
 		}
 		return true;
 	}
@@ -32,8 +27,9 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 		long startTime = (Long) request.getAttribute("startTime");
 		long executeTime = System.currentTimeMillis() - startTime;
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("[" + handler + "] executeTime : " + executeTime + "ms");
+		if (logger.isInfoEnabled()) {
+			logger.info(
+					request.getRemoteAddr() + " " + request.getRequestURI() + " executeTime: " + executeTime + "ms");
 		}
 	}
 }

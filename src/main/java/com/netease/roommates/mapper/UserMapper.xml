@@ -3,7 +3,7 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.netease.roommates.mapper.UserMapper">
-	<cache/>
+	<cache />
 	<resultMap id="userMap" type="user">
 		<id column="userId" property="userId" />
 		<association property="personality" column="userId"
@@ -17,13 +17,15 @@
 		insert into sys_user(userName, pwdMD5Hash, nickName,
 		gender, companyEmail, phoneNumber,
 		birthday, address, updateTime,
-		company, position)
+		company, position, constellation)
 		values(#{userName},
-		#{pwdMD5Hash}, #{nickName},
+		#{pwdMD5Hash},
+		#{nickName},
 		#{gender}, #{companyEmail},
 		#{phoneNumber},
-		#{birthday}, #{address},
-		now(), #{company}, #{position})
+		#{birthday},
+		#{address},
+		now(), #{company}, #{position}, #{constellation})
 	</insert>
 
 	<select id="getUserById" parameterType="int" resultMap="userMap">
@@ -64,6 +66,9 @@
 			<if test="status != null">
 				status = #{status, jdbcType=BIT},
 			</if>
+			<if test="constellation != null">
+				constellation = #{constellation, jdbcType=VARCHAR},
+			</if>
 			updateTime = now()
 		</set>
 		where userId=#{userId}
@@ -77,20 +82,19 @@
 		insert into
 		user_personality(userId, smoking, pet, dailySchedule, visitor,
 		constellation,
-		cleanliness, personCharacter, hasHouse)
-		values(#{userId}, #{smoking}, #{pet},
+		cleanliness, personCharacter, updateTime)
+		values(#{userId},
+		#{smoking}, #{pet},
 		#{dailySchedule}, #{visitor},
 		#{constellation},
-		#{cleanliness}, #{personCharacter}, #{hasHouse} )
+		#{cleanliness}, #{personCharacter}, now())
 	</insert>
 
 	<update id="updateUserPersonality" parameterType="personality">
 		update user_personality
 		<set>
-			<if test="hasHouse != 0">
-				hasHouse = #{hasHouse, jdbcType=INTEGER},
-			</if>
-			<if test="smoking != 0"> smoking = #{smoking, jdbcType=INTEGER},
+			<if test="smoking != 0">
+				smoking = #{smoking, jdbcType=INTEGER},
 			</if>
 			<if test="pet != 0">
 				pet = #{pet, jdbcType=INTEGER},
@@ -130,8 +134,9 @@
 
 	<select id="isQuestionnaireAll" parameterType="int" resultType="int">
 		select count(*) from user_personality where userId=#{userId} and
-		(smoking!=1 or pet!=1 or dailySchedule!=1 or visitor!=1 
-		or cleanliness!=1 or personCharacter!=1)
+		(smoking!=1 or pet!=1 or dailySchedule!=1 or visitor!=1
+		or
+		cleanliness!=1 or personCharacter!=1)
 	</select>
 
 </mapper>

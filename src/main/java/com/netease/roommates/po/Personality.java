@@ -13,11 +13,6 @@ public class Personality implements Serializable {
 	private String constellation;
 	private int cleanliness = 1;
 	private int personCharacter = 1;
-	private int hasHouse = 1;
-	
-	public Personality() {
-	
-	}
 	
 	public int getId() {
 		return id;
@@ -96,12 +91,4 @@ public class Personality implements Serializable {
 		this.personCharacter = personCharacter;
 	}
 
-	public int getHasHouse() {
-		return hasHouse;
-	}
-
-	public void setHasHouse(int hasHouse) {
-		this.hasHouse = hasHouse;
-	}
-	
 }
