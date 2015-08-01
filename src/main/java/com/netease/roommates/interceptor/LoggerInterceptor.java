@@ -13,7 +13,7 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		// request.getSession().setAttribute("userId", 29);
+		//request.getSession().setAttribute("userId", 29);
 		request.setAttribute("startTime", System.currentTimeMillis());
 
 		String ip = getRemoteAddress(request);

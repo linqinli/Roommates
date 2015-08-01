@@ -122,7 +122,7 @@ public class LoginController {
 				if(user.getGender()==0 || user.getGender()==1)
 					dataMap.put("gender", (user.getGender() == 0) ? "男" : "女");	
 				dataMap.put("birthday", user.getBirthday());
-				dataMap.put("constellation", personality.getConstellation());
+				//dataMap.put("constellation", personality.getConstellation());
 				dataMap.put("company", user.getCompany());
 				dataMap.put("job", user.getPosition());
 				dataMap.put("phone", user.getPhoneNumber());

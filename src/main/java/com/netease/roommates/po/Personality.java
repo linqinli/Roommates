@@ -10,7 +10,6 @@ public class Personality implements Serializable {
 	private int pet = 1;
 	private int dailySchedule = 1;
 	private int visitor = 1;
-	private String constellation;
 	private int cleanliness = 1;
 	private int personCharacter = 1;
 	
@@ -62,14 +61,6 @@ public class Personality implements Serializable {
 
 	public void setVisitor(int visitor) {
 		this.visitor = visitor;
-	}
-
-	public String getConstellation() {
-		return constellation;
-	}
-
-	public void setConstellation(String constellation) {
-		this.constellation = constellation;
 	}
 
 	public int getCleanliness() {

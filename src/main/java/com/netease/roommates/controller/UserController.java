@@ -85,11 +85,17 @@ public class UserController {
 	public String addUserPersonality(HttpSession session, @RequestBody QuestionnaireVO questionnaireVO)
 			throws ControllerException {
 		try {
+			int userId = (Integer) session.getAttribute(USER_ID);
 			JsonBuilder result = new JsonBuilder();
 			Personality personality = new Personality();
-			personality.setUserId((Integer) session.getAttribute(USER_ID));
+			personality.setUserId(userId);
 			questionnaireVO.populatePersonality(personality);
-			userInfoService.insertUserPersonality(personality);
+			User user = userInfoService.getUserById(userId);
+			if (user.getPersonality() == null) {
+				userInfoService.insertUserPersonality(personality);
+			} else {
+				userInfoService.updateUserPersonality(personality);
+			}
 			result.append("errno", 0);
 			return result.build();
 		} catch (ServiceException se) {
@@ -110,11 +116,6 @@ public class UserController {
 			throw new ControllerException("Error getting user quiz.", e);
 		}
 
-	}
-
-	@RequestMapping(value = "/updateUserPersonality", method = RequestMethod.POST)
-	public void updateUserPersonality(@RequestBody Personality personality) throws ServiceException {
-		userInfoService.updateUserPersonality(personality);
 	}
 
 	@ResponseBody

@@ -81,13 +81,13 @@
 	<insert id="insertUserPersonality" parameterType="personality">
 		insert into
 		user_personality(userId, smoking, pet, dailySchedule, visitor,
-		constellation,
 		cleanliness, personCharacter, updateTime)
 		values(#{userId},
-		#{smoking}, #{pet},
+		#{smoking},
+		#{pet},
 		#{dailySchedule}, #{visitor},
-		#{constellation},
-		#{cleanliness}, #{personCharacter}, now())
+		#{cleanliness},
+		#{personCharacter}, now())
 	</insert>
 
 	<update id="updateUserPersonality" parameterType="personality">
@@ -106,10 +106,6 @@
 			<if test="visitor != 0">
 				visitor = #{visitor, jdbcType=INTEGER},
 			</if>
-			<if test="constellation != null">
-				constellation = #{constellation,
-				jdbcType=VARCHAR},
-			</if>
 			<if test="cleanliness != 0">
 				cleanliness = #{cleanliness,
 				jdbcType=INTEGER},
@@ -120,7 +116,7 @@
 			</if>
 			updateTime = now()
 		</set>
-		where id=#{id}
+		where userId=#{userId}
 	</update>
 
 	<select id="getUserByName" parameterType="String" resultType="user">
@@ -130,7 +126,6 @@
 	<select id="getUserByEmail" parameterType="String" resultType="user">
 		select * from sys_user where companyEmail=#{email}
 	</select>
-
 
 	<select id="isQuestionnaireAll" parameterType="int" resultType="int">
 		select count(*) from user_personality where userId=#{userId} and
