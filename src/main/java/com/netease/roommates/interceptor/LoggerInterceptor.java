@@ -16,8 +16,11 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 		// request.getSession().setAttribute("userId", 29);
 		request.setAttribute("startTime", System.currentTimeMillis());
 
+		String ip = getRemoteAddress(request);
+		String userId = String.valueOf(request.getSession().getAttribute("userId"));
+		String url = request.getRequestURI();
 		if (logger.isInfoEnabled()) {
-			logger.info("{} {}", request.getRemoteAddr(), request.getRequestURI());
+			logger.info("{} {} {}", ip, userId, url);
 		}
 		return true;
 	}
@@ -26,10 +29,21 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 			ModelAndView modelAndView) throws Exception {
 		long startTime = (Long) request.getAttribute("startTime");
 		long executeTime = System.currentTimeMillis() - startTime;
-
+		
+		String ip = getRemoteAddress(request);
+		String userId = String.valueOf(request.getSession().getAttribute("userId"));
+		String url = request.getRequestURI();
+		
 		if (logger.isInfoEnabled()) {
-			logger.info(
-					request.getRemoteAddr() + " " + request.getRequestURI() + " executeTime: " + executeTime + "ms");
+			logger.info("{} {} {} executeTime: {}ms", ip, userId, url, executeTime);
 		}
+	}
+
+	private String getRemoteAddress(HttpServletRequest request) {
+		String ip = request.getHeader("X-Real-IP");
+		if (ip == null) {
+			ip = request.getRemoteAddr();
+		}
+		return ip;
 	}
 }

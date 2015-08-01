@@ -29,3 +29,6 @@ src/main/resources/db.properties
 
 # Test-Output
 test-output/
+
+# Log4j config
+src/main/resources/log4j.properties
