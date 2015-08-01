@@ -20,9 +20,8 @@ target
 # Eclipse Settings
 .classpath
 .settings/
-
-src/main/webapp/
-!src/main/webapp/WEB-INF/web.xml
+.project
+.DS_Store
 
 # DB Settings
 src/main/resources/db.properties
@@ -30,5 +29,4 @@ src/main/resources/db.properties
 # Test-Output
 test-output/
 
-# Log4j config
-src/main/resources/log4j.properties
+
