@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.netease.user.service.FileService;
+import com.netease.user.service.IFileService;
 
 public class PhotoControllerTest {
 	
@@ -21,7 +21,7 @@ public class PhotoControllerTest {
 	private PhotoController photoController;
 	
 	@Mock
-	private FileService fileService;
+	private IFileService fileService;
 	
 	@BeforeClass
 	public void setUp() {

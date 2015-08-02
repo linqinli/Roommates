@@ -17,11 +17,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.netease.user.service.FileService;
+import com.netease.user.service.IFileService;
 import com.netease.utils.IOUtils;
 
 @Service
-public class PhotoTransportService implements FileService {
+public class PhotoTransportService implements IFileService {
 
 	@Override
 	public void fildUpload(String name, byte[] photo) throws IOException {
