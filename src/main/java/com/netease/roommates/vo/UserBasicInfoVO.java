@@ -2,10 +2,12 @@ package com.netease.roommates.vo;
 
 import java.util.Date;
 
+import org.springframework.util.StringUtils;
+
 import com.netease.roommates.po.User;
 
 public class UserBasicInfoVO {
-	private byte lookstatus;
+	private Byte lookstatus;
 	private String name;
 	private String sex;
 	private Date birth;
@@ -17,11 +19,11 @@ public class UserBasicInfoVO {
 
 	}
 
-	public byte getLookstatus() {
+	public Byte getLookstatus() {
 		return lookstatus;
 	}
 
-	public void setLookstatus(byte lookstatus) {
+	public void setLookstatus(Byte lookstatus) {
 		this.lookstatus = lookstatus;
 	}
 
@@ -74,12 +76,14 @@ public class UserBasicInfoVO {
 	}
 
 	public void populateUser(User user) {
-		user.setStatus(lookstatus);
-		user.setNickName(name);
 		user.setBirthday(birth);
-		user.setPhoneNumber(phone);
-		user.setCompany(company);
-		user.setPosition(job);
+		user.setNickName(checkNull(name));
+		user.setPhoneNumber(checkNull(phone));
+		user.setCompany(checkNull(company));
+		user.setPosition(checkNull(job));
+		if (lookstatus != null) {
+			user.setStatus(lookstatus.byteValue() ==  1 ? (byte) 1 : (byte) 0);
+		}
 		if (sex != null) {
 			switch (sex.charAt(0)) {
 			case '男':
@@ -89,11 +93,25 @@ public class UserBasicInfoVO {
 				user.setGender((byte) 1);
 				break;
 			default:
-				user.setGender((byte) 2); // blank
+				user.setGender(null); // blank
 			}
 		} else {
-			user.setGender((byte) 2);
+			user.setGender(null);
 		}
+	}
+
+	private String checkNull(String str) {
+		if (!StringUtils.isEmpty(str)) {
+			return str;
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "UserBasicInfoVO [lookstatus=" + lookstatus + ", name=" + name + ", sex=" + sex + ", birth=" + birth
+				+ ", phone=" + phone + ", company=" + company + ", job=" + job + "]";
 	}
 
 }

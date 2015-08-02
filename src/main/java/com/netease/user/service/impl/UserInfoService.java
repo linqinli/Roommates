@@ -41,7 +41,9 @@ public class UserInfoService implements IUserInfoService {
 	// @CacheEvict(value = "userCache", key = "'User' + #user.getUserId()")
 	public void updateUserBasicInfo(User user) throws ServiceException {
 		try {
-			user.setConstellation(getConstellation(user.getBirthday()));
+			if (user.getBirthday() != null) {
+				user.setConstellation(getConstellation(user.getBirthday()));
+			}
 			userMapper.updateUserBasicInfo(user);
 		} catch (DataAccessException se) {
 			log.error("error updatting target user: " + user, se);
@@ -50,7 +52,7 @@ public class UserInfoService implements IUserInfoService {
 	}
 
 	private String getConstellation(Date birth) {
-		Calendar calendar=Calendar.getInstance();
+		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(birth);
 		int month = calendar.get(Calendar.MONTH);
 		int day = calendar.get(Calendar.DATE);

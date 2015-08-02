@@ -8,8 +8,8 @@ public class User implements Serializable{
 	
 	private int userId;
 	private String userName;
-	private byte gender;
-	private byte status;
+	private Byte gender;
+	private Byte status;
 	private String nickName;
 	private Date birthday;
 	private String position;
@@ -58,19 +58,19 @@ public class User implements Serializable{
 		this.position = position;
 	}
 
-	public byte getGender() {
+	public Byte getGender() {
 		return gender;
 	}
 
-	public void setGender(byte gender) {
+	public void setGender(Byte gender) {
 		this.gender = gender;
 	}
 
-	public byte getStatus() {
+	public Byte getStatus() {
 		return status;
 	}
 
-	public void setStatus(byte status) {
+	public void setStatus(Byte status) {
 		this.status = status;
 	}
 

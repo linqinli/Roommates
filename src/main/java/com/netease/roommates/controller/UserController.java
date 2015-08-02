@@ -50,6 +50,7 @@ public class UserController {
 			throws ControllerException {
 		try {
 			int userId = (Integer) session.getAttribute(USER_ID);
+			logger.info("User id:" + userId + " " + userBasicInfoVO);
 			JsonBuilder result = new JsonBuilder();
 			User user = new User();
 			user.setUserId(userId);
