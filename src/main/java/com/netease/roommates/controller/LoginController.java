@@ -119,7 +119,7 @@ public class LoginController {
 				dataMap.put("credit", credit);
 				dataMap.put("auth", auth);
 				dataMap.put("hasHouse", (user.getUserHouse() == null) ? false : true);
-				if(user.getGender()==0 || user.getGender()==1)
+				if(user.getGender() != null)
 					dataMap.put("gender", (user.getGender() == 0) ? "男" : "女");	
 				dataMap.put("birthday", user.getBirthday());
 				//dataMap.put("constellation", personality.getConstellation());
