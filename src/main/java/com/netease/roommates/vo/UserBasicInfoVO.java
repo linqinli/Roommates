@@ -7,10 +7,10 @@ import org.springframework.util.StringUtils;
 import com.netease.roommates.po.User;
 
 public class UserBasicInfoVO {
-	private Byte lookstatus;
-	private String name;
-	private String sex;
-	private Date birth;
+	private Byte lookStatus;
+	private String nickName;
+	private String gender;
+	private Date birthday;
 	private String phone;
 	private String company;
 	private String job;
@@ -19,36 +19,36 @@ public class UserBasicInfoVO {
 
 	}
 
-	public Byte getLookstatus() {
-		return lookstatus;
+	public Byte getLookStatus() {
+		return lookStatus;
 	}
 
-	public void setLookstatus(Byte lookstatus) {
-		this.lookstatus = lookstatus;
+	public void setLookStatus(Byte lookStatus) {
+		this.lookStatus = lookStatus;
 	}
 
-	public String getName() {
-		return name;
+	public String getNickName() {
+		return nickName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
 	}
 
-	public String getSex() {
-		return sex;
+	public String getGender() {
+		return gender;
 	}
 
-	public void setSex(String sex) {
-		this.sex = sex;
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
-	public Date getBirth() {
-		return birth;
+	public Date getBirthday() {
+		return birthday;
 	}
 
-	public void setBirth(Date birth) {
-		this.birth = birth;
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
 	}
 
 	public String getPhone() {
@@ -76,16 +76,16 @@ public class UserBasicInfoVO {
 	}
 
 	public void populateUser(User user) {
-		user.setBirthday(birth);
-		user.setNickName(checkNull(name));
+		user.setBirthday(birthday);
+		user.setNickName(checkNull(nickName));
 		user.setPhoneNumber(checkNull(phone));
 		user.setCompany(checkNull(company));
 		user.setPosition(checkNull(job));
-		if (lookstatus != null) {
-			user.setStatus(lookstatus.byteValue() ==  1 ? (byte) 1 : (byte) 0);
+		if (lookStatus != null) {
+			user.setStatus(lookStatus.byteValue() ==  1 ? (byte) 1 : (byte) 0);
 		}
-		if (sex != null) {
-			switch (sex.charAt(0)) {
+		if (gender != null) {
+			switch (gender.charAt(0)) {
 			case '男':
 				user.setGender((byte) 0);
 				break;
@@ -106,12 +106,6 @@ public class UserBasicInfoVO {
 		} else {
 			return null;
 		}
-	}
-
-	@Override
-	public String toString() {
-		return "UserBasicInfoVO [lookstatus=" + lookstatus + ", name=" + name + ", sex=" + sex + ", birth=" + birth
-				+ ", phone=" + phone + ", company=" + company + ", job=" + job + "]";
 	}
 
 }

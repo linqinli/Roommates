@@ -69,7 +69,7 @@ public class UserController {
 	private int checkUserInfoCompletion(User user) {
 		if (!StringUtils.isEmpty(user.getNickName()) && !StringUtils.isEmpty(user.getCompany())
 				&& !StringUtils.isEmpty(user.getPosition()) && !StringUtils.isEmpty(user.getPhoneNumber())
-				&& user.getGender() != 2 && user.getBirthday() != null) {
+				&& user.getGender() != null && user.getBirthday() != null) {
 			return 1;
 		}
 		return 0;

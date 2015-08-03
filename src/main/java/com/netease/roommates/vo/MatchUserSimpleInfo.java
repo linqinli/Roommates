@@ -34,8 +34,8 @@ public class MatchUserSimpleInfo {
 	public String getGender() {
 		return gender;
 	}
-	public void setGender(byte byteGender) {
-		if(byteGender == 0) this.gender = "男";
+	public void setGender(Byte byteGender) {
+		if(byteGender != null && byteGender == 0) this.gender = "男";
 		else this.gender = "女";
 	}
 	public String getNickName() {
