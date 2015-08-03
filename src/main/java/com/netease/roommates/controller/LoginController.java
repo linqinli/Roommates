@@ -21,7 +21,8 @@ import com.netease.roommates.po.User;
 import com.netease.roommates.vo.LoginAndRegisterUserVO;
 import com.netease.user.service.IUserInfoService;
 import com.netease.utils.HashGeneratorUtils;
-
+import com.netease.roommates.vo.TagVO;
+import com.netease.user.service.IUserHouseService;
 
 
 
@@ -30,6 +31,8 @@ import com.netease.utils.HashGeneratorUtils;
 public class LoginController {
 	@Autowired
 	private IUserInfoService userInfoService;
+	@Autowired
+	private IUserHouseService userHouseService;
 	
 	@RequestMapping(value="/logout")
 	@ResponseBody
@@ -62,19 +65,19 @@ public class LoginController {
 		
 		if(p_email==null || p_email.isEmpty()){
 			info.put("result", 0);
-			info.put("info","邮箱为空");
+			info.put("info","请输入企业邮箱");
 			return info;
 		}
 		if(p_password==null || p_password.isEmpty()){
 			info.put("result", 0);
-			info.put("info", "密码为空");
+			info.put("info", "请输入登录密码");
 			return info;
 		}
 		
 		
 		if(!emailAddress.emailCheck(p_email)){
 			info.put("result", 0);
-			info.put("info", "邮箱格式错误");
+			info.put("info", "请输入您的企业邮箱");
 			return info;
 		}
 		
@@ -94,6 +97,7 @@ public class LoginController {
 				String headImgUrl = "http://223.252.223.13/Roommates/photo/photo_" + user.getUserId() + "_small.jpg";
 				Personality personality = userInfoService.getUserPersonalityById(user.getUserId());
 				
+				
 				Map<String, Object> auth= new HashMap<String, Object>();
 				auth.put("email", true);
 				auth.put("tel", false);
@@ -101,30 +105,38 @@ public class LoginController {
 				
 				Map<String, Object> tags = null;
 				if(isQuestionnaireAll==1){
+					TagVO tag = new TagVO(personality);
 					tags= new HashMap<String, Object>();
-					tags.put("zx", personality.getDailySchedule());
-					tags.put("cy", personality.getSmoking());
-					tags.put("cw", personality.getPet());
-					tags.put("ws", personality.getCleanliness());
-					tags.put("fk", personality.getVisitor());
-					tags.put("xg", personality.getPersonCharacter());
+					tags.put("zx", tag.getZx());
+					tags.put("cy", tag.getCy());
+					tags.put("cw", tag.getCw());
+					tags.put("ws", tag.getWs());
+					tags.put("fk", tag.getFk());
+					tags.put("xg", tag.getXg());
 				}
 				
 				
 				Map<String, Object> dataMap = new HashMap<String, Object>();
 				dataMap.put("userId", user.getUserId());
 				dataMap.put("nickName", user.getNickName());
-				dataMap.put("avatar", headImgUrl);
+				if(user.getHasPhoto())
+					dataMap.put("avatar", headImgUrl);
+				else
+					dataMap.put("avatar", "http://223.252.223.13/Roommates/photo/photo_default_small.jpg");
 				dataMap.put("lookStatus",user.getStatus());
 				dataMap.put("credit", credit);
 				dataMap.put("auth", auth);
-				dataMap.put("hasHouse", (user.getUserHouse() == null) ? false : true);
+				dataMap.put("hasHouse", (userHouseService.getUserHouseById(user.getUserId()) == null) ? false : true);
 				if(user.getGender() != null)
 					dataMap.put("gender", (user.getGender() == 0) ? "男" : "女");	
-				dataMap.put("birthday", user.getBirthday());
-				//dataMap.put("constellation", personality.getConstellation());
+				if(user.getBirthday() != null)
+					dataMap.put("birthday", user.getBirthday());
+				if(user.getConstellation() != null)
+					dataMap.put("constellation", user.getConstellation());
 				dataMap.put("company", user.getCompany());
-				dataMap.put("job", user.getPosition());
+				if(user.getPosition() != null)
+					dataMap.put("job", user.getPosition());
+				if(user.getPhoneNumber() != null)
 				dataMap.put("phone", user.getPhoneNumber());
 				if(tags!=null)
 					dataMap.put("tags", tags);				
@@ -136,13 +148,13 @@ public class LoginController {
 			}
 			else{
 				info.put("result", 0);
-				info.put("info", "邮箱与密码不匹配");
+				info.put("info", "密码输入不正确，请重新输入");
 				return info;
 			}
 		}
 		else{
 			info.put("result",0);
-			info.put("info", "该邮箱未注册");
+			info.put("info", "该企业邮箱尚未注册，请检查邮箱");
 			return info;
 		}
 	}

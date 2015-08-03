@@ -581,7 +581,8 @@ public class MatchDataService implements IMatchDataService {
 		matchUserInfo.setNickName(user.getNickName());
 
 		// matchUserInfo.setPhotoId(user.getUserId(), 0);
-		matchUserInfo.setPhotoId(123, 0);
+		if(user.getHasPhoto()) matchUserInfo.setPhotoId(user.getUserId(), 0);
+		else matchUserInfo.setPhotoId(123, 0);
 		matchUserInfo.setUserId(user.getUserId());
 		matchUserInfo.setAge(dateToAge(user.getBirthday()));
 		return matchUserInfo;

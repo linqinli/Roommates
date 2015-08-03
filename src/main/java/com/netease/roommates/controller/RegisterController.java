@@ -114,17 +114,17 @@ public class RegisterController {
 		
 		if(p_name==null || p_name.isEmpty()){
 			info.put("result", 0);
-			info.put("info", "昵称为空");
+			info.put("info", "请输入昵称");
 			return info;
 		}
 		if(p_password==null || p_password.isEmpty()){
 			info.put("result", 0);
-			info.put("info", "密码为空");
+			info.put("info", "请输入密码");
 			return info;
 		}
 		if(p_email==null || p_email.isEmpty()){
 			info.put("result", 0);
-			info.put("info", "邮箱为空");
+			info.put("info", "请输入企业邮箱");
 			return info;
 		}
 		
@@ -136,7 +136,7 @@ public class RegisterController {
 		
 		if(!emailAddress.emailCheck(p_email)){
 			info.put("result", 0);
-			info.put("info", "邮箱格式错误");
+			info.put("info", "请输入您的企业邮箱");
 			return info;
 		}
 		
