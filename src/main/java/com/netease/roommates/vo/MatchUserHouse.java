@@ -67,7 +67,7 @@ public class MatchUserHouse {
 		this.setCommunity(userHouse.getCommunity());
 		this.setPrice(userHouse.getPrice());
 		this.setDescription(userHouse.getDescription());
-		this.setUpdateTime(userHouse.getUpdateTime());
+		this.setUpdateTime(userHouse.getUpdateTime().substring(0, 10));
 	}
 	public String getUpdateTime() {
 		return updateTime;

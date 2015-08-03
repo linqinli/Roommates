@@ -622,14 +622,14 @@ public class MatchDataService implements IMatchDataService {
 
 	@Override
 	public List<MatchUserSimpleInfo> searchUserSimpleInfoByPara(String keyWords, int id, int p, int xb, int f, int gs,
-			int cy, int cw, int zx, int ws, int xg, int fk) throws ServiceException, UnsupportedEncodingException {
+			int cy, int cw, int zx, int ws, int xg, int fk) throws ServiceException {
 		// TODO Auto-generated method stub
-		keyWords = new String(keyWords.getBytes(), "utf8");
+		
 		String selectSqlString = generateSqlStrByCondition(id, xb, f, gs, cy, cw, zx, ws, xg, fk);
 		String nickSqlString = "select su.userId from sys_user su join ( " + selectSqlString + " ) res on su.userId=res.userId where "
 				+ "su.nickName='" + keyWords+"'";
 		List<Integer> nickUserIdList = (List<Integer>)jdbcTemplate.queryForList(nickSqlString, Integer.class);
-		if(nickUserIdList != null){
+		if(nickUserIdList.size() != 0){
 			List<MatchUserSimpleInfo>  matchUserSimpleInfo = matchResultSimpleInfo(id, nickUserIdList);
 			List<MatchUserSimpleInfo> resultUserSimpleInfo = new ArrayList<MatchUserSimpleInfo>();
 			for(int i=(p-1)*20; i<p*20 && i<matchUserSimpleInfo.size(); ++i ){
@@ -640,7 +640,7 @@ public class MatchDataService implements IMatchDataService {
 		String addrSqlString = "select fh.userId from fn_house fh join ( " + selectSqlString + " ) res on fh.userId=res.userId where "
 				+ "fh.community='" + keyWords + "'";
 		List<Integer> addrUserIdList = (List<Integer>)jdbcTemplate.queryForList(addrSqlString, Integer.class);
-		if(addrUserIdList != null){
+		if(addrUserIdList.size() != 0){
 			List<MatchUserSimpleInfo>  matchUserSimpleInfo = matchResultSimpleInfo(id, addrUserIdList);
 			List<MatchUserSimpleInfo> resultUserSimpleInfo = new ArrayList<MatchUserSimpleInfo>();
 			for(int i=(p-1)*20; i<p*20 && i<matchUserSimpleInfo.size(); ++i ){

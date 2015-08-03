@@ -114,16 +114,18 @@ public class MatchController {
 			@RequestParam(value="xg", defaultValue="1")int xg,
 			@RequestParam(value="fk", defaultValue="1")int fk) throws ServiceException {
 		
+		try {
+			keyWords = new String(keyWords.getBytes("iso-8859-1"), "utf8");
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		Map resultMap = new HashMap<String, Object >();
 		
 		List<MatchUserSimpleInfo> resultUserInfo = new ArrayList<MatchUserSimpleInfo>();
 		
-		try {
-			resultUserInfo = matchDataService.searchUserSimpleInfoByPara(keyWords,id, p, xb, f, gs, cy, cw, zx, ws, xg, fk);
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		resultUserInfo = matchDataService.searchUserSimpleInfoByPara(keyWords,id, p, xb, f, gs, cy, cw, zx, ws, xg, fk);
+		
 		
 		resultMap.put("data", resultUserInfo);
 		resultMap.put("errno", 0);
