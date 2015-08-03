@@ -21,7 +21,8 @@ import com.netease.roommates.po.User;
 import com.netease.roommates.vo.LoginAndRegisterUserVO;
 import com.netease.user.service.IUserInfoService;
 import com.netease.utils.HashGeneratorUtils;
-
+import com.netease.roommates.vo.TagVO;
+import com.netease.user.service.IUserHouseService;
 
 
 
@@ -30,6 +31,8 @@ import com.netease.utils.HashGeneratorUtils;
 public class LoginController {
 	@Autowired
 	private IUserInfoService userInfoService;
+	@Autowired
+	private IUserHouseService userHouseService;
 	
 	@RequestMapping(value="/logout")
 	@ResponseBody
@@ -94,6 +97,7 @@ public class LoginController {
 				String headImgUrl = "http://223.252.223.13/Roommates/photo/photo_" + user.getUserId() + "_small.jpg";
 				Personality personality = userInfoService.getUserPersonalityById(user.getUserId());
 				
+				
 				Map<String, Object> auth= new HashMap<String, Object>();
 				auth.put("email", true);
 				auth.put("tel", false);
@@ -101,13 +105,14 @@ public class LoginController {
 				
 				Map<String, Object> tags = null;
 				if(isQuestionnaireAll==1){
+					TagVO tag = new TagVO(personality);
 					tags= new HashMap<String, Object>();
-					tags.put("zx", personality.getDailySchedule());
-					tags.put("cy", personality.getSmoking());
-					tags.put("cw", personality.getPet());
-					tags.put("ws", personality.getCleanliness());
-					tags.put("fk", personality.getVisitor());
-					tags.put("xg", personality.getPersonCharacter());
+					tags.put("zx", tag.getZx());
+					tags.put("cy", tag.getCy());
+					tags.put("cw", tag.getCw());
+					tags.put("ws", tag.getWs());
+					tags.put("fk", tag.getFk());
+					tags.put("xg", tag.getXg());
 				}
 				
 				
@@ -118,13 +123,17 @@ public class LoginController {
 				dataMap.put("lookStatus",user.getStatus());
 				dataMap.put("credit", credit);
 				dataMap.put("auth", auth);
-				dataMap.put("hasHouse", (user.getUserHouse() == null) ? false : true);
+				dataMap.put("hasHouse", (userHouseService.getUserHouseById(user.getUserId()) == null) ? false : true);
 				if(user.getGender() != null)
 					dataMap.put("gender", (user.getGender() == 0) ? "男" : "女");	
-				dataMap.put("birthday", user.getBirthday());
-				//dataMap.put("constellation", personality.getConstellation());
+				if(user.getBirthday() != null)
+					dataMap.put("birthday", user.getBirthday());
+				if(user.getConstellation() != null)
+					dataMap.put("constellation", user.getConstellation());
 				dataMap.put("company", user.getCompany());
-				dataMap.put("job", user.getPosition());
+				if(user.getPosition() != null)
+					dataMap.put("job", user.getPosition());
+				if(user.getPhoneNumber() != null)
 				dataMap.put("phone", user.getPhoneNumber());
 				if(tags!=null)
 					dataMap.put("tags", tags);				
