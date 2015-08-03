@@ -65,19 +65,19 @@ public class LoginController {
 		
 		if(p_email==null || p_email.isEmpty()){
 			info.put("result", 0);
-			info.put("info","邮箱为空");
+			info.put("info","请输入企业邮箱");
 			return info;
 		}
 		if(p_password==null || p_password.isEmpty()){
 			info.put("result", 0);
-			info.put("info", "密码为空");
+			info.put("info", "请输入登录密码");
 			return info;
 		}
 		
 		
 		if(!emailAddress.emailCheck(p_email)){
 			info.put("result", 0);
-			info.put("info", "邮箱格式错误");
+			info.put("info", "请输入您的企业邮箱");
 			return info;
 		}
 		
@@ -119,7 +119,10 @@ public class LoginController {
 				Map<String, Object> dataMap = new HashMap<String, Object>();
 				dataMap.put("userId", user.getUserId());
 				dataMap.put("nickName", user.getNickName());
-				dataMap.put("avatar", headImgUrl);
+				if(user.getHasPhoto())
+					dataMap.put("avatar", headImgUrl);
+				else
+					dataMap.put("avatar", "http://223.252.223.13/Roommates/photo/photo_default_small.jpg");
 				dataMap.put("lookStatus",user.getStatus());
 				dataMap.put("credit", credit);
 				dataMap.put("auth", auth);
@@ -145,13 +148,13 @@ public class LoginController {
 			}
 			else{
 				info.put("result", 0);
-				info.put("info", "邮箱与密码不匹配");
+				info.put("info", "密码输入不正确，请重新输入");
 				return info;
 			}
 		}
 		else{
 			info.put("result",0);
-			info.put("info", "该邮箱未注册");
+			info.put("info", "该企业邮箱尚未注册，请检查邮箱");
 			return info;
 		}
 	}
