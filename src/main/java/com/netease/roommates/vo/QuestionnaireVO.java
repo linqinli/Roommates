@@ -3,7 +3,6 @@ package com.netease.roommates.vo;
 import com.netease.roommates.po.Personality;
 
 public class QuestionnaireVO {
-	private int yf;
 	private int zx;
 	private int cy;
 	private int cw;
@@ -11,16 +10,10 @@ public class QuestionnaireVO {
 	private int fk;
 	private int xg;
 	
-	public QuestionnaireVO() {}
-
-	public int getYf() {
-		return yf;
+	public QuestionnaireVO() {
+		
 	}
-
-	public void setYf(int yf) {
-		this.yf = yf;
-	}
-
+	
 	public int getZx() {
 		return zx;
 	}
@@ -70,7 +63,6 @@ public class QuestionnaireVO {
 	}
 	
 	public void populatePersonality(Personality personality) {
-		personality.setHasHouse(yf);
 		personality.setDailySchedule(zx);
 		personality.setSmoking(cy);
 		personality.setPet(cw);
@@ -78,4 +70,5 @@ public class QuestionnaireVO {
 		personality.setVisitor(fk);
 		personality.setPersonCharacter(xg);
 	}
+	
 }

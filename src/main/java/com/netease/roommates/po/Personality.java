@@ -10,14 +10,8 @@ public class Personality implements Serializable {
 	private int pet = 1;
 	private int dailySchedule = 1;
 	private int visitor = 1;
-	private String constellation;
 	private int cleanliness = 1;
 	private int personCharacter = 1;
-	private int hasHouse = 1;
-	
-	public Personality() {
-	
-	}
 	
 	public int getId() {
 		return id;
@@ -69,14 +63,6 @@ public class Personality implements Serializable {
 		this.visitor = visitor;
 	}
 
-	public String getConstellation() {
-		return constellation;
-	}
-
-	public void setConstellation(String constellation) {
-		this.constellation = constellation;
-	}
-
 	public int getCleanliness() {
 		return cleanliness;
 	}
@@ -96,12 +82,4 @@ public class Personality implements Serializable {
 		this.personCharacter = personCharacter;
 	}
 
-	public int getHasHouse() {
-		return hasHouse;
-	}
-
-	public void setHasHouse(int hasHouse) {
-		this.hasHouse = hasHouse;
-	}
-	
 }

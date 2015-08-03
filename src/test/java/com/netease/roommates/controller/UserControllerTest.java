@@ -4,9 +4,6 @@ import static org.testng.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import javax.servlet.http.HttpSession;
@@ -18,7 +15,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.netease.exception.ControllerException;
 import com.netease.exception.ServiceException;
@@ -55,9 +51,9 @@ public class UserControllerTest {
 	public void testGetUserPersonalityByUserId() throws ServiceException {
 		Personality personality = new Personality();
 		personality.setUserId(1);
-		when(userInfoService.getUserPersonality(1)).thenReturn(personality);
+		when(userInfoService.getUserPersonalityById(1)).thenReturn(personality);
 		Personality personality2 = userController.getUserPersonalityById(1);
-		verify(userInfoService).getUserPersonality(1);
+		verify(userInfoService).getUserPersonalityById(1);
 		assertEquals(personality.getUserId(), personality2.getUserId());
 	}
 
@@ -73,26 +69,12 @@ public class UserControllerTest {
 	}
 
 	@Test
-	public void testGetUserListByAddress() throws ServiceException, UnsupportedEncodingException {
-		String address = "Address:Wall Street";
-		List<User> users = new ArrayList<User>();
-		for (int i = 0; i < 5; i++) {
-			users.add(generateUser(address));
-		}
-		when(userInfoService.getUserListByAddress(address)).thenReturn(users);
-		List<User> userList = userController.getUserListByAddress(address);
-		for (int i = 0; i < users.size(); i++) {
-			User user1 = users.get(i);
-			User user2 = userList.get(i);
-			assertEqualUser(user1, user2);
-		}
-
-	}
-
-	@Test
-	public void testAddUserPersonality() throws JsonProcessingException, ControllerException {
+	public void testAddUserPersonality() throws ControllerException, ServiceException {
+		User user = generateUser();
+		int userId = user.getUserId();
 		HttpSession session = mock(HttpSession.class);
-		when(session.getAttribute("userId")).thenReturn(1);
+		when(session.getAttribute("userId")).thenReturn(userId);
+		when(userInfoService.getUserById(userId)).thenReturn(user);
 		String result = userController.addUserPersonality(session, new QuestionnaireVO());
 		assertEquals(result, "{\"errno\":0}");
 	}

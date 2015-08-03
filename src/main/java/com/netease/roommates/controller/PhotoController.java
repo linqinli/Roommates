@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.netease.user.service.FileService;
+import com.netease.user.service.IFileService;
 
 @Controller
 @RequestMapping("/api/photo")
@@ -25,7 +25,7 @@ public class PhotoController {
 	private final static String PREFIX = "/var/www/lighttpd/Roommates/photo/photo";
 	private final static String SUFFIX = ".jpg";
 	@Autowired
-	private FileService photoTransportService;
+	private IFileService photoTransportService;
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	@ResponseBody

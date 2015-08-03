@@ -88,7 +88,7 @@ public class LoginController {
 				request.getSession().setAttribute("userId",user.getUserId());
 				request.getSession().setAttribute("isChecked",true);
 				
-				boolean isInfoAll = (user.getUserName()!=null&&user.getGender()!=2&user.getPhoneNumber()!=null&&user.getBirthday()!=null&&user.getAddress()!=null&&user.getPosition()!=null);
+				boolean isInfoAll = (user.getUserName()!=null&&user.getGender()!=null&user.getPhoneNumber()!=null&&user.getBirthday()!=null&&user.getAddress()!=null&&user.getPosition()!=null);
 				int isQuestionnaireAll = userInfoService.isQuestionnaireAll(user.getUserId());
 				String credit = "一般";
 				String headImgUrl = "http://223.252.223.13/Roommates/photo/photo_" + user.getUserId() + "_small.jpg";
@@ -119,10 +119,10 @@ public class LoginController {
 				dataMap.put("credit", credit);
 				dataMap.put("auth", auth);
 				dataMap.put("hasHouse", (user.getUserHouse() == null) ? false : true);
-				if(user.getGender()==0 || user.getGender()==1)
+				if(user.getGender() != null)
 					dataMap.put("gender", (user.getGender() == 0) ? "男" : "女");	
 				dataMap.put("birthday", user.getBirthday());
-				dataMap.put("constellation", personality.getConstellation());
+				//dataMap.put("constellation", personality.getConstellation());
 				dataMap.put("company", user.getCompany());
 				dataMap.put("job", user.getPosition());
 				dataMap.put("phone", user.getPhoneNumber());

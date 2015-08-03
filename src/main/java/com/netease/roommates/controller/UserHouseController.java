@@ -1,15 +1,13 @@
 package com.netease.roommates.controller;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.netease.exception.ServiceException;
 import com.netease.roommates.po.BatchPhotoModel;
@@ -34,12 +31,6 @@ public class UserHouseController {
 	
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-	private final static String save_prefix = "/var/www/lighttpd/Roommates/photo/house/";
-//	private final static String save_prefix = "E:/photo/house/";
-	
-	private final static String PREFIX = "http://223.252.223.13/Roommates/photo/house/";
-	private final static String SUFFIX = ".jpg";
-	
 	@Autowired
 	private IUserHouseService userHouseService;
 	
@@ -65,10 +56,10 @@ public class UserHouseController {
 		
 		List<String> picLst = new ArrayList<String>();
 		
-		if(uHouse.getPictures()!=null && uHouse.getPictures().contains(".jpg")){
+		if(uHouse.getPictures()!=null && !uHouse.getPictures().equals("")){
 			String[] pics = uHouse.getPictures().split("\n");
 			for(String pic:pics){
-				picLst.add(PREFIX + pic);
+				picLst.add(pic);
 			}
 		}
 		uHouse.setPicList(picLst);
@@ -87,39 +78,25 @@ public class UserHouseController {
 	 */
 	@RequestMapping(value = "/insert", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,Object> insertUserHouse(BatchPhotoModel model) throws ServiceException {
+	public Map<String,Object> insertUserHouse(HttpSession session,BatchPhotoModel model) throws ServiceException {
 		
 		Map<String, Object> result = new HashMap<String, Object>();//
 		
 		Integer userId = model.getUserId();
+		//取session中的userid
+		if(session.getAttribute("userId")!=null){
+			userId = (Integer) session.getAttribute("userId");
+		}
 		
-		//上传图片
+		//保存图片
 		StringBuilder pics = new StringBuilder();
-		List<MultipartFile> files = model.getFiles();
-		try {
-			File path = new File(save_prefix);
-			if(!path.exists()){
-				path.mkdirs();
+		List<String> files = model.getFiles();
+		for(int i=0; files!=null && i<files.size();i++){
+			
+			String file = files.get(i);
+			if (!file.isEmpty()) {
+				pics.append(file + "\n");
 			}
-			for(int i=0; files!=null && i<files.size();i++){
-				
-				MultipartFile file = files.get(i);
-				if (!file.isEmpty()) {
-					byte[] bytes = file.getBytes();
-					String i_fileName = generatePathByUserId(userId,i);
-					fildUpload(i_fileName, bytes);
-					
-					pics.append(userId + "_" + i + SUFFIX + "\n");
-				}
-			}
-			
-		} catch (IOException ioe) {
-			logger.error("Error uploading photo, userId:" + userId, ioe);
-			
-			result.put("errno", "1");
-			result.put("message", "上传图片失败");
-			
-			return result;
 		}
 		
 		//添加新的记录到数据库
@@ -159,7 +136,7 @@ public class UserHouseController {
 	 */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,Object> updateUserHouse(BatchPhotoModel model) throws ServiceException {
+	public Map<String,Object> updateUserHouse(HttpSession session,BatchPhotoModel model) throws ServiceException {
 		
 		Map<String, Object> result = new HashMap<String, Object>();
 		
@@ -169,10 +146,25 @@ public class UserHouseController {
 			result.put("message", "用户id为空");
 			return result;
 		}
+		//取session中的userid
+		if(session.getAttribute("userId")!=null){
+			userId = (Integer) session.getAttribute("userId");
+		}
+		
+		//保存图片
+		StringBuilder pics = new StringBuilder();
+		List<String> files = model.getFiles();
+		for(int i=0; files!=null && i<files.size();i++){
+			
+			String file = files.get(i);
+			if (!file.isEmpty()) {
+				pics.append(file + "\n");
+			}
+		}
 		
 		UserHouse uhouse = new UserHouse();
 		uhouse.setUserId(userId);
-//		uhouse.setPictures(request.getParameter("images"));
+		uhouse.setPictures(pics.toString());
 		uhouse.setTitle(model.getTitle());
 		uhouse.setPrice(model.getPrice());
 		uhouse.setArea(model.getArea());
@@ -219,26 +211,5 @@ public class UserHouseController {
 		}
 		
 		return result;
-	}
-	
-	public String generatePathByUserId(int userId,Integer index) {
-		
-		if(index==null){
-			return save_prefix + userId + SUFFIX;
-		}
-		return save_prefix + userId + "_" + index + SUFFIX;
-	}
-	
-	public void fildUpload(String name, byte[] photo) throws IOException {
-		BufferedOutputStream bos = null;
-		try {
-			bos = new BufferedOutputStream(new FileOutputStream(name));
-			bos.write(photo);
-			bos.flush();
-		} finally {
-			if (bos != null) {
-				bos.close();
-			}
-		}
 	}
 }

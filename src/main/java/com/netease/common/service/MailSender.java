@@ -4,6 +4,8 @@ import java.io.File;
 
 import javax.mail.MessagingException;
 
+import com.netease.exception.ServiceException;
+
 /**
  * A simple interface of mail sender.
  * @author hzlinqinli
@@ -37,5 +39,5 @@ public interface MailSender {
 	 * Send the mail.
 	 * @throws MessagingException 
 	 */
-	public void send() throws MessagingException;
+	public void send() throws ServiceException;
 }

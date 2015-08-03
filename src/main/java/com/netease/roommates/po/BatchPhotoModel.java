@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class BatchPhotoModel {
 
-	private List<MultipartFile> files;
+	private List<String> files;
 	
 	private int userId;
 	
@@ -64,15 +64,15 @@ public class BatchPhotoModel {
 		this.userId = userId;
 	}
 
-	public List<MultipartFile> getFiles() {
+	public List<String> getFiles() {
 		return files;
 	}
 
-	public void setFiles(List<MultipartFile> files) {
+	public void setFiles(List<String> files) {
 		this.files = files;
 	}
 
-	public BatchPhotoModel(int userId, List<MultipartFile> files) {
+	public BatchPhotoModel(int userId, List<String> files) {
 		super();
 		this.files = files;
 		this.userId = userId;

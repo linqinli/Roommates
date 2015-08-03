@@ -12,6 +12,7 @@ import com.netease.roommates.mapper.RoommatesMapper;
 import com.netease.roommates.po.User;
 import com.netease.roommates.po.UserHouse;
 import com.netease.roommates.vo.MatchUserDetailInfo;
+import com.netease.roommates.vo.TagVO;
 import com.netease.user.service.IUserHouseService;
 import com.netease.user.service.IUserInfoService;
 
@@ -39,6 +40,7 @@ public class MatchDetailService implements IMatchDetailService {
 		matchUserDetailInfo.setGender(user.getGender());
 		matchUserDetailInfo.setNickName(user.getNickName());
 		//tags
+		if(user.getPersonality()!=null) matchUserDetailInfo.setTags(new TagVO(user.getPersonality()));
 		matchUserDetailInfo.setTel(user.getPhoneNumber());
 
 		if(user.getUserHouse()!=null){
@@ -76,6 +78,7 @@ public class MatchDetailService implements IMatchDetailService {
 		matchUserDetailInfo.setAge(dateToAge(user.getBirthday()));
 		matchUserDetailInfo.setGender(user.getGender());
 		//tags
+		if(user.getPersonality()!=null) matchUserDetailInfo.setTags(new TagVO(user.getPersonality()));
 		matchUserDetailInfo.setTel(user.getPhoneNumber());
 		
 		if(user.getUserHouse()!=null){

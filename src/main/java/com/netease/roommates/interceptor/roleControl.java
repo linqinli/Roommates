@@ -5,12 +5,15 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import com.netease.roommates.po.role;
 
 
 public class roleControl extends HandlerInterceptorAdapter {
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	private List<String> userAllow(role user){
 		List<String> checked_list = new ArrayList<String>();
@@ -35,7 +38,7 @@ public class roleControl extends HandlerInterceptorAdapter {
 	
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {  
-	  System.out.println("HandlerInterceptor1 preHandle");
+	  logger.debug("HandlerInterceptor1 preHandle");
 	  
 	  request.setCharacterEncoding("utf-8");  
 	  role user;
@@ -48,7 +51,7 @@ public class roleControl extends HandlerInterceptorAdapter {
 	  else
 		  user = role.vistor;
 	  
-	  System.out.println("role is "+user);
+	  logger.debug("role is "+user);
 	  /*
 	  List<String> allowAddress = userAllow(user);
 	  boolean flag = false;
@@ -71,10 +74,10 @@ public class roleControl extends HandlerInterceptorAdapter {
   }
   @Override
   public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-      System.out.println("HandlerInterceptor1 postHandle");
+	  logger.debug("HandlerInterceptor1 postHandle");
   }
   @Override
   public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-      System.out.println("HandlerInterceptor1 afterCompletion");
+	  logger.debug("HandlerInterceptor1 afterCompletion");
   }
 }

@@ -1,8 +1,5 @@
 package com.netease.roommates.interceptor;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,16 +10,17 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 public class LoggerInterceptor extends HandlerInterceptorAdapter {
 	private Logger logger = LoggerFactory.getLogger(LoggerInterceptor.class);
-	private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		//request.getSession().setAttribute("userId", 1);
+		//request.getSession().setAttribute("userId", 29);
 		request.setAttribute("startTime", System.currentTimeMillis());
-		String time = format.format(new Date());
-		
-		if (logger.isDebugEnabled()) {
-			logger.debug("{} {} {}", time, request.getRemoteAddr(), request.getPathTranslated());
+
+		String ip = getRemoteAddress(request);
+		String userId = String.valueOf(request.getSession().getAttribute("userId"));
+		String url = request.getRequestURI();
+		if (logger.isInfoEnabled()) {
+			logger.info("{} {} {} Starting", ip, userId, url);
 		}
 		return true;
 	}
@@ -31,9 +29,21 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 			ModelAndView modelAndView) throws Exception {
 		long startTime = (Long) request.getAttribute("startTime");
 		long executeTime = System.currentTimeMillis() - startTime;
-
-		if (logger.isDebugEnabled()) {
-			logger.debug("[" + handler + "] executeTime : " + executeTime + "ms");
+		
+		String ip = getRemoteAddress(request);
+		String userId = String.valueOf(request.getSession().getAttribute("userId"));
+		String url = request.getRequestURI();
+		
+		if (logger.isInfoEnabled()) {
+			logger.info("{} {} {} executeTime: {}ms", ip, userId, url, executeTime);
 		}
+	}
+
+	private String getRemoteAddress(HttpServletRequest request) {
+		String ip = request.getHeader("X-Real-IP");
+		if (ip == null) {
+			ip = request.getRemoteAddr();
+		}
+		return ip;
 	}
 }

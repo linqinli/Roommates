@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.netease.roommates.mapper.HouseMapper">
+	<select id="getHouseDetailById" parameterType="String" resultType="houseDetail">
+		select * from cr_housedetail where houseId=#{id}
+	</select>
+
+	<resultMap id="BaseResultMap" type="com.netease.roommates.po.House">
+		<id column="houseId" property="houseId" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="area" property="area" jdbcType="VARCHAR" />
+		<result column="community" property="community" jdbcType="VARCHAR" />
+		<result column="publishTime" property="publishTime" jdbcType="VARCHAR" />
+		<result column="jjr" property="jjr" jdbcType="VARCHAR" />
+		<result column="jjrname" property="jjrname" jdbcType="VARCHAR" />
+		<result column="price" property="price" jdbcType="VARCHAR" />
+		<result column="roomType" property="roomType" jdbcType="VARCHAR" />
+		<result column="imgUrl" property="picUrls" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getHousesInfoByQuery" parameterType="com.netease.roommates.po.HouseQuery"
+		resultMap="BaseResultMap">
+		select c.houseId, c.title, c.area,
+		c.community,c.publishTime,c.jjr,c.jjrname,c.price,c.roomType,c2.picUrls
+		from cr_house c,cr_housedetail c2 where 1=1 and c.houseId=c2.houseId 
+		<if test="keyword !=null or keyword!=''">
+			and (c.title like CONCAT(CONCAT('%', #{keyword, jdbcType=VARCHAR}),'%')
+			or c.area like CONCAT(CONCAT('%', #{keyword, jdbcType=VARCHAR}),'%')
+			or c.community like CONCAT(CONCAT('%', #{keyword,
+			jdbcType=VARCHAR}),'%')
+			)
+		</if>
+		<if test="area != null and area != '' ">
+			and c.area like CONCAT(CONCAT('%', #{area, jdbcType=VARCHAR}),'%')
+		</if>
+		<if test="minPrice != 0">
+			and c.price &gt;= #{minPrice, jdbcType=INTEGER}
+		</if>
+		
+		<if test="maxPrice != 0">
+			and c.price &lt;= #{maxPrice, jdbcType=INTEGER}
+		</if>
+		<if test="room != null and room != '' ">
+			and c.roomType like CONCAT(CONCAT('%', #{room, jdbcType=VARCHAR}),'%')
+		</if>
+		limit #{startRow, jdbcType=INTEGER},#{pageSize, jdbcType=INTEGER}
+	</select>
+</mapper>
