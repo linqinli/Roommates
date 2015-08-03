@@ -2,7 +2,7 @@ package com.netease.user.service;
 
 import java.util.List;
 
-import com.netease.roommates.vo.MatchUserDetailInfo;
+import com.netease.roommates.vo.MatchUserSimpleInfo;
 
 public interface IRoommatesService {
 	public void addHate(int userId, int hate);
@@ -11,5 +11,5 @@ public interface IRoommatesService {
 	
 	public void removeFavorite(int userId, int favorite);
 	
-	public List<MatchUserDetailInfo> getAllFavorite(int userId);
+	public List<MatchUserSimpleInfo> getAllFavorite(int userId);
 }

@@ -1,5 +1,6 @@
 package com.netease.roommates.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,15 +18,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.netease.exception.ControllerException;
+import com.netease.exception.ServiceException;
+import com.netease.match.service.IMatchDataService;
+import com.netease.roommates.po.Personality;
+import com.netease.roommates.po.User;
+import com.netease.roommates.vo.MatchScoreAndMessage;
 import com.netease.roommates.vo.MatchUserDetailInfo;
+import com.netease.roommates.vo.MatchUserSimpleInfo;
 import com.netease.user.service.IRoommatesService;
+import com.netease.user.service.IUserInfoService;
 import com.netease.utils.JsonBuilder;
 
 @Controller
-@RequestMapping(value="/api/people", produces="application/json;charset=UTF-8")
+@RequestMapping(value = "/api/people", produces = "application/json;charset=UTF-8")
 public class RoommatesController {
 	private Logger logger = LoggerFactory.getLogger(RoommatesController.class);
 	private final static String USER_ID = "userId";
+
 	@Autowired
 	private IRoommatesService roommatesService;
 
@@ -41,19 +50,18 @@ public class RoommatesController {
 		JsonBuilder result = new JsonBuilder();
 		return result.append("errno", 0).build();
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/fav", method = RequestMethod.GET)
 	public String getAllFavorite(HttpSession session) {
-		logger.info("Session id:" + session.getId());
 		int userId = (Integer) session.getAttribute(USER_ID);
-		List<MatchUserDetailInfo> matchUserDetailInfoList =  roommatesService.getAllFavorite(userId);
+		List<MatchUserSimpleInfo> favorites = roommatesService.getAllFavorite(userId);
 		JsonBuilder result = new JsonBuilder();
 		result.append("errno", 0);
-		result.append("data", matchUserDetailInfoList);
+		result.append("data", favorites);
 		return result.build();
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/fav", method = RequestMethod.POST)
 	public String addFavorite(HttpSession session, @RequestBody Map<String, String> params) throws ControllerException {
@@ -69,7 +77,8 @@ public class RoommatesController {
 
 	@ResponseBody
 	@RequestMapping(value = "/fav/del", method = RequestMethod.POST)
-	public String removeFavorite(HttpSession session, @RequestBody Map<String, String> params) throws ControllerException {
+	public String removeFavorite(HttpSession session, @RequestBody Map<String, String> params)
+			throws ControllerException {
 		int userId = (Integer) session.getAttribute(USER_ID);
 		String favId = params.get("favId");
 		if (favId == null) {
