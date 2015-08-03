@@ -1,5 +1,6 @@
 package com.netease.match.service.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -62,6 +63,14 @@ public class MatchDataService implements IMatchDataService {
 	
 	@Override
 	public List<Integer> getUserIdListByCondition(int id, int xb, int f, int gs, int cy, int cw,
+			int zx, int ws, int xg, int fk){
+		String selectSqlString = generateSqlStrByCondition(id, xb, f, gs, cy, cw, zx, ws, xg, fk);
+		String orderSqlString = "select * from ( " + selectSqlString + " ) res order by res.userId desc";
+		List<Integer> userIdList = (List<Integer>)jdbcTemplate.queryForList(orderSqlString, Integer.class);
+		return userIdList;
+	}
+	@Override
+	public String generateSqlStrByCondition(int id, int xb, int f, int gs, int cy, int cw,
 			int zx, int ws, int xg, int fk){
 		String selectSqlString = "";
 		
@@ -352,8 +361,7 @@ public class MatchDataService implements IMatchDataService {
 			}
 		}
 		
-		List<Integer> userIdList = (List<Integer>)jdbcTemplate.queryForList(selectSqlString, Integer.class);;
-		return userIdList;
+		return selectSqlString;
 	}
 	
 	@Override
@@ -377,13 +385,15 @@ public class MatchDataService implements IMatchDataService {
 			userTmpInfo.setMatchMessage(matchScoreAndMessage.getMatchMessage());
 			matchUserInfo.add(userTmpInfo);
 		}
-		// 按分数高低进行排序
-		Collections.sort(matchUserInfo,new Comparator<MatchUserSimpleInfo>(){
-			@Override
-			public int compare(MatchUserSimpleInfo matchUserInfo1, MatchUserSimpleInfo matchUserInfo2){
-				return matchUserInfo2.getMatchScore()-matchUserInfo1.getMatchScore();
-			}
-		});
+		// 如果有填过问卷，则按分数高低进行排序
+		if(curUser.getPersonality()!=null){
+			Collections.sort(matchUserInfo,new Comparator<MatchUserSimpleInfo>(){
+				@Override
+				public int compare(MatchUserSimpleInfo matchUserInfo1, MatchUserSimpleInfo matchUserInfo2){
+					return matchUserInfo2.getMatchScore()-matchUserInfo1.getMatchScore();
+				}
+			});
+		}
 		return matchUserInfo;
 	}
 	
@@ -610,5 +620,34 @@ public class MatchDataService implements IMatchDataService {
 		return "";
 	}
 
-
+	@Override
+	public List<MatchUserSimpleInfo> searchUserSimpleInfoByPara(String keyWords, int id, int p, int xb, int f, int gs,
+			int cy, int cw, int zx, int ws, int xg, int fk) throws ServiceException, UnsupportedEncodingException {
+		// TODO Auto-generated method stub
+		keyWords = new String(keyWords.getBytes(), "utf8");
+		String selectSqlString = generateSqlStrByCondition(id, xb, f, gs, cy, cw, zx, ws, xg, fk);
+		String nickSqlString = "select su.userId from sys_user su join ( " + selectSqlString + " ) res on su.userId=res.userId where "
+				+ "su.nickName='" + keyWords+"'";
+		List<Integer> nickUserIdList = (List<Integer>)jdbcTemplate.queryForList(nickSqlString, Integer.class);
+		if(nickUserIdList != null){
+			List<MatchUserSimpleInfo>  matchUserSimpleInfo = matchResultSimpleInfo(id, nickUserIdList);
+			List<MatchUserSimpleInfo> resultUserSimpleInfo = new ArrayList<MatchUserSimpleInfo>();
+			for(int i=(p-1)*20; i<p*20 && i<matchUserSimpleInfo.size(); ++i ){
+				resultUserSimpleInfo.add(matchUserSimpleInfo.get(i));
+			}
+			return resultUserSimpleInfo;
+		}
+		String addrSqlString = "select fh.userId from fn_house fh join ( " + selectSqlString + " ) res on fh.userId=res.userId where "
+				+ "fh.community='" + keyWords + "'";
+		List<Integer> addrUserIdList = (List<Integer>)jdbcTemplate.queryForList(addrSqlString, Integer.class);
+		if(addrUserIdList != null){
+			List<MatchUserSimpleInfo>  matchUserSimpleInfo = matchResultSimpleInfo(id, addrUserIdList);
+			List<MatchUserSimpleInfo> resultUserSimpleInfo = new ArrayList<MatchUserSimpleInfo>();
+			for(int i=(p-1)*20; i<p*20 && i<matchUserSimpleInfo.size(); ++i ){
+				resultUserSimpleInfo.add(matchUserSimpleInfo.get(i));
+			}
+			return resultUserSimpleInfo;
+		}
+		return null;
+	}
 }

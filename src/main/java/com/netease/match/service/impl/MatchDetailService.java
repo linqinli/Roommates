@@ -37,6 +37,7 @@ public class MatchDetailService implements IMatchDetailService {
 		matchUserDetailInfo.setJob(user.getPosition());
 		matchUserDetailInfo.setAge(dateToAge(user.getBirthday()));
 		matchUserDetailInfo.setGender(user.getGender());
+		matchUserDetailInfo.setNickName(user.getNickName());
 		//tags
 		matchUserDetailInfo.setTel(user.getPhoneNumber());
 
@@ -69,6 +70,7 @@ public class MatchDetailService implements IMatchDetailService {
 		matchUserDetailInfo.setUserId(userId);
 		matchUserDetailInfo.setPhotoId(userId, 0);
 		matchUserDetailInfo.setCredit("一般");
+		matchUserDetailInfo.setNickName(user.getNickName());
 		matchUserDetailInfo.setCompany(user.getCompany());
 		matchUserDetailInfo.setJob(user.getPosition());
 		matchUserDetailInfo.setAge(dateToAge(user.getBirthday()));

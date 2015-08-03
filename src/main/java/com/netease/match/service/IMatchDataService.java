@@ -1,5 +1,6 @@
 package com.netease.match.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,6 +16,9 @@ public interface IMatchDataService {
 	public List selectAllPersonalitys() throws ServiceException;
 	
 	public List<Integer> getUserIdListByCondition(int id, int xb, int f, int gs, int cy, int cw,
+			int zx, int ws, int xg, int fk) throws ServiceException;
+	
+	public String generateSqlStrByCondition(int id, int xb, int f, int gs, int cy, int cw,
 			int zx, int ws, int xg, int fk) throws ServiceException;
 	
 	public List<MatchUserSimpleInfo> matchResultSimpleInfo(int curUserId, List<Integer> userIdList) throws ServiceException;
@@ -33,6 +37,9 @@ public interface IMatchDataService {
 	
 	public List<MatchUserSimpleInfo> getMatchUserSimpleInfoByPara(int id, int p, int xb, int f, int gs, int cy, int cw,
 			int zx, int ws, int xg, int fk) throws ServiceException;
+	
+	public List<MatchUserSimpleInfo> searchUserSimpleInfoByPara(String keyWords, int id, int p, int xb, int f, int gs, int cy, int cw,
+			int zx, int ws, int xg, int fk) throws ServiceException, UnsupportedEncodingException;
 	
 	public String setDisplayMatchMessage(User curUser, User user) throws ServiceException; 
 }
