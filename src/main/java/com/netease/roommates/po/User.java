@@ -19,6 +19,7 @@ public class User implements Serializable{
 	private String company;
 	private String address;
 	private String constellation;
+	private Boolean hasPhoto;
 	private Personality personality;
 	private UserHouse userHouse;
 	
@@ -128,6 +129,14 @@ public class User implements Serializable{
 
 	public void setConstellation(String constellation) {
 		this.constellation = constellation;
+	}
+
+	public Boolean getHasPhoto() {
+		return hasPhoto;
+	}
+
+	public void setHasPhoto(Boolean hasPhoto) {
+		this.hasPhoto = hasPhoto;
 	}
 
 	public Personality getPersonality() {
