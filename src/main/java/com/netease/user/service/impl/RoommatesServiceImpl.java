@@ -1,6 +1,5 @@
 package com.netease.user.service.impl;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -11,9 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.netease.exception.ServiceException;
 import com.netease.match.service.IMatchDataService;
-import com.netease.match.service.IMatchDetailService;
 import com.netease.roommates.mapper.RoommatesMapper;
-import com.netease.roommates.vo.MatchUserDetailInfo;
 import com.netease.roommates.vo.MatchUserSimpleInfo;
 import com.netease.user.service.IRoommatesService;
 

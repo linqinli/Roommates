@@ -1,6 +1,5 @@
 package com.netease.roommates.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,15 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.netease.exception.ControllerException;
-import com.netease.exception.ServiceException;
-import com.netease.match.service.IMatchDataService;
-import com.netease.roommates.po.Personality;
-import com.netease.roommates.po.User;
-import com.netease.roommates.vo.MatchScoreAndMessage;
-import com.netease.roommates.vo.MatchUserDetailInfo;
 import com.netease.roommates.vo.MatchUserSimpleInfo;
 import com.netease.user.service.IRoommatesService;
-import com.netease.user.service.IUserInfoService;
 import com.netease.utils.JsonBuilder;
 
 @Controller
