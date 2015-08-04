@@ -34,14 +34,14 @@ public class MatchDetailService implements IMatchDetailService {
 		matchUserDetailInfo.setUserId(userId);
 		matchUserDetailInfo.setPhotoId(userId, 0);
 		matchUserDetailInfo.setCredit("一般");
-		matchUserDetailInfo.setCompany(user.getCompany());
-		matchUserDetailInfo.setJob(user.getPosition());
-		matchUserDetailInfo.setAge(dateToAge(user.getBirthday()));
-		matchUserDetailInfo.setGender(user.getGender());
-		matchUserDetailInfo.setNickName(user.getNickName());
+		if(user.getCompany()!=null) matchUserDetailInfo.setCompany(user.getCompany());
+		if(user.getPosition()!=null) matchUserDetailInfo.setJob(user.getPosition());
+		if(user.getBirthday()!=null) matchUserDetailInfo.setAge(dateToAge(user.getBirthday()));
+		if(user.getGender()!=null) matchUserDetailInfo.setGender(user.getGender());
+		if(user.getNickName()!=null) matchUserDetailInfo.setNickName(user.getNickName());
 		//tags
 		if(user.getPersonality()!=null) matchUserDetailInfo.setTags(new TagVO(user.getPersonality()));
-		matchUserDetailInfo.setTel(user.getPhoneNumber());
+		if(user.getPhoneNumber()!=null) matchUserDetailInfo.setTel(user.getPhoneNumber());
 
 		if(user.getUserHouse()!=null){
 			matchUserDetailInfo.setHasHouse(true);
@@ -72,14 +72,14 @@ public class MatchDetailService implements IMatchDetailService {
 		matchUserDetailInfo.setUserId(userId);
 		matchUserDetailInfo.setPhotoId(userId, 0);
 		matchUserDetailInfo.setCredit("一般");
-		matchUserDetailInfo.setNickName(user.getNickName());
-		matchUserDetailInfo.setCompany(user.getCompany());
-		matchUserDetailInfo.setJob(user.getPosition());
-		matchUserDetailInfo.setAge(dateToAge(user.getBirthday()));
-		matchUserDetailInfo.setGender(user.getGender());
+		if(user.getNickName()!=null) matchUserDetailInfo.setNickName(user.getNickName());
+		if(user.getCompany()!=null) matchUserDetailInfo.setCompany(user.getCompany());
+		if(user.getPosition()!=null) matchUserDetailInfo.setJob(user.getPosition());
+		if(user.getBirthday()!=null) matchUserDetailInfo.setAge(dateToAge(user.getBirthday()));
+		if(user.getGender()!=null) matchUserDetailInfo.setGender(user.getGender());
 		//tags
 		if(user.getPersonality()!=null) matchUserDetailInfo.setTags(new TagVO(user.getPersonality()));
-		matchUserDetailInfo.setTel(user.getPhoneNumber());
+		if(user.getPhoneNumber()!=null) matchUserDetailInfo.setTel(user.getPhoneNumber());
 		
 		if(user.getUserHouse()!=null){
 			matchUserDetailInfo.setHasHouse(true);

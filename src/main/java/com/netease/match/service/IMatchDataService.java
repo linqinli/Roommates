@@ -1,6 +1,5 @@
 package com.netease.match.service;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,19 +11,23 @@ import com.netease.roommates.vo.MatchScoreAndMessage;
 
 public interface IMatchDataService {
 	
+	// 从数据库sys_user表中选出所有用户
 	public List selectAllUsers() throws ServiceException;
+	// 从数据库user_personality表中选出所有personality
 	public List selectAllPersonalitys() throws ServiceException;
 	
+	// 根据条件从数据库中选出符合条件的userId
 	public List<Integer> getUserIdListByCondition(int id, int xb, int f, int gs, int cy, int cw,
 			int zx, int ws, int xg, int fk) throws ServiceException;
-	
+	// 根据条件生成sql语句
 	public String generateSqlStrByCondition(int id, int xb, int f, int gs, int cy, int cw,
 			int zx, int ws, int xg, int fk) throws ServiceException;
-	
+	// 提供当前用户id与userId列表，生成室友匹配列表
 	public List<MatchUserSimpleInfo> matchResultSimpleInfo(int curUserId, List<Integer> userIdList) throws ServiceException;
 	
+	// 通过加权计算两个personality的加权得分
 	public MatchScoreAndMessage getSimilarityBetweenTwoPersonality(Personality per1, Personality per2) throws ServiceException;
-	
+	// 通过计算向量夹角的方式计算两个personality的得分
 	public MatchScoreAndMessage getVectorSimilarityBetweenTwoPersonality(Personality per1, Personality per2) throws ServiceException;
 	
 	public int queryConstellation(String constellation) throws ServiceException;

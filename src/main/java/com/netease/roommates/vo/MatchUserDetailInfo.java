@@ -1,6 +1,5 @@
 package com.netease.roommates.vo;
 
-import java.util.List;
 import com.netease.roommates.po.UserHouse;
 import com.netease.roommates.vo.MatchUserHouse;
 

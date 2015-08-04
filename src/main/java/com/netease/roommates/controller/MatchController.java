@@ -101,7 +101,7 @@ public class MatchController {
 
 	@RequestMapping(value = "/people/search")
 	@ResponseBody
-	public Map searchPeopleList(@RequestParam("keyWords")String keyWords,
+	public Map searchPeopleList(@RequestParam("q")String keyWords,
 			@RequestParam("id")int id,
 			@RequestParam(value="p", defaultValue="1")int p,
 			@RequestParam(value="xb", defaultValue="1")int xb,
