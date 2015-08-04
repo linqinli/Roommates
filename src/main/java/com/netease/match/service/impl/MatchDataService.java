@@ -1,6 +1,5 @@
 package com.netease.match.service.impl;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -77,7 +76,7 @@ public class MatchDataService implements IMatchDataService {
 		if(f==1){
 			if(cy*cw*zx*ws*xg*fk == 1){
 				selectSqlString = "select s.userId from sys_user s left join roommates_hate r on "
-						+ "s.userId=r.userId where r.userId is null and s.userId!="+id + " and";
+						+ "s.userId=r.userId where (r.hate!="+id+" or r.hate is null) and s.userId!="+id + " and";
 				switch(xb){
 				case 2: selectSqlString += " s.gender=0 and"; break;
 				case 3: selectSqlString += " s.gender=1 and"; break;
@@ -104,7 +103,7 @@ public class MatchDataService implements IMatchDataService {
 			}
 			else{
 				selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId join user_personality p "
-						+ "on s.userId = p.userId where r.userId is null and s.userId!="+id+" and";
+						+ "on s.userId = p.userId where (r.hate!="+id+" or r.hate is null) and s.userId!="+id+" and";
 				
 				switch(xb){
 				case 2: selectSqlString += " s.gender=0 and"; break;
@@ -171,7 +170,7 @@ public class MatchDataService implements IMatchDataService {
 			if(f==2){
 				if(cy*cw*zx*ws*xg*fk == 1){
 					selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId "
-							+ "join fn_house f on s.userId=f.userId where r.userId is null and s.userId!="+id + " and";
+							+ "join fn_house f on s.userId=f.userId where (r.hate!="+id+" or r.hate is null) and s.userId!="+id + " and";
 					switch(xb){
 					case 2: selectSqlString += " gender=0 and"; break;
 					case 3: selectSqlString += " gender=1 and"; break;
@@ -200,7 +199,7 @@ public class MatchDataService implements IMatchDataService {
 					selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId "
 							+ "join user_personality p "
 							+ "on s.userId = p.userId join fn_house f on s.userId=f.userId "
-							+ "where r.userId is null and s.userId!="+id+" and";
+							+ "where (r.hate!="+id+" or r.hate is null) and s.userId!="+id+" and";
 					
 					switch(xb){
 					case 2: selectSqlString += " s.gender=0 and"; break;
@@ -267,7 +266,7 @@ public class MatchDataService implements IMatchDataService {
 				if(cy*cw*zx*ws*xg*fk == 1){
 					selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId "
 							+ "left join fn_house f on s.userId=f.userId"
-							+ " where f.userId is null and r.userId is null and s.userId!="+id + " and";
+							+ " where f.userId is null and (r.hate!="+id+" or r.hate) is null and s.userId!="+id + " and";
 					switch(xb){
 					case 2: selectSqlString += " gender=0 and"; break;
 					case 3: selectSqlString += " gender=1 and"; break;
@@ -296,7 +295,7 @@ public class MatchDataService implements IMatchDataService {
 					selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId "
 							+ "left join fn_house f on s.userId=f.userId"
 							+ " join user_personality p on s.userId = p.userId  "
-							+ "where f.userId is null and r.userId is null and s.userId!="+id+" and";
+							+ "where f.userId is null and (r.hate!="+id+" or r.hate is null) and s.userId!="+id+" and";
 					
 					switch(xb){
 					case 2: selectSqlString += " s.gender=0 and"; break;
@@ -576,15 +575,15 @@ public class MatchDataService implements IMatchDataService {
 	@Override
 	public MatchUserSimpleInfo userInfoToMatchUserSimpleInfo(User user){
 		MatchUserSimpleInfo matchUserInfo = new MatchUserSimpleInfo();
-		matchUserInfo.setCompany(user.getCompany());
-		matchUserInfo.setGender(user.getGender());
-		matchUserInfo.setNickName(user.getNickName());
+		if(user.getCompany()!=null) matchUserInfo.setCompany(user.getCompany());
+		if(user.getGender()!=null) matchUserInfo.setGender(user.getGender());
+		if(user.getNickName()!=null) matchUserInfo.setNickName(user.getNickName());
 
 		// matchUserInfo.setPhotoId(user.getUserId(), 0);
 		if(user.getHasPhoto()) matchUserInfo.setPhotoId(user.getUserId(), 0);
 		else matchUserInfo.setPhotoId(123, 0);
 		matchUserInfo.setUserId(user.getUserId());
-		matchUserInfo.setAge(dateToAge(user.getBirthday()));
+		if(user.getBirthday()!=null) matchUserInfo.setAge(dateToAge(user.getBirthday()));
 		return matchUserInfo;
 	}
 
@@ -603,7 +602,7 @@ public class MatchDataService implements IMatchDataService {
 		// TODO Auto-generated method stub
 		Personality curPer = curUser.getPersonality();
 		Personality per = user.getPersonality();
-		
+		if(curPer==null || per==null) return "";
 		// 公司，年龄，问卷
 		if(curPer.getCleanliness()==per.getCleanliness() && curPer.getPersonCharacter()==per.getPersonCharacter()
 				&& curPer.getDailySchedule()==per.getDailySchedule() && curPer.getPet()==per.getPet() 

@@ -1,6 +1,5 @@
 package com.netease.roommates.vo;
 
-import java.util.List;
 import com.netease.roommates.po.UserHouse;
 import com.netease.roommates.vo.MatchUserHouse;
 
@@ -32,7 +31,8 @@ public class MatchUserDetailInfo {
 		String prefix = "http://223.252.223.13/Roommates/photo/photo_";
 		String smallSuffix = "_small.jpg";
 		String suffix = ".jpg";
-		this.photoId = prefix + userid + suffix;
+		if(userid==-1) this.photoId = prefix+"default"+suffix;
+		else this.photoId = prefix + userid + suffix;
 	}
 	public String getNickName() {
 		return nickName;
