@@ -91,7 +91,7 @@ public class LoginController {
 				request.getSession().setAttribute("userId",user.getUserId());
 				request.getSession().setAttribute("isChecked",true);
 				
-				boolean isInfoAll = (user.getUserName()!=null&&user.getGender()!=null&user.getPhoneNumber()!=null&&user.getBirthday()!=null&&user.getAddress()!=null&&user.getPosition()!=null);
+				boolean isInfoAll = (user.getNickName()!=null&&user.getGender()!=null&user.getPhoneNumber()!=null&&user.getBirthday()!=null&& user.getPosition()!=null);
 				int isQuestionnaireAll = userInfoService.isQuestionnaireAll(user.getUserId());
 				String credit = "一般";
 				String headImgUrl = "http://223.252.223.13/Roommates/photo/photo_" + user.getUserId() + "_small.jpg";

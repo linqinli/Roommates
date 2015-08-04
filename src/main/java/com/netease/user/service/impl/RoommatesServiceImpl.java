@@ -1,6 +1,6 @@
 package com.netease.user.service.impl;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.netease.exception.ServiceException;
-import com.netease.match.service.IMatchDetailService;
+import com.netease.match.service.IMatchDataService;
 import com.netease.roommates.mapper.RoommatesMapper;
-import com.netease.roommates.vo.MatchUserDetailInfo;
+import com.netease.roommates.vo.MatchUserSimpleInfo;
 import com.netease.user.service.IRoommatesService;
 
 @Service
@@ -20,7 +20,7 @@ public class RoommatesServiceImpl implements IRoommatesService {
 	@Autowired
 	private RoommatesMapper roommatesMapper;
 	@Autowired
-	private IMatchDetailService matchDetailService;
+	private IMatchDataService matchDataService;
 
 	@Override
 	public void addHate(int userId, int hate) {
@@ -38,15 +38,18 @@ public class RoommatesServiceImpl implements IRoommatesService {
 	}
 
 	@Override
-	public List<MatchUserDetailInfo> getAllFavorite(int userId) {
-		List<MatchUserDetailInfo> matchUsers = new ArrayList<MatchUserDetailInfo>();
+	public List<MatchUserSimpleInfo> getAllFavorite(int userId) {
 		try {
-			for (int favUserId : roommatesMapper.selectAllFavorite(userId)) {
-				matchUsers.add(matchDetailService.getDetailByUser(favUserId));
-			}
+			return matchDataService.matchResultSimpleInfo(userId, roommatesMapper.selectAllFavorite(userId));
+
 		} catch (ServiceException e) {
 			logger.error("Error getting all favorite.", e);
 		}
-		return matchUsers;
+		return Collections.emptyList();
+	}
+
+	@Override
+	public boolean isFavorite(int userId, int targetUserId) {
+		return roommatesMapper.isFavorite(userId, targetUserId);
 	}
 }

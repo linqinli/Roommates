@@ -90,7 +90,7 @@ public class RegisterController {
 			return info;
 		}
 		//info.put("result", 0);
-		info.put("验证结果", "验证失败");
+		info.put("验证结果", "邮箱验证失败");
 		return info;
 		
 	}
@@ -178,7 +178,7 @@ public class RegisterController {
 		
 		
 		StringBuffer mailstring = new StringBuffer("这是验证邮件，请访问如下网址：<br/><a href=");
-		StringBuffer stringbuffer = new StringBuffer("223.252.223.13/Roommates/api/register/usercheck");
+		StringBuffer stringbuffer = new StringBuffer("http://223.252.223.13/Roommates/api/register/usercheck");
 		stringbuffer.append("?checkid=" + userId);
 		stringbuffer.append("&checkemail=" + p_email);
 		stringbuffer.append("&checkname=" + HashGeneratorUtils.generateSaltMD5(p_name));

@@ -76,7 +76,7 @@ public class MatchDataService implements IMatchDataService {
 		if(f==1){
 			if(cy*cw*zx*ws*xg*fk == 1){
 				selectSqlString = "select s.userId from sys_user s left join roommates_hate r on "
-						+ "s.userId=r.userId where r.hate!="+id+" or r.hate is null and s.userId!="+id + " and";
+						+ "s.userId=r.userId where (r.hate!="+id+" or r.hate is null) and s.userId!="+id + " and";
 				switch(xb){
 				case 2: selectSqlString += " s.gender=0 and"; break;
 				case 3: selectSqlString += " s.gender=1 and"; break;
@@ -103,7 +103,7 @@ public class MatchDataService implements IMatchDataService {
 			}
 			else{
 				selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId join user_personality p "
-						+ "on s.userId = p.userId where r.hate!="+id+" or r.hate is null and s.userId!="+id+" and";
+						+ "on s.userId = p.userId where (r.hate!="+id+" or r.hate is null) and s.userId!="+id+" and";
 				
 				switch(xb){
 				case 2: selectSqlString += " s.gender=0 and"; break;
@@ -170,7 +170,7 @@ public class MatchDataService implements IMatchDataService {
 			if(f==2){
 				if(cy*cw*zx*ws*xg*fk == 1){
 					selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId "
-							+ "join fn_house f on s.userId=f.userId where r.hate!="+id+" or r.hate is null and s.userId!="+id + " and";
+							+ "join fn_house f on s.userId=f.userId where (r.hate!="+id+" or r.hate is null) and s.userId!="+id + " and";
 					switch(xb){
 					case 2: selectSqlString += " gender=0 and"; break;
 					case 3: selectSqlString += " gender=1 and"; break;
@@ -199,7 +199,7 @@ public class MatchDataService implements IMatchDataService {
 					selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId "
 							+ "join user_personality p "
 							+ "on s.userId = p.userId join fn_house f on s.userId=f.userId "
-							+ "where r.hate!="+id+" or r.hate is null and s.userId!="+id+" and";
+							+ "where (r.hate!="+id+" or r.hate is null) and s.userId!="+id+" and";
 					
 					switch(xb){
 					case 2: selectSqlString += " s.gender=0 and"; break;
@@ -266,7 +266,7 @@ public class MatchDataService implements IMatchDataService {
 				if(cy*cw*zx*ws*xg*fk == 1){
 					selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId "
 							+ "left join fn_house f on s.userId=f.userId"
-							+ " where f.userId is null and r.hate!="+id+" or r.hate is null and s.userId!="+id + " and";
+							+ " where f.userId is null and (r.hate!="+id+" or r.hate) is null and s.userId!="+id + " and";
 					switch(xb){
 					case 2: selectSqlString += " gender=0 and"; break;
 					case 3: selectSqlString += " gender=1 and"; break;
@@ -295,7 +295,7 @@ public class MatchDataService implements IMatchDataService {
 					selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId "
 							+ "left join fn_house f on s.userId=f.userId"
 							+ " join user_personality p on s.userId = p.userId  "
-							+ "where f.userId is null and r.hate!="+id+" or r.hate is null and s.userId!="+id+" and";
+							+ "where f.userId is null and (r.hate!="+id+" or r.hate is null) and s.userId!="+id+" and";
 					
 					switch(xb){
 					case 2: selectSqlString += " s.gender=0 and"; break;

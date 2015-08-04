@@ -13,6 +13,7 @@ import com.netease.roommates.po.User;
 import com.netease.roommates.po.UserHouse;
 import com.netease.roommates.vo.MatchUserDetailInfo;
 import com.netease.roommates.vo.TagVO;
+import com.netease.user.service.IRoommatesService;
 import com.netease.user.service.IUserHouseService;
 import com.netease.user.service.IUserInfoService;
 
@@ -24,6 +25,8 @@ public class MatchDetailService implements IMatchDetailService {
 	private IUserHouseService userHouseService;
 	@Autowired
 	private RoommatesMapper roommatesMapper;
+	@Autowired
+	private IRoommatesService roommatesService;
 	
 
 	@Override
@@ -32,7 +35,8 @@ public class MatchDetailService implements IMatchDetailService {
 		MatchUserDetailInfo matchUserDetailInfo = new MatchUserDetailInfo();
 		if(user == null) return null;
 		matchUserDetailInfo.setUserId(userId);
-		matchUserDetailInfo.setPhotoId(userId, 0);
+		if(user.getHasPhoto()) matchUserDetailInfo.setPhotoId(user.getUserId(), 0);
+		else matchUserDetailInfo.setPhotoId(-1, 0);
 		matchUserDetailInfo.setCredit("一般");
 		if(user.getCompany()!=null) matchUserDetailInfo.setCompany(user.getCompany());
 		if(user.getPosition()!=null) matchUserDetailInfo.setJob(user.getPosition());
@@ -70,7 +74,8 @@ public class MatchDetailService implements IMatchDetailService {
 		MatchUserDetailInfo matchUserDetailInfo = new MatchUserDetailInfo();
 		if(user == null) return null;
 		matchUserDetailInfo.setUserId(userId);
-		matchUserDetailInfo.setPhotoId(userId, 0);
+		if(user.getHasPhoto()) matchUserDetailInfo.setPhotoId(user.getUserId(), 0);
+		else matchUserDetailInfo.setPhotoId(-1, 0);
 		matchUserDetailInfo.setCredit("一般");
 		if(user.getNickName()!=null) matchUserDetailInfo.setNickName(user.getNickName());
 		if(user.getCompany()!=null) matchUserDetailInfo.setCompany(user.getCompany());
@@ -91,7 +96,6 @@ public class MatchDetailService implements IMatchDetailService {
 		List<Integer> userIds = roommatesMapper.selectAllFavorite(curUserId);
 		if(userIds.indexOf(userId) != -1) matchUserDetailInfo.setFav(true);
 		else matchUserDetailInfo.setFav(false);
-		
 		return matchUserDetailInfo;
 	}
 

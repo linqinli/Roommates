@@ -12,4 +12,6 @@ public interface RoommatesMapper {
 	public void deleteFavorite(@Param("userId")int userId, @Param("favorite")int favorite);
 	
 	public List<Integer> selectAllFavorite(@Param("userId")int userId);
+	
+	public boolean isFavorite(@Param("userId")int userId, @Param("targetUserId")int targetUserId);
 }
