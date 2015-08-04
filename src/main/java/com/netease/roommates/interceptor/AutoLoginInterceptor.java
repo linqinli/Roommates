@@ -1,5 +1,7 @@
 package com.netease.roommates.interceptor;
 
+import java.io.IOException;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +23,7 @@ public class AutoLoginInterceptor extends HandlerInterceptorAdapter {
 			throws Exception {
 		String previousSessionId = null;
 		if (request.getCookies() == null) {
-			return true;
+			return checkLogin(request, response);
 		}
 		for (Cookie cookie : request.getCookies()) {
 			if (cookie.getName().equals("JSESSIONID")) {
@@ -39,12 +41,33 @@ public class AutoLoginInterceptor extends HandlerInterceptorAdapter {
 					session.setAttribute("userId", Integer.parseInt(userId));
 					session.setAttribute("isLogin", true);
 					autoLoginRedisService.deleteSessionIdAndUserId(previousSessionId);
-					//autoLoginRedisService.putSessionIdAndUserId(currentSessionId, userId);
-					//response.addCookie(new Cookie("JSESSIONID", currentSessionId));
+					// autoLoginRedisService.putSessionIdAndUserId(currentSessionId,
+					// userId);
+					// response.addCookie(new Cookie("JSESSIONID",
+					// currentSessionId));
 				}
 			}
 		}
+		if (!checkLogin(request, response)) {
+			return false;
+		}
+		return true;
+	}
 
+	private boolean checkLogin(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			String path = request.getServletPath();
+			if(path.startsWith("/api/login") || path.startsWith("/api/register")) {
+				return true;
+			}
+			if (request.getSession().getAttribute("userId") == null) {
+				response.setContentType("text/html;charset=utf-8");
+				response.sendError(HttpServletResponse.SC_FORBIDDEN, "用户未登录");
+				return false;
+			}
+		} catch (IOException ioe) {
+			//TODO
+		}
 		return true;
 	}
 
@@ -57,7 +80,7 @@ public class AutoLoginInterceptor extends HandlerInterceptorAdapter {
 			if (userId != null) {
 				String uid = userId.toString();
 				autoLoginRedisService.putSessionIdAndUserId(session.getId(), uid);
-				
+
 			}
 		}
 	}
