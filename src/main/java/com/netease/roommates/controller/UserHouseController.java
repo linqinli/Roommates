@@ -87,7 +87,7 @@ public class UserHouseController {
 	 */
 	@RequestMapping(value = "/insert", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> insertUserHouse(HttpSession session, BatchPhotoModel model) throws ServiceException {
+	public Map<String, Object> insertUserHouse(HttpSession session, @RequestBody BatchPhotoModel model) throws ServiceException {
 
 		Map<String, Object> result = new HashMap<String, Object>();//
 
@@ -149,7 +149,7 @@ public class UserHouseController {
 	 */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> updateUserHouse(HttpSession session, BatchPhotoModel model) throws ServiceException {
+	public Map<String, Object> updateUserHouse(HttpSession session, @RequestBody BatchPhotoModel model) throws ServiceException {
 
 		Map<String, Object> result = new HashMap<String, Object>();
 
