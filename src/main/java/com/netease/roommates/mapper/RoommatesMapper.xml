@@ -25,4 +25,8 @@
 		on rf.favorite = su.userId 
 		where rf.userId=#{userId}
 	</select>
+	
+	<select id="isFavorite" parameterType="int" resultType="boolean">
+		select count(*) from roommates_favorite where userId=#{userId} and favorite=#{targetUserId}
+	</select>
 </mapper>

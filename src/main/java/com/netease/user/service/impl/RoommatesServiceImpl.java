@@ -47,4 +47,9 @@ public class RoommatesServiceImpl implements IRoommatesService {
 		}
 		return Collections.emptyList();
 	}
+
+	@Override
+	public boolean isFavorite(int userId, int targetUserId) {
+		return roommatesMapper.isFavorite(userId, targetUserId);
+	}
 }

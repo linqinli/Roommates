@@ -12,4 +12,6 @@ public interface IRoommatesService {
 	public void removeFavorite(int userId, int favorite);
 	
 	public List<MatchUserSimpleInfo> getAllFavorite(int userId);
+	
+	public boolean isFavorite(int userId, int targetUserId);
 }
