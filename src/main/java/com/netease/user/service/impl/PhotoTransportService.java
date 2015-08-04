@@ -11,6 +11,8 @@ import java.io.OutputStream;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,7 +24,8 @@ import com.netease.utils.IOUtils;
 
 @Service
 public class PhotoTransportService implements IFileService {
-
+	private Logger logger = LoggerFactory.getLogger(PhotoTransportService.class);
+	
 	@Override
 	public void fildUpload(String name, byte[] photo) throws IOException {
 		BufferedOutputStream bos = null;
@@ -30,14 +33,17 @@ public class PhotoTransportService implements IFileService {
 			bos = new BufferedOutputStream(new FileOutputStream(name));
 			bos.write(photo);
 			bos.flush();
-			compressImg(name, getSmallPicturePath(name), 100, 100);
 		} finally {
-			if (bos != null) {
-				bos.close();
-			}
+			IOUtils.closeOutputStream(bos);
 		}
 	}
-
+	
+	@Override
+	public void fildUploadAndCompress(String name, byte[] photo) throws IOException {
+		fildUpload(name, photo);
+		compressImg(name, getSmallPicturePath(name), 100, 100);
+	}
+	
 	@Override
 	public ResponseEntity<byte[]> fileDownload(String fileName) throws IOException {
 		File file = new File(fileName);
@@ -64,5 +70,13 @@ public class PhotoTransportService implements IFileService {
 	private String getSmallPicturePath(String path) {
 		int idx = path.lastIndexOf('.');
 		return path.substring(0, idx) + "_small" + path.substring(idx);
+	}
+
+	@Override
+	public void deleteFile(String fileName) {
+		File photo = new File(fileName);
+		if(photo.exists() && !photo.delete()) {
+			logger.warn("Can not delete target file, " + fileName);
+		}
 	}
 }
