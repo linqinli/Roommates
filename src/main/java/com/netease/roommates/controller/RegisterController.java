@@ -174,7 +174,7 @@ public class RegisterController {
 		info.put("info", "注册成功");
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		dataMap.put("userId",userId);
-		dataMap.put("avatar", "http://223.252.223.13/Roommates/photo/photo_default_small.jpg");
+		dataMap.put("avatar", "http://223.252.223.13/Roommates/photo/photo_default.jpg");
 		info.put("data", dataMap);
 		
 		
