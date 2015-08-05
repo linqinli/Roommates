@@ -92,7 +92,7 @@ public class LoginController {
 				boolean isInfoAll = (user.getNickName()!=null&&user.getGender()!=null&user.getPhoneNumber()!=null&&user.getBirthday()!=null&& user.getPosition()!=null);
 				int isQuestionnaireAll = userInfoService.isQuestionnaireAll(user.getUserId());
 				String credit = "一般";
-				String headImgUrl = "http://223.252.223.13/Roommates/photo/photo_" + user.getUserId() + "_small.jpg";
+				String headImgUrl = "http://223.252.223.13/Roommates/photo/photo_" + user.getUserId() + ".jpg";
 				Personality personality = userInfoService.getUserPersonalityById(user.getUserId());
 				
 				
@@ -120,7 +120,7 @@ public class LoginController {
 				if(user.getHasPhoto())
 					dataMap.put("avatar", headImgUrl);
 				else
-					dataMap.put("avatar", "http://223.252.223.13/Roommates/photo/photo_default_small.jpg");
+					dataMap.put("avatar", "http://223.252.223.13/Roommates/photo/photo_default.jpg");
 				dataMap.put("lookStatus",user.getStatus());
 				dataMap.put("credit", credit);
 				dataMap.put("auth", auth);
