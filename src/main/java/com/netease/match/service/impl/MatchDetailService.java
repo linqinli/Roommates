@@ -46,7 +46,8 @@ public class MatchDetailService implements IMatchDetailService {
 		//tags
 		if(user.getPersonality()!=null) matchUserDetailInfo.setTags(new TagVO(user.getPersonality()));
 		if(user.getPhoneNumber()!=null) matchUserDetailInfo.setTel(user.getPhoneNumber());
-
+		if(user.getConstellation()!=null) matchUserDetailInfo.setConstellation(user.getConstellation());
+		
 		if(user.getUserHouse()!=null){
 			matchUserDetailInfo.setHasHouse(true);
 			UserHouse userHouse = userHouseService.getUserHouseById(user.getUserId());
@@ -85,6 +86,7 @@ public class MatchDetailService implements IMatchDetailService {
 		//tags
 		if(user.getPersonality()!=null) matchUserDetailInfo.setTags(new TagVO(user.getPersonality()));
 		if(user.getPhoneNumber()!=null) matchUserDetailInfo.setTel(user.getPhoneNumber());
+		if(user.getConstellation()!=null) matchUserDetailInfo.setConstellation(user.getConstellation());
 		
 		if(user.getUserHouse()!=null){
 			matchUserDetailInfo.setHasHouse(true);

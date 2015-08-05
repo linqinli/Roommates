@@ -17,6 +17,7 @@ public class MatchUserDetailInfo {
 	private boolean hasHouse;
 	private MatchUserHouse matchUserHouse;
 	private boolean isFav;
+	private String constellation;
 	
 	public int getUserId() {
 		return userId;
@@ -100,6 +101,12 @@ public class MatchUserDetailInfo {
 	}
 	public void setCredit(String credit) {
 		this.credit = credit;
+	}
+	public String getConstellation() {
+		return constellation;
+	}
+	public void setConstellation(String constellation) {
+		this.constellation = constellation;
 	}
 	
 	

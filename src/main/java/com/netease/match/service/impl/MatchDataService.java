@@ -41,7 +41,7 @@ public class MatchDataService implements IMatchDataService {
 	@Override
 	public List selectAllPersonalitys() throws ServiceException {
 		// TODO Auto-generated method stub
-		log.debug("MatchDataService.selectAllUsers");
+		log.debug("MatchDataService.selectAllPersonalitys");
 		List personalitys = jdbcTemplate.queryForList("select * from user_personality");
 		return personalitys;
 	}
@@ -90,14 +90,6 @@ public class MatchDataService implements IMatchDataService {
 				case 5: selectSqlString += " s.company='UC斯达康' and"; break;
 				case 6: selectSqlString += " s.company='海康威视' and"; break;
 				default: break;
-				}
-				
-				String suffix = selectSqlString.substring(selectSqlString.length()-4, 
-						selectSqlString.length());
-				
-				if(suffix.equals(" and")){
-					selectSqlString = selectSqlString.substring(0, 
-							selectSqlString.length()-4);
 				}
 				
 			}
@@ -155,14 +147,6 @@ public class MatchDataService implements IMatchDataService {
 				case 4: selectSqlString += " p.visitor=4 and"; break;
 				default: break;
 				}
-				
-				String suffix = selectSqlString.substring(selectSqlString.length()-4, 
-						selectSqlString.length());
-				
-				if(suffix.equals(" and")){
-					selectSqlString = selectSqlString.substring(0, 
-							selectSqlString.length()-4);
-				}
 			}
 		}
 		else {
@@ -185,15 +169,6 @@ public class MatchDataService implements IMatchDataService {
 					case 6: selectSqlString += " company='海康威视' and"; break;
 					default: break;
 					}
-					
-					String suffix = selectSqlString.substring(selectSqlString.length()-4, 
-							selectSqlString.length());
-					
-					if(suffix.equals(" and")){
-						selectSqlString = selectSqlString.substring(0, 
-								selectSqlString.length()-4);
-					}
-					
 				}
 				else{
 					selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId "
@@ -250,14 +225,6 @@ public class MatchDataService implements IMatchDataService {
 					case 3: selectSqlString += " p.visitor=3 and"; break;
 					case 4: selectSqlString += " p.visitor=4 and"; break;
 					default: break;
-					}
-					
-					String suffix = selectSqlString.substring(selectSqlString.length()-4, 
-							selectSqlString.length());
-					
-					if(suffix.equals(" and")){
-						selectSqlString = selectSqlString.substring(0, 
-								selectSqlString.length()-4);
 					}
 				}
 				
@@ -347,19 +314,16 @@ public class MatchDataService implements IMatchDataService {
 					case 4: selectSqlString += " p.visitor=4 and"; break;
 					default: break;
 					}
-					
-					String suffix = selectSqlString.substring(selectSqlString.length()-4, 
-							selectSqlString.length());
-					
-					if(suffix.equals(" and")){
-						selectSqlString = selectSqlString.substring(0, 
-								selectSqlString.length()-4);
-					}
 				}
-				
 			}
 		}
+		String suffix = selectSqlString.substring(selectSqlString.length()-4, 
+				selectSqlString.length());
 		
+		if(suffix.equals(" and")){
+			selectSqlString = selectSqlString.substring(0, 
+					selectSqlString.length()-4);
+		}
 		return selectSqlString;
 	}
 	
@@ -401,7 +365,6 @@ public class MatchDataService implements IMatchDataService {
 	public MatchScoreAndMessage getSimilarityBetweenTwoPersonality(Personality per1, Personality per2){
 		MatchScoreAndMessage matchScoreAndMessage = new MatchScoreAndMessage();
 		int matchScore = 0;
-		String matchMessage = "TA";
 
 		// 权重 分配
 		int zxWeight = 1; // 作息选项权重
@@ -416,7 +379,6 @@ public class MatchDataService implements IMatchDataService {
 		int user2DailySchedule = per2.getDailySchedule();
 		if(user1DailySchedule == user2DailySchedule){
 			matchScore += zxWeight*1;
-			matchMessage = matchMessage + " 作息 ";
 		}
 		else matchScore += zxWeight*(-1);
 
@@ -427,7 +389,6 @@ public class MatchDataService implements IMatchDataService {
 		user2Smoking -= 2;
 		if(user1Smoking == user2Smoking){
 			matchScore += cyWeight*1;
-			matchMessage = matchMessage + " 抽烟 ";
 		}
 		else matchScore += cyWeight*(user1Smoking*user2Smoking);
 
@@ -438,7 +399,6 @@ public class MatchDataService implements IMatchDataService {
 		user2Pet -= 2;
 		if(user1Pet == user2Pet){
 			matchScore += cwWeight*1;
-			matchMessage = matchMessage + " 宠物 ";
 		}
 		else matchScore += cwWeight*(user1Pet*user2Pet);
 
@@ -449,7 +409,6 @@ public class MatchDataService implements IMatchDataService {
 		user2Visitor -= 2;
 		if(user1Visitor == user2Visitor){
 			matchScore += fkWeight*1;
-			matchMessage = matchMessage + " 访客 ";
 		}
 		else matchScore += fkWeight*(user1Visitor*user2Visitor);
 
@@ -460,7 +419,6 @@ public class MatchDataService implements IMatchDataService {
 		user2Sanitation -= 2;
 		if(user1Sanitation == user2Sanitation){
 			matchScore += grwsWeight*1;
-			matchMessage = matchMessage + " 个人卫生 ";
 		}
 		else matchScore += grwsWeight*(user1Sanitation*user2Sanitation);
 
@@ -471,7 +429,6 @@ public class MatchDataService implements IMatchDataService {
 		user2Character -= 2;
 		if(user1Character == user2Character){
 			matchScore += xgWeight*1;
-			matchMessage = matchMessage + " 性格 ";
 		}
 		else matchScore += xgWeight*(user1Character*user2Character);
 
@@ -480,11 +437,8 @@ public class MatchDataService implements IMatchDataService {
 		matchScore = matchScore+zxWeight+cyWeight+cwWeight+fkWeight+grwsWeight+xgWeight;
 		matchScore = (int)(100*(double)matchScore/(double)totalWeight);
 
-		if(matchMessage == "TA") matchMessage = " ";
-		else matchMessage += "与您相同！";
-
 		matchScoreAndMessage.setMatchScore(matchScore);
-		matchScoreAndMessage.setMatchMessage(matchMessage);
+		matchScoreAndMessage.setMatchMessage("");
 
 		return matchScoreAndMessage;
 	}

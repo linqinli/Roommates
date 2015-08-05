@@ -60,20 +60,6 @@ public class MatchController {
 		return resultMap;//matchPernality.matchResultTest();
 	}
 	
-	@RequestMapping(value = "/people/allus")
-	@ResponseBody
-	public List showAllPeople() throws ServiceException, HashGenerationException {
-		
-		return matchDataService.selectAllUsers();//matchPernality.matchResultTest();
-	}
-	
-	@RequestMapping(value = "/people/allps")
-	@ResponseBody
-	public List showAllPersonality() throws ServiceException, HashGenerationException {
-		
-		return matchDataService.selectAllPersonalitys();//matchPernality.matchResultTest();
-	}
-	
 	@RequestMapping(value = "/people/detail/{id}")
 	@ResponseBody
 	public Map matchPeopleDetail(HttpSession session, @PathVariable int id) throws ServiceException {
