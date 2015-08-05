@@ -581,8 +581,8 @@ public class MatchDataService implements IMatchDataService {
 		
 		String selectSqlString = generateSqlStrByCondition(id, xb, f, gs, cy, cw, zx, ws, xg, fk);
 		String nickSqlString = "select su.userId from sys_user su join ( " + selectSqlString + " ) res on su.userId=res.userId where "
-				+ "su.nickName='" + keyWords+"'";
-		List<Integer> nickUserIdList = (List<Integer>)jdbcTemplate.queryForList(nickSqlString, Integer.class);
+				+ "su.nickName=?";
+		List<Integer> nickUserIdList = (List<Integer>)jdbcTemplate.queryForList(nickSqlString, new Object[]{keyWords}, Integer.class);
 		if(nickUserIdList.size() != 0){
 			List<MatchUserSimpleInfo>  matchUserSimpleInfo = matchResultSimpleInfo(id, nickUserIdList);
 			List<MatchUserSimpleInfo> resultUserSimpleInfo = new ArrayList<MatchUserSimpleInfo>();
@@ -592,8 +592,8 @@ public class MatchDataService implements IMatchDataService {
 			return resultUserSimpleInfo;
 		}
 		String addrSqlString = "select fh.userId from fn_house fh join ( " + selectSqlString + " ) res on fh.userId=res.userId where "
-				+ "fh.community='" + keyWords + "'";
-		List<Integer> addrUserIdList = (List<Integer>)jdbcTemplate.queryForList(addrSqlString, Integer.class);
+				+ "fh.community=?";
+		List<Integer> addrUserIdList = (List<Integer>)jdbcTemplate.queryForList(addrSqlString, new Object[]{keyWords}, Integer.class);
 		if(addrUserIdList.size() != 0){
 			List<MatchUserSimpleInfo>  matchUserSimpleInfo = matchResultSimpleInfo(id, addrUserIdList);
 			List<MatchUserSimpleInfo> resultUserSimpleInfo = new ArrayList<MatchUserSimpleInfo>();

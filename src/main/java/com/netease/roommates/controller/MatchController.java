@@ -105,6 +105,7 @@ public class MatchController {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		
 		Map resultMap = new HashMap<String, Object >();
 		
 		List<MatchUserSimpleInfo> resultUserInfo = new ArrayList<MatchUserSimpleInfo>();
