@@ -97,7 +97,10 @@ public class UserController {
 			} else {
 				userInfoService.updateUserPersonality(personality);
 			}
+			user = userInfoService.getUserById(userId);
+			personality = user.getPersonality();
 			result.append("errno", 0);
+			result.append("tags", new TagVO(personality));
 			return result.build();
 		} catch (ServiceException se) {
 			logger.error("error add user personality", se);
