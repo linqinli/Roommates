@@ -21,8 +21,10 @@ import com.netease.exception.ServiceException;
 import com.netease.roommates.po.Personality;
 import com.netease.roommates.po.User;
 import com.netease.roommates.vo.QuestionnaireVO;
+import com.netease.roommates.vo.TagVO;
 import com.netease.roommates.vo.UserBasicInfoVO;
 import com.netease.user.service.IUserInfoService;
+import com.netease.utils.JsonBuilder;
 
 public class UserControllerTest {
 	@InjectMocks
@@ -71,12 +73,18 @@ public class UserControllerTest {
 	@Test
 	public void testAddUserPersonality() throws ControllerException, ServiceException {
 		User user = generateUser();
+		user.setPersonality(new Personality());
 		int userId = user.getUserId();
 		HttpSession session = mock(HttpSession.class);
 		when(session.getAttribute("userId")).thenReturn(userId);
 		when(userInfoService.getUserById(userId)).thenReturn(user);
 		String result = userController.addUserPersonality(session, new QuestionnaireVO());
-		assertEquals(result, "{\"errno\":0}");
+		Personality personality = new Personality();
+		personality.setUserId(userId);
+		new QuestionnaireVO().populatePersonality(personality);
+		JsonBuilder json = new JsonBuilder();
+		json.append("errno", 0).append("tags", new TagVO(personality));
+		assertEquals(result, json.build());
 	}
 
 	private void assertEqualUser(User u1, User u2) {
