@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -47,7 +46,6 @@ public class RegisterController {
 		}
 		else{
 			int p_userId = (Integer)session.getAttribute("userId");
-			System.out.println(p_userId+"");
 			if(p_userId==Integer.parseInt(userId)){
 				User user = userInfoService.getUserById(p_userId);
 				if(user==null ||  user.getCompanyEmail()==null || user.getCompanyEmail().isEmpty()){
@@ -73,13 +71,12 @@ public class RegisterController {
 	
 	@RequestMapping(value="/register/usercheck")
 	@ResponseBody
-	public Map<String, Object> userCheck(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public Map<String, Object> userCheck(HttpServletRequest request) throws Exception{
 		Map<String, Object> info = new HashMap<String,Object>();
 		request.setCharacterEncoding("utf-8"); 
 		String p_userId = request.getParameter("checkid");
 		String p_email = request.getParameter("checkemail");
 		String p_name = request.getParameter("checkname");
-		System.out.println(Integer.parseInt(p_userId)+"+"+p_email);
 		User user = userInfoService.getUserById(Integer.parseInt(p_userId));
 		System.out.println(user);
 		if(user!=null && p_name.equals(HashGeneratorUtils.generateSaltMD5(user.getNickName()))){
@@ -168,13 +165,17 @@ public class RegisterController {
 			info.put("info", "注册失败");
 			return info;
 		}
+		
 		int userId = registerUser.getUserId();
 		request.getSession(true);
 		request.getSession().setAttribute("userId",userId);
 		request.getSession().setAttribute("isRegister",true);
 		info.put("result", 1);
 		info.put("info", "注册成功");
-		info.put("userId", userId);
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		dataMap.put("userId",userId);
+		dataMap.put("avatar", "http://223.252.223.13/Roommates/photo/photo_default_small.jpg");
+		info.put("data", dataMap);
 		
 		
 		StringBuffer mailstring = new StringBuffer("这是验证邮件，请访问如下网址：<br/><a href=");

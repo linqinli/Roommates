@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,7 +34,7 @@ public class LoginController {
 	
 	@RequestMapping(value="/logout")
 	@ResponseBody
-	public Map<String, Object> logout(HttpServletRequest request, HttpServletResponse response){
+	public Map<String, Object> logout(HttpServletRequest request){
 		Map<String, Object> info = new HashMap<String, Object>();
 		request.getSession().invalidate();
 		info.put("result",1);
