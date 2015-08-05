@@ -98,6 +98,7 @@ public class UserController {
 				userInfoService.updateUserPersonality(personality);
 			}
 			result.append("errno", 0);
+			result.append("tags", new TagVO(personality));
 			return result.build();
 		} catch (ServiceException se) {
 			logger.error("error add user personality", se);
