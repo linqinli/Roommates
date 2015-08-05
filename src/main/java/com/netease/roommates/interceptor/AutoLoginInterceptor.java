@@ -21,6 +21,11 @@ public class AutoLoginInterceptor extends HandlerInterceptorAdapter {
 
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+		String path = request.getServletPath();
+		if(path.startsWith("/api/login") || path.startsWith("/api/register")) {
+			return true;
+		}
+		
 		String previousSessionId = null;
 		if (request.getCookies() == null) {
 			return checkLogin(request, response);
@@ -56,10 +61,6 @@ public class AutoLoginInterceptor extends HandlerInterceptorAdapter {
 
 	private boolean checkLogin(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			String path = request.getServletPath();
-			if(path.startsWith("/api/login") || path.startsWith("/api/register")) {
-				return true;
-			}
 			if (request.getSession().getAttribute("userId") == null) {
 				response.setContentType("text/html;charset=utf-8");
 				response.sendError(HttpServletResponse.SC_FORBIDDEN, "用户未登录");
