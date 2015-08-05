@@ -76,7 +76,8 @@ public class MatchDataService implements IMatchDataService {
 		if(f==1){
 			if(cy*cw*zx*ws*xg*fk == 1){
 				selectSqlString = "select s.userId from sys_user s left join roommates_hate r on "
-						+ "s.userId=r.userId where (r.hate!="+id+" or r.hate is null) and s.userId!="+id + " and";
+						+ "s.userId=r.userId join user_personality p on s.userId=p.userId where (r.hate!="+id+" or r.hate is null) and s.userId!="+id + 
+						" and s.phoneNumber is not null and";
 				switch(xb){
 				case 2: selectSqlString += " s.gender=0 and"; break;
 				case 3: selectSqlString += " s.gender=1 and"; break;
@@ -95,7 +96,7 @@ public class MatchDataService implements IMatchDataService {
 			}
 			else{
 				selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId join user_personality p "
-						+ "on s.userId = p.userId where (r.hate!="+id+" or r.hate is null) and s.userId!="+id+" and";
+						+ "on s.userId = p.userId where (r.hate!="+id+" or r.hate is null) and s.userId!="+id+" and s.phoneNumber is not null and";
 				
 				switch(xb){
 				case 2: selectSqlString += " s.gender=0 and"; break;
@@ -154,7 +155,8 @@ public class MatchDataService implements IMatchDataService {
 			if(f==2){
 				if(cy*cw*zx*ws*xg*fk == 1){
 					selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId "
-							+ "join fn_house f on s.userId=f.userId where (r.hate!="+id+" or r.hate is null) and s.userId!="+id + " and";
+							+ "join fn_house f on s.userId=f.userId join user_personality p on s.userId=p.userId where (r.hate!="+id+
+							" or r.hate is null) and s.phoneNumber is not null and s.userId!="+id + " and";
 					switch(xb){
 					case 2: selectSqlString += " gender=0 and"; break;
 					case 3: selectSqlString += " gender=1 and"; break;
@@ -174,7 +176,7 @@ public class MatchDataService implements IMatchDataService {
 					selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId "
 							+ "join user_personality p "
 							+ "on s.userId = p.userId join fn_house f on s.userId=f.userId "
-							+ "where (r.hate!="+id+" or r.hate is null) and s.userId!="+id+" and";
+							+ "where (r.hate!="+id+" or r.hate is null) and s.phoneNumber is not null and s.userId!="+id+" and";
 					
 					switch(xb){
 					case 2: selectSqlString += " s.gender=0 and"; break;
@@ -233,7 +235,7 @@ public class MatchDataService implements IMatchDataService {
 				if(cy*cw*zx*ws*xg*fk == 1){
 					selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId "
 							+ "left join fn_house f on s.userId=f.userId"
-							+ " where f.userId is null and (r.hate!="+id+" or r.hate) is null and s.userId!="+id + " and";
+							+ " join user_personality p on s.userId=p.userId where f.userId is null and s.phoneNumber is not null and (r.hate!="+id+" or r.hate) is null and s.userId!="+id + " and";
 					switch(xb){
 					case 2: selectSqlString += " gender=0 and"; break;
 					case 3: selectSqlString += " gender=1 and"; break;
@@ -248,21 +250,12 @@ public class MatchDataService implements IMatchDataService {
 					case 6: selectSqlString += " company='海康威视' and"; break;
 					default: break;
 					}
-					
-					String suffix = selectSqlString.substring(selectSqlString.length()-4, 
-							selectSqlString.length());
-					
-					if(suffix.equals(" and")){
-						selectSqlString = selectSqlString.substring(0, 
-								selectSqlString.length()-4);
-					}
-					
 				}
 				else{
 					selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId "
 							+ "left join fn_house f on s.userId=f.userId"
 							+ " join user_personality p on s.userId = p.userId  "
-							+ "where f.userId is null and (r.hate!="+id+" or r.hate is null) and s.userId!="+id+" and";
+							+ "where f.userId is null and (r.hate!="+id+" or r.hate is null) and s.phoneNumber is not null and s.userId!="+id+" and";
 					
 					switch(xb){
 					case 2: selectSqlString += " s.gender=0 and"; break;
@@ -334,19 +327,22 @@ public class MatchDataService implements IMatchDataService {
 		if(curUser == null) return matchUserInfo;
 		for(int i=0; i<userIdList.size(); ++i){
 			User user = userInfoService.getUserById(userIdList.get(i));
-			MatchScoreAndMessage matchScoreAndMessage = new MatchScoreAndMessage();
-			MatchUserSimpleInfo userTmpInfo = userInfoToMatchUserSimpleInfo(user);
-			userTmpInfo.setHasHouse(false);
-			if(curUser.getPersonality()!=null && user.getPersonality()!=null){
+			// 如果还在找房，则显示出来
+			if(user.getStatus()==0){
+				MatchScoreAndMessage matchScoreAndMessage = new MatchScoreAndMessage();
+				MatchUserSimpleInfo userTmpInfo = userInfoToMatchUserSimpleInfo(user);
+				userTmpInfo.setHasHouse(false);
+				if(curUser.getPersonality()!=null && user.getPersonality()!=null){
+					
+					matchScoreAndMessage = this.getVectorSimilarityBetweenTwoPersonality(curUser.getPersonality(), user.getPersonality());
+					matchScoreAndMessage.setMatchMessage(setDisplayMatchMessage(curUser, user));
+				}
+				if(user.getUserHouse()!=null) userTmpInfo.setHasHouse(true);
 				
-				matchScoreAndMessage = this.getVectorSimilarityBetweenTwoPersonality(curUser.getPersonality(), user.getPersonality());
-				matchScoreAndMessage.setMatchMessage(setDisplayMatchMessage(curUser, user));
+				userTmpInfo.setMatchScore(matchScoreAndMessage.getMatchScore());
+				userTmpInfo.setMatchMessage(matchScoreAndMessage.getMatchMessage());
+				matchUserInfo.add(userTmpInfo);
 			}
-			if(user.getUserHouse()!=null) userTmpInfo.setHasHouse(true);
-			
-			userTmpInfo.setMatchScore(matchScoreAndMessage.getMatchScore());
-			userTmpInfo.setMatchMessage(matchScoreAndMessage.getMatchMessage());
-			matchUserInfo.add(userTmpInfo);
 		}
 		// 如果有填过问卷，则按分数高低进行排序
 		if(curUser.getPersonality()!=null){
@@ -580,8 +576,9 @@ public class MatchDataService implements IMatchDataService {
 		// TODO Auto-generated method stub
 		
 		String selectSqlString = generateSqlStrByCondition(id, xb, f, gs, cy, cw, zx, ws, xg, fk);
+		keyWords="%"+keyWords+"%";
 		String nickSqlString = "select su.userId from sys_user su join ( " + selectSqlString + " ) res on su.userId=res.userId where "
-				+ "su.nickName=?";
+				+ "su.nickName like ?";
 		List<Integer> nickUserIdList = (List<Integer>)jdbcTemplate.queryForList(nickSqlString, new Object[]{keyWords}, Integer.class);
 		if(nickUserIdList.size() != 0){
 			List<MatchUserSimpleInfo>  matchUserSimpleInfo = matchResultSimpleInfo(id, nickUserIdList);
@@ -592,7 +589,7 @@ public class MatchDataService implements IMatchDataService {
 			return resultUserSimpleInfo;
 		}
 		String addrSqlString = "select fh.userId from fn_house fh join ( " + selectSqlString + " ) res on fh.userId=res.userId where "
-				+ "fh.community=?";
+				+ "fh.community like ?";
 		List<Integer> addrUserIdList = (List<Integer>)jdbcTemplate.queryForList(addrSqlString, new Object[]{keyWords}, Integer.class);
 		if(addrUserIdList.size() != 0){
 			List<MatchUserSimpleInfo>  matchUserSimpleInfo = matchResultSimpleInfo(id, addrUserIdList);
