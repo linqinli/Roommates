@@ -52,6 +52,7 @@ public class PhotoController {
 					photoTransportService.fildUpload(generatePathByUserId(userId), decodedBytes);
 					result.append("errono", 0);
 					result.append("imgUrl", PHOTO_URL_PREFIX + userId + SUFFIX);
+					return result.build();
 				}
 			}
 			result.append("errono", 1).append("message", "Photo is empty or format of base64 isn't correct!");
