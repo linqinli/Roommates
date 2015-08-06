@@ -3,6 +3,7 @@ package com.netease.roommates.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -39,13 +40,18 @@ public class RegisterController {
 		String userId = request.getParameter("userId");
 		Map<String, Object> info = new HashMap<String, Object>();
 		HttpSession session= request.getSession();
+		if(userId==null){
+			info.put("result", 0);
+			info.put("info", "传入参数错误");
+			return info;
+		}
 		if((Integer)session.getAttribute("userId")==null){
 			info.put("result", 0);
 			info.put("info", "超时");
 			return info;
 		}
 		else{
-			int p_userId = (Integer)session.getAttribute("userId");
+			int p_userId = (Integer)(session.getAttribute("userId"));
 			if(p_userId==Integer.parseInt(userId)){
 				User user = userInfoService.getUserById(p_userId);
 				if(user==null ||  user.getCompanyEmail()==null || user.getCompanyEmail().isEmpty()){
