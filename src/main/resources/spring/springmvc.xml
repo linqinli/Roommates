@@ -47,7 +47,7 @@
 		</mvc:interceptor>
 		<mvc:interceptor>
 			<mvc:mapping path="/**" />
-			<bean class="com.netease.roommates.interceptor.AutoLoginInterceptor" />
+			<bean class="com.netease.roommates.interceptor.PermissionInterceptor" />
 		</mvc:interceptor>
 		<mvc:interceptor>
 			<mvc:mapping path="/**" />
