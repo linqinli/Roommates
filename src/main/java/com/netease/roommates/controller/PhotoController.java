@@ -3,46 +3,63 @@ package com.netease.roommates.controller;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.xml.bind.DatatypeConverter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
+import com.netease.exception.ControllerException;
 import com.netease.user.service.IFileService;
+import com.netease.utils.JsonBuilder;
 
 @Controller
-@RequestMapping("/api/photo")
+@RequestMapping(value = "/api/photo", produces = "application/json;charset=UTF-8")
 public class PhotoController {
 	private Logger logger = LoggerFactory.getLogger(PhotoController.class);
 	private final static String PREFIX = "/var/www/lighttpd/Roommates/photo/photo";
+	private final static String PHOTO_URL_PREFIX = "http://223.252.223.13/Roommates/photo/photo_";
 	private final static String SUFFIX = ".jpg";
+	private final static String USER_ID = "userId";
+
 	@Autowired
 	private IFileService photoTransportService;
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, String> upload(int userId, MultipartFile file) {
-		Map<String, String> result = new HashMap<String, String>();
+	public String upload(HttpSession session, @RequestBody Map<String, String> params) throws ControllerException {
 		try {
-			if (!file.isEmpty()) {
-				byte[] bytes = file.getBytes();
-				photoTransportService.fildUpload(generatePathByUserId(userId), bytes);
-				result.put("state", "success");
-				return result;
+			JsonBuilder result = new JsonBuilder();
+			int userId = (Integer) session.getAttribute(USER_ID);
+			String base64Image = params.get("file");
+			if (!StringUtils.isEmpty(base64Image)) {
+				int idx = base64Image.indexOf(',');
+				if (idx != -1) {
+					base64Image = base64Image.substring(idx + 1);
+					byte[] decodedBytes = DatatypeConverter.parseBase64Binary(base64Image);
+					photoTransportService.fildUpload(generatePathByUserId(userId), decodedBytes);
+					result.append("errono", 0);
+					result.append("imgUrl", PHOTO_URL_PREFIX + userId + SUFFIX);
+				}
 			}
+			result.append("errono", 1).append("message", "Photo is empty or format of base64 isn't correct!");
+			return result.build();
 		} catch (IOException ioe) {
-			logger.error("Error uploading photo, userId:" + userId, ioe);
+			logger.error("Error uploading photo", ioe);
+			throw new ControllerException("Error uploading photo", ioe);
 		}
-		result.put("state", "failure");
-		return result;
 	}
 
 	@RequestMapping("/downloadBig")
@@ -53,7 +70,7 @@ public class PhotoController {
 			if (new File(path).exists()) {
 				return photoTransportService.fileDownload(path);
 			} else {
-				//TODO
+				// TODO
 			}
 		} catch (FileNotFoundException fnfe) {
 			logger.warn("photo not found fot target user, userId" + userId, fnfe);
@@ -62,7 +79,7 @@ public class PhotoController {
 		}
 		return null;
 	}
-	
+
 	@RequestMapping("/downloadSmall")
 	@ResponseBody
 	public ResponseEntity<byte[]> downloadSmallImage(int userId) {
@@ -71,7 +88,7 @@ public class PhotoController {
 			if (new File(path).exists()) {
 				return photoTransportService.fileDownload(path);
 			} else {
-				//TODO
+				// TODO
 			}
 		} catch (FileNotFoundException fnfe) {
 			logger.warn("photo not found fot target user, userId" + userId, fnfe);
@@ -80,12 +97,21 @@ public class PhotoController {
 		}
 		return null;
 	}
-	
+
 	private String generatePathByUserId(int userId) {
-		return PREFIX + '_' +  userId + SUFFIX;
+		return PREFIX + '_' + userId + SUFFIX;
 	}
-	
+
 	private String generateSPICPathByUserId(int userId) {
-		return PREFIX + '_' + userId + '_'+ "small" + SUFFIX;
+		return PREFIX + '_' + userId + '_' + "small" + SUFFIX;
+	}
+
+	@ResponseBody
+	@ExceptionHandler(Exception.class)
+	private String handleError(HttpServletRequest request, Exception exception) {
+		logger.error("Request: " + request.getRequestURL() + " raised " + exception);
+		JsonBuilder result = new JsonBuilder();
+		result.append("errono", 1).append("message", exception.getMessage());
+		return result.build();
 	}
 }
