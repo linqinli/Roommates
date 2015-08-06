@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.netease.exception.ServiceException;
 import com.netease.match.service.IMatchDataService;
+import com.netease.match.service.IMatchSqlService;
 import com.netease.roommates.vo.MatchScoreAndMessage;
 import com.netease.roommates.po.Personality;
 import com.netease.roommates.po.User;
@@ -29,6 +30,8 @@ public class MatchDataService implements IMatchDataService {
 	private JdbcTemplate jdbcTemplate;
 	@Autowired
 	private IUserInfoService userInfoService;
+	@Autowired
+	private IMatchSqlService matchSqlService;
 	
 	@Override
 	public List selectAllUsers() throws ServiceException {
@@ -63,268 +66,10 @@ public class MatchDataService implements IMatchDataService {
 	@Override
 	public List<Integer> getUserIdListByCondition(int id, int xb, int f, int gs, int cy, int cw,
 			int zx, int ws, int xg, int fk){
-		String selectSqlString = generateSqlStrByCondition(id, xb, f, gs, cy, cw, zx, ws, xg, fk);
+		String selectSqlString = matchSqlService.generateSqlStrByCondition(id, xb, f, gs, cy, cw, zx, ws, xg, fk);
 		String orderSqlString = "select * from ( " + selectSqlString + " ) res order by res.userId desc";
 		List<Integer> userIdList = (List<Integer>)jdbcTemplate.queryForList(orderSqlString, Integer.class);
 		return userIdList;
-	}
-	@Override
-	public String generateSqlStrByCondition(int id, int xb, int f, int gs, int cy, int cw,
-			int zx, int ws, int xg, int fk){
-		String selectSqlString = "";
-		
-		if(f==1){
-			if(cy*cw*zx*ws*xg*fk == 1){
-				selectSqlString = "select s.userId from sys_user s left join roommates_hate r on "
-						+ "s.userId=r.userId where (r.hate!="+id+" or r.hate is null) and s.userId!="+id + " and";
-				switch(xb){
-				case 2: selectSqlString += " s.gender=0 and"; break;
-				case 3: selectSqlString += " s.gender=1 and"; break;
-				default: break;
-				}
-				
-				switch(gs){
-				case 2: selectSqlString += " s.company='网易' and"; break;
-				case 3: selectSqlString += " s.company='阿里' and"; break;
-				case 4: selectSqlString += " s.company='大华' and"; break;
-				case 5: selectSqlString += " s.company='UC斯达康' and"; break;
-				case 6: selectSqlString += " s.company='海康威视' and"; break;
-				default: break;
-				}
-				
-			}
-			else{
-				selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId join user_personality p "
-						+ "on s.userId = p.userId where (r.hate!="+id+" or r.hate is null) and s.userId!="+id+" and";
-				
-				switch(xb){
-				case 2: selectSqlString += " s.gender=0 and"; break;
-				case 3: selectSqlString += " s.gender=1 and"; break;
-				default: break;
-				}
-				switch(gs){
-				case 2: selectSqlString += " s.company='网易' and"; break;
-				case 3: selectSqlString += " s.company='阿里' and"; break;
-				case 4: selectSqlString += " s.company='大华' and"; break;
-				case 5: selectSqlString += " s.company='UC斯达康' and"; break;
-				case 6: selectSqlString += " s.company='海康威视' and"; break;
-				default: break;
-				}
-				switch(cy){
-				case 2: selectSqlString += " p.smoking=2 and"; break;
-				case 3: selectSqlString += " p.smoking=3 and"; break;
-				case 4: selectSqlString += " p.smoking=4 and"; break;
-				default: break;
-				}
-
-				switch(cw){
-				case 2: selectSqlString += " p.pet=2 and"; break;
-				case 3: selectSqlString += " p.pet=3 and"; break;
-				case 4: selectSqlString += " p.pet=4 and"; break;
-				default: break;
-				}
-
-				switch(zx){
-				case 2: selectSqlString += " p.dailySchedule=2 and"; break;
-				case 3: selectSqlString += " p.dailySchedule=3 and"; break;
-				default: break;
-				}
-				switch(ws){
-				case 2: selectSqlString += " p.cleanliness=2 and"; break;
-				case 3: selectSqlString += " p.cleanliness=3 and"; break;
-				case 4: selectSqlString += " p.cleanliness=4 and"; break;
-				default: break;
-				}
-				switch(xg){
-				case 2: selectSqlString += " p.personCharacter=2 and"; break;
-				case 3: selectSqlString += " p.personCharacter=3 and"; break;
-				case 4: selectSqlString += " p.personCharacter=4 and"; break;
-				default: break;
-				}
-				switch(fk){
-				case 2: selectSqlString += " p.visitor=2 and"; break;
-				case 3: selectSqlString += " p.visitor=3 and"; break;
-				case 4: selectSqlString += " p.visitor=4 and"; break;
-				default: break;
-				}
-			}
-		}
-		else {
-			// 有房
-			if(f==2){
-				if(cy*cw*zx*ws*xg*fk == 1){
-					selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId "
-							+ "join fn_house f on s.userId=f.userId where (r.hate!="+id+" or r.hate is null) and s.userId!="+id + " and";
-					switch(xb){
-					case 2: selectSqlString += " gender=0 and"; break;
-					case 3: selectSqlString += " gender=1 and"; break;
-					default: break;
-					}
-					
-					switch(gs){
-					case 2: selectSqlString += " company='网易' and"; break;
-					case 3: selectSqlString += " company='阿里' and"; break;
-					case 4: selectSqlString += " company='大华' and"; break;
-					case 5: selectSqlString += " company='UC斯达康' and"; break;
-					case 6: selectSqlString += " company='海康威视' and"; break;
-					default: break;
-					}
-				}
-				else{
-					selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId "
-							+ "join user_personality p "
-							+ "on s.userId = p.userId join fn_house f on s.userId=f.userId "
-							+ "where (r.hate!="+id+" or r.hate is null) and s.userId!="+id+" and";
-					
-					switch(xb){
-					case 2: selectSqlString += " s.gender=0 and"; break;
-					case 3: selectSqlString += " s.gender=1 and"; break;
-					default: break;
-					}
-					switch(gs){
-					case 2: selectSqlString += " s.company='网易' and"; break;
-					case 3: selectSqlString += " s.company='阿里' and"; break;
-					case 4: selectSqlString += " s.company='大华' and"; break;
-					case 5: selectSqlString += " s.company='UC斯达康' and"; break;
-					case 6: selectSqlString += " s.company='海康威视' and"; break;
-					default: break;
-					}
-					switch(cy){
-					case 2: selectSqlString += " p.smoking=2 and"; break;
-					case 3: selectSqlString += " p.smoking=3 and"; break;
-					case 4: selectSqlString += " p.smoking=4 and"; break;
-					default: break;
-					}
-
-					switch(cw){
-					case 2: selectSqlString += " p.pet=2 and"; break;
-					case 3: selectSqlString += " p.pet=3 and"; break;
-					case 4: selectSqlString += " p.pet=4 and"; break;
-					default: break;
-					}
-
-					switch(zx){
-					case 2: selectSqlString += " p.dailySchedule=2 and"; break;
-					case 3: selectSqlString += " p.dailySchedule=3 and"; break;
-					default: break;
-					}
-					switch(ws){
-					case 2: selectSqlString += " p.cleanliness=2 and"; break;
-					case 3: selectSqlString += " p.cleanliness=3 and"; break;
-					case 4: selectSqlString += " p.cleanliness=4 and"; break;
-					default: break;
-					}
-					switch(xg){
-					case 2: selectSqlString += " p.personCharacter=2 and"; break;
-					case 3: selectSqlString += " p.personCharacter=3 and"; break;
-					case 4: selectSqlString += " p.personCharacter=4 and"; break;
-					default: break;
-					}
-					switch(fk){
-					case 2: selectSqlString += " p.visitor=2 and"; break;
-					case 3: selectSqlString += " p.visitor=3 and"; break;
-					case 4: selectSqlString += " p.visitor=4 and"; break;
-					default: break;
-					}
-				}
-				
-			}
-			else if(f==3){
-				if(cy*cw*zx*ws*xg*fk == 1){
-					selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId "
-							+ "left join fn_house f on s.userId=f.userId"
-							+ " where f.userId is null and (r.hate!="+id+" or r.hate) is null and s.userId!="+id + " and";
-					switch(xb){
-					case 2: selectSqlString += " gender=0 and"; break;
-					case 3: selectSqlString += " gender=1 and"; break;
-					default: break;
-					}
-					
-					switch(gs){
-					case 2: selectSqlString += " company='网易' and"; break;
-					case 3: selectSqlString += " company='阿里' and"; break;
-					case 4: selectSqlString += " company='大华' and"; break;
-					case 5: selectSqlString += " company='UC斯达康' and"; break;
-					case 6: selectSqlString += " company='海康威视' and"; break;
-					default: break;
-					}
-					
-					String suffix = selectSqlString.substring(selectSqlString.length()-4, 
-							selectSqlString.length());
-					
-					if(suffix.equals(" and")){
-						selectSqlString = selectSqlString.substring(0, 
-								selectSqlString.length()-4);
-					}
-					
-				}
-				else{
-					selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId "
-							+ "left join fn_house f on s.userId=f.userId"
-							+ " join user_personality p on s.userId = p.userId  "
-							+ "where f.userId is null and (r.hate!="+id+" or r.hate is null) and s.userId!="+id+" and";
-					
-					switch(xb){
-					case 2: selectSqlString += " s.gender=0 and"; break;
-					case 3: selectSqlString += " s.gender=1 and"; break;
-					default: break;
-					}
-					switch(gs){
-					case 2: selectSqlString += " s.company='网易' and"; break;
-					case 3: selectSqlString += " s.company='阿里' and"; break;
-					case 4: selectSqlString += " s.company='大华' and"; break;
-					case 5: selectSqlString += " s.company='UC斯达康' and"; break;
-					case 6: selectSqlString += " s.company='海康威视' and"; break;
-					default: break;
-					}
-					switch(cy){
-					case 2: selectSqlString += " p.smoking=2 and"; break;
-					case 3: selectSqlString += " p.smoking=3 and"; break;
-					case 4: selectSqlString += " p.smoking=4 and"; break;
-					default: break;
-					}
-
-					switch(cw){
-					case 2: selectSqlString += " p.pet=2 and"; break;
-					case 3: selectSqlString += " p.pet=3 and"; break;
-					case 4: selectSqlString += " p.pet=4 and"; break;
-					default: break;
-					}
-
-					switch(zx){
-					case 2: selectSqlString += " p.dailySchedule=2 and"; break;
-					case 3: selectSqlString += " p.dailySchedule=3 and"; break;
-					default: break;
-					}
-					switch(ws){
-					case 2: selectSqlString += " p.cleanliness=2 and"; break;
-					case 3: selectSqlString += " p.cleanliness=3 and"; break;
-					case 4: selectSqlString += " p.cleanliness=4 and"; break;
-					default: break;
-					}
-					switch(xg){
-					case 2: selectSqlString += " p.personCharacter=2 and"; break;
-					case 3: selectSqlString += " p.personCharacter=3 and"; break;
-					case 4: selectSqlString += " p.personCharacter=4 and"; break;
-					default: break;
-					}
-					switch(fk){
-					case 2: selectSqlString += " p.visitor=2 and"; break;
-					case 3: selectSqlString += " p.visitor=3 and"; break;
-					case 4: selectSqlString += " p.visitor=4 and"; break;
-					default: break;
-					}
-				}
-			}
-		}
-		String suffix = selectSqlString.substring(selectSqlString.length()-4, 
-				selectSqlString.length());
-		
-		if(suffix.equals(" and")){
-			selectSqlString = selectSqlString.substring(0, 
-					selectSqlString.length()-4);
-		}
-		return selectSqlString;
 	}
 	
 	@Override
@@ -334,19 +79,22 @@ public class MatchDataService implements IMatchDataService {
 		if(curUser == null) return matchUserInfo;
 		for(int i=0; i<userIdList.size(); ++i){
 			User user = userInfoService.getUserById(userIdList.get(i));
-			MatchScoreAndMessage matchScoreAndMessage = new MatchScoreAndMessage();
-			MatchUserSimpleInfo userTmpInfo = userInfoToMatchUserSimpleInfo(user);
-			userTmpInfo.setHasHouse(false);
-			if(curUser.getPersonality()!=null && user.getPersonality()!=null){
+			// 如果还在找房，则显示出来
+			if(user.getStatus()==0){
+				MatchScoreAndMessage matchScoreAndMessage = new MatchScoreAndMessage();
+				MatchUserSimpleInfo userTmpInfo = userInfoToMatchUserSimpleInfo(user);
+				userTmpInfo.setHasHouse(false);
+				if(curUser.getPersonality()!=null && user.getPersonality()!=null){
+					
+					matchScoreAndMessage = this.getVectorSimilarityBetweenTwoPersonality(curUser.getPersonality(), user.getPersonality());
+					matchScoreAndMessage.setMatchMessage(setDisplayMatchMessage(curUser, user));
+				}
+				if(user.getUserHouse()!=null) userTmpInfo.setHasHouse(true);
 				
-				matchScoreAndMessage = this.getVectorSimilarityBetweenTwoPersonality(curUser.getPersonality(), user.getPersonality());
-				matchScoreAndMessage.setMatchMessage(setDisplayMatchMessage(curUser, user));
+				userTmpInfo.setMatchScore(matchScoreAndMessage.getMatchScore());
+				userTmpInfo.setMatchMessage(matchScoreAndMessage.getMatchMessage());
+				matchUserInfo.add(userTmpInfo);
 			}
-			if(user.getUserHouse()!=null) userTmpInfo.setHasHouse(true);
-			
-			userTmpInfo.setMatchScore(matchScoreAndMessage.getMatchScore());
-			userTmpInfo.setMatchMessage(matchScoreAndMessage.getMatchMessage());
-			matchUserInfo.add(userTmpInfo);
 		}
 		// 如果有填过问卷，则按分数高低进行排序
 		if(curUser.getPersonality()!=null){
@@ -553,7 +301,6 @@ public class MatchDataService implements IMatchDataService {
 
 	@Override
 	public String setDisplayMatchMessage(User curUser, User user) throws ServiceException {
-		// TODO Auto-generated method stub
 		Personality curPer = curUser.getPersonality();
 		Personality per = user.getPersonality();
 		if(curPer==null || per==null) return "";
@@ -577,11 +324,11 @@ public class MatchDataService implements IMatchDataService {
 	@Override
 	public List<MatchUserSimpleInfo> searchUserSimpleInfoByPara(String keyWords, int id, int p, int xb, int f, int gs,
 			int cy, int cw, int zx, int ws, int xg, int fk) throws ServiceException {
-		// TODO Auto-generated method stub
 		
-		String selectSqlString = generateSqlStrByCondition(id, xb, f, gs, cy, cw, zx, ws, xg, fk);
+		String selectSqlString = matchSqlService.generateSqlStrByCondition(id, xb, f, gs, cy, cw, zx, ws, xg, fk);
+		keyWords="%"+keyWords+"%";
 		String nickSqlString = "select su.userId from sys_user su join ( " + selectSqlString + " ) res on su.userId=res.userId where "
-				+ "su.nickName=?";
+				+ "su.nickName like ?";
 		List<Integer> nickUserIdList = (List<Integer>)jdbcTemplate.queryForList(nickSqlString, new Object[]{keyWords}, Integer.class);
 		if(nickUserIdList.size() != 0){
 			List<MatchUserSimpleInfo>  matchUserSimpleInfo = matchResultSimpleInfo(id, nickUserIdList);
@@ -592,7 +339,7 @@ public class MatchDataService implements IMatchDataService {
 			return resultUserSimpleInfo;
 		}
 		String addrSqlString = "select fh.userId from fn_house fh join ( " + selectSqlString + " ) res on fh.userId=res.userId where "
-				+ "fh.community=?";
+				+ "fh.community like ?";
 		List<Integer> addrUserIdList = (List<Integer>)jdbcTemplate.queryForList(addrSqlString, new Object[]{keyWords}, Integer.class);
 		if(addrUserIdList.size() != 0){
 			List<MatchUserSimpleInfo>  matchUserSimpleInfo = matchResultSimpleInfo(id, addrUserIdList);

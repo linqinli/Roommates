@@ -19,9 +19,6 @@ public interface IMatchDataService {
 	// 根据条件从数据库中选出符合条件的userId
 	public List<Integer> getUserIdListByCondition(int id, int xb, int f, int gs, int cy, int cw,
 			int zx, int ws, int xg, int fk) throws ServiceException;
-	// 根据条件生成sql语句
-	public String generateSqlStrByCondition(int id, int xb, int f, int gs, int cy, int cw,
-			int zx, int ws, int xg, int fk) throws ServiceException;
 	// 提供当前用户id与userId列表，生成室友匹配列表
 	public List<MatchUserSimpleInfo> matchResultSimpleInfo(int curUserId, List<Integer> userIdList) throws ServiceException;
 	
