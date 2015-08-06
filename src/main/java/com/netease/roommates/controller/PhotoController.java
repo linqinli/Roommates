@@ -44,7 +44,7 @@ public class PhotoController {
 			JsonBuilder result = new JsonBuilder();
 			int userId = (Integer) session.getAttribute(USER_ID);
 			String base64Image = params.get("file");
-			if (!StringUtils.isEmpty(base64Image)) {
+			if (!StringUtils.isEmpty(base64Image) && base64Image.length() < 200 * 1024) {
 				int idx = base64Image.indexOf(',');
 				if (idx != -1) {
 					base64Image = base64Image.substring(idx + 1);
@@ -55,8 +55,7 @@ public class PhotoController {
 					return result.build();
 				}
 			}
-			result.append("errono", 1).append("message", "Photo is empty or format of base64 isn't correct!");
-			return result.build();
+			throw new ControllerException("Photo is empty or excess max size 200KB or base64 format error.");
 		} catch (IOException ioe) {
 			logger.error("Error uploading photo", ioe);
 			throw new ControllerException("Error uploading photo", ioe);
