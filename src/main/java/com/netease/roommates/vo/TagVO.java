@@ -17,7 +17,7 @@ public class TagVO {
 
 	public TagVO(Personality personality) {
 		zx = MessageUtils.getMessage("DAILI_SCHEDULE_" + personality.getDailySchedule());
-		cy = MessageUtils.getMessage("SOMKING_" + personality.getSmoking());
+		cy = MessageUtils.getMessage("SMOKING_" + personality.getSmoking());
 		cw = MessageUtils.getMessage("PET_" + personality.getPet());
 		ws = MessageUtils.getMessage("CLEAN_" + personality.getCleanliness());
 		fk = MessageUtils.getMessage("VISITOR_" + personality.getVisitor());
