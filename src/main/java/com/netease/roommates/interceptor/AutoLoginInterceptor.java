@@ -21,7 +21,7 @@ public class AutoLoginInterceptor extends HandlerInterceptorAdapter {
 
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		// if(1==1) return true;
+		//if(1==1) return true;
 		String path = request.getServletPath();
 		if(path.startsWith("/api/login") || path.startsWith("/api/register")) {
 			return true;
