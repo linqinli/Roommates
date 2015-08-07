@@ -12,6 +12,8 @@ import com.netease.roommates.mapper.RoommatesMapper;
 import com.netease.roommates.po.User;
 import com.netease.roommates.po.UserHouse;
 import com.netease.roommates.vo.MatchUserDetailInfo;
+import com.netease.roommates.vo.TagVO;
+import com.netease.user.service.IRoommatesService;
 import com.netease.user.service.IUserHouseService;
 import com.netease.user.service.IUserInfoService;
 
@@ -23,6 +25,8 @@ public class MatchDetailService implements IMatchDetailService {
 	private IUserHouseService userHouseService;
 	@Autowired
 	private RoommatesMapper roommatesMapper;
+	@Autowired
+	private IRoommatesService roommatesService;
 	
 
 	@Override
@@ -31,15 +35,19 @@ public class MatchDetailService implements IMatchDetailService {
 		MatchUserDetailInfo matchUserDetailInfo = new MatchUserDetailInfo();
 		if(user == null) return null;
 		matchUserDetailInfo.setUserId(userId);
-		matchUserDetailInfo.setPhotoId(userId, 0);
+		if(user.getHasPhoto()) matchUserDetailInfo.setPhotoId(user.getUserId(), 0);
+		else matchUserDetailInfo.setPhotoId(-1, 0);
 		matchUserDetailInfo.setCredit("一般");
-		matchUserDetailInfo.setCompany(user.getCompany());
-		matchUserDetailInfo.setJob(user.getPosition());
-		matchUserDetailInfo.setAge(dateToAge(user.getBirthday()));
-		matchUserDetailInfo.setGender(user.getGender());
+		if(user.getCompany()!=null) matchUserDetailInfo.setCompany(user.getCompany());
+		if(user.getPosition()!=null) matchUserDetailInfo.setJob(user.getPosition());
+		if(user.getBirthday()!=null) matchUserDetailInfo.setAge(dateToAge(user.getBirthday()));
+		if(user.getGender()!=null) matchUserDetailInfo.setGender(user.getGender());
+		if(user.getNickName()!=null) matchUserDetailInfo.setNickName(user.getNickName());
 		//tags
-		matchUserDetailInfo.setTel(user.getPhoneNumber());
-
+		if(user.getPersonality()!=null) matchUserDetailInfo.setTags(new TagVO(user.getPersonality()));
+		if(user.getPhoneNumber()!=null) matchUserDetailInfo.setTel(user.getPhoneNumber());
+		if(user.getConstellation()!=null) matchUserDetailInfo.setConstellation(user.getConstellation());
+		
 		if(user.getUserHouse()!=null){
 			matchUserDetailInfo.setHasHouse(true);
 			UserHouse userHouse = userHouseService.getUserHouseById(user.getUserId());
@@ -67,14 +75,18 @@ public class MatchDetailService implements IMatchDetailService {
 		MatchUserDetailInfo matchUserDetailInfo = new MatchUserDetailInfo();
 		if(user == null) return null;
 		matchUserDetailInfo.setUserId(userId);
-		matchUserDetailInfo.setPhotoId(userId, 0);
+		if(user.getHasPhoto()) matchUserDetailInfo.setPhotoId(user.getUserId(), 0);
+		else matchUserDetailInfo.setPhotoId(-1, 0);
 		matchUserDetailInfo.setCredit("一般");
-		matchUserDetailInfo.setCompany(user.getCompany());
-		matchUserDetailInfo.setJob(user.getPosition());
-		matchUserDetailInfo.setAge(dateToAge(user.getBirthday()));
-		matchUserDetailInfo.setGender(user.getGender());
+		if(user.getNickName()!=null) matchUserDetailInfo.setNickName(user.getNickName());
+		if(user.getCompany()!=null) matchUserDetailInfo.setCompany(user.getCompany());
+		if(user.getPosition()!=null) matchUserDetailInfo.setJob(user.getPosition());
+		if(user.getBirthday()!=null) matchUserDetailInfo.setAge(dateToAge(user.getBirthday()));
+		if(user.getGender()!=null) matchUserDetailInfo.setGender(user.getGender());
 		//tags
-		matchUserDetailInfo.setTel(user.getPhoneNumber());
+		if(user.getPersonality()!=null) matchUserDetailInfo.setTags(new TagVO(user.getPersonality()));
+		if(user.getPhoneNumber()!=null) matchUserDetailInfo.setTel(user.getPhoneNumber());
+		if(user.getConstellation()!=null) matchUserDetailInfo.setConstellation(user.getConstellation());
 		
 		if(user.getUserHouse()!=null){
 			matchUserDetailInfo.setHasHouse(true);
@@ -86,7 +98,6 @@ public class MatchDetailService implements IMatchDetailService {
 		List<Integer> userIds = roommatesMapper.selectAllFavorite(curUserId);
 		if(userIds.indexOf(userId) != -1) matchUserDetailInfo.setFav(true);
 		else matchUserDetailInfo.setFav(false);
-		
 		return matchUserDetailInfo;
 	}
 

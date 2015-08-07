@@ -1,6 +1,5 @@
 package com.netease.roommates.vo;
 
-import java.util.List;
 import com.netease.roommates.po.UserHouse;
 import com.netease.roommates.vo.MatchUserHouse;
 
@@ -13,11 +12,12 @@ public class MatchUserDetailInfo {
 	private String job;
 	private String age;
 	private String gender;
-	private List<String> tags;
+	private TagVO tags;
 	private String tel;
 	private boolean hasHouse;
 	private MatchUserHouse matchUserHouse;
 	private boolean isFav;
+	private String constellation;
 	
 	public int getUserId() {
 		return userId;
@@ -32,7 +32,8 @@ public class MatchUserDetailInfo {
 		String prefix = "http://223.252.223.13/Roommates/photo/photo_";
 		String smallSuffix = "_small.jpg";
 		String suffix = ".jpg";
-		this.photoId = prefix + userid + suffix;
+		if(userid==-1) this.photoId = prefix+"default"+suffix;
+		else this.photoId = prefix + userid + suffix;
 	}
 	public String getNickName() {
 		return nickName;
@@ -65,10 +66,10 @@ public class MatchUserDetailInfo {
 		if(byteGender == 0) this.gender = "男";
 		else this.gender = "女";
 	}
-	public List<String> getTags() {
+	public TagVO getTags() {
 		return tags;
 	}
-	public void setTags(List<String> tags) {
+	public void setTags(TagVO tags) {
 		this.tags = tags;
 	}
 	public String getTel() {
@@ -100,6 +101,12 @@ public class MatchUserDetailInfo {
 	}
 	public void setCredit(String credit) {
 		this.credit = credit;
+	}
+	public String getConstellation() {
+		return constellation;
+	}
+	public void setConstellation(String constellation) {
+		this.constellation = constellation;
 	}
 	
 	

@@ -12,6 +12,8 @@ public class MatchUserHouse {
 	private String community;
 	private String price;
 	private String description;
+	private String updateTime;
+	
 	public int getId() {
 		return id;
 	}
@@ -65,6 +67,14 @@ public class MatchUserHouse {
 		this.setCommunity(userHouse.getCommunity());
 		this.setPrice(userHouse.getPrice());
 		this.setDescription(userHouse.getDescription());
+		this.setUpdateTime(userHouse.getUpdateTime().substring(0, 10));
 	}
+	public String getUpdateTime() {
+		return updateTime;
+	}
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
+	}
+	
 
 }

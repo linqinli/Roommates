@@ -1,5 +1,6 @@
 package com.netease.roommates.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -28,8 +29,6 @@ import com.netease.utils.HashGeneratorUtils;
 @Controller
 @RequestMapping("/api")
 public class MatchController {
-	@Autowired
-	private IUserInfoService userInfoService;
 	@Autowired
 	private IMatchDataService matchDataService;
 	@Autowired
@@ -61,32 +60,23 @@ public class MatchController {
 		return resultMap;//matchPernality.matchResultTest();
 	}
 	
-	@RequestMapping(value = "/people/allus")
-	@ResponseBody
-	public List showAllPeople() throws ServiceException, HashGenerationException {
-		
-		return matchDataService.selectAllUsers();//matchPernality.matchResultTest();
-	}
-	
 	@RequestMapping(value = "/people/allps")
 	@ResponseBody
-	public List showAllPersonality() throws ServiceException, HashGenerationException {
-		
-		return matchDataService.selectAllPersonalitys();//matchPernality.matchResultTest();
+	public List selectAllPersonality() throws ServiceException{
+		return matchDataService.selectAllPersonalitys();
 	}
 	
 	@RequestMapping(value = "/people/detail/{id}")
 	@ResponseBody
-	public Map matchPeopleList(HttpSession session, @PathVariable int id) throws ServiceException {
-		MatchUserDetailInfo matchUserDetailInfo = matchDetailService.getDetailByUser(id);
-//		if(session == null){
-//			matchUserDetailInfo =  matchDetailService.getDetailByUser(id);
-//			
-//		}else{
-//			int curUserId = (Integer) session.getAttribute(USER_ID);
-//			if(curUserId == id) return null;
-//			matchUserDetailInfo =  matchDetailService.getDetailByUser(curUserId,id);
-//		}
+	public Map matchPeopleDetail(HttpSession session, @PathVariable int id) throws ServiceException {
+		MatchUserDetailInfo matchUserDetailInfo;// = matchDetailService.getDetailByUser(id);
+		if(session.getAttribute(USER_ID)==null){
+			matchUserDetailInfo =  matchDetailService.getDetailByUser(id);
+		}else{
+			int curUserId = (Integer) session.getAttribute(USER_ID);
+			if(curUserId == id) return null;
+			matchUserDetailInfo =  matchDetailService.getDetailByUser(curUserId,id);
+		}
 		Map matchDetailMap = new HashMap<String, Object>();
 		if(matchUserDetailInfo != null){
 			matchDetailMap.put("data", matchUserDetailInfo);
@@ -100,5 +90,38 @@ public class MatchController {
 		return matchDetailMap;//matchPernality.matchResultTest();
 	}
 
+	@RequestMapping(value = "/people/search")
+	@ResponseBody
+	public Map searchPeopleList(@RequestParam("q")String keyWords,
+			@RequestParam("id")int id,
+			@RequestParam(value="p", defaultValue="1")int p,
+			@RequestParam(value="xb", defaultValue="1")int xb,
+			@RequestParam(value="f", defaultValue="1")int f,
+			@RequestParam(value="gs", defaultValue="1")int gs,
+			@RequestParam(value="cy", defaultValue="1")int cy,
+			@RequestParam(value="cw", defaultValue="1")int cw, 
+			@RequestParam(value="zx", defaultValue="1")int zx,
+			@RequestParam(value="ws", defaultValue="1")int ws,
+			@RequestParam(value="xg", defaultValue="1")int xg,
+			@RequestParam(value="fk", defaultValue="1")int fk) throws ServiceException {
+		
+		try {
+			keyWords = new String(keyWords.getBytes("iso-8859-1"), "utf8");
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		Map resultMap = new HashMap<String, Object >();
+		
+		List<MatchUserSimpleInfo> resultUserInfo = new ArrayList<MatchUserSimpleInfo>();
+		
+		resultUserInfo = matchDataService.searchUserSimpleInfoByPara(keyWords,id, p, xb, f, gs, cy, cw, zx, ws, xg, fk);
+		
+		
+		resultMap.put("data", resultUserInfo);
+		resultMap.put("errno", 0);
+		return resultMap;//matchPernality.matchResultTest();
+	}
 	
 }

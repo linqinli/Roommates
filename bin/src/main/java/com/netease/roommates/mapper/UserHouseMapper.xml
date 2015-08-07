@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.netease.roommates.mapper.UserHouseMapper">
+	
+	<insert id="insertUserHouse" parameterType="userHouse">
+		insert into fn_house(userId, pictures, title, price, community, area,
+			description, updateTime)
+		values(#{userId}, #{pictures}, #{title}, #{price}, #{community}, #{area},
+		 	#{description}, #{updateTime})
+	</insert>
+	
+	<select id="getUserHouseById" parameterType="int" resultType="userHouse">
+		select * from fn_house where userId=#{id}
+	</select>
+	
+	<update id="updateUserHouseInfo" parameterType="userHouse">
+		update fn_house  
+		<set>
+			<if test="pictures !=null">
+				pictures = #{pictures, jdbcType=VARCHAR}, 
+			</if>
+			<if test="title !=null">
+				title = #{title, jdbcType=VARCHAR}, 
+			</if>
+			<if test="price != null">
+				price = #{price, jdbcType=VARCHAR}, 
+			</if>
+			<if test="community != null">
+				community = #{community, jdbcType=VARCHAR}, 
+			</if>
+			<if test="area != null">
+				area = #{area, jdbcType=VARCHAR}, 
+			</if>
+			<if test="description != null">
+				description = #{description, jdbcType=VARCHAR}, 
+			</if>
+			updateTime = #{updateTime} 
+		</set>
+		where userId = #{userId}
+	</update>
+	<delete id="deleteUserHouse" parameterType="int">
+		delete from fn_house where userId = #{id}
+	</delete>
+</mapper>

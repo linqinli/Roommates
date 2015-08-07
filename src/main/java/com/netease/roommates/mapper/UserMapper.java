@@ -27,4 +27,6 @@ public interface UserMapper {
 	public User getUserByEmail(String email);
 	
 	public int isQuestionnaireAll(int userId);
+	
+	//public void logoutById(int userId);
 }

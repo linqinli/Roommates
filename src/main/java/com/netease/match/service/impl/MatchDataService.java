@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.netease.exception.ServiceException;
 import com.netease.match.service.IMatchDataService;
+import com.netease.match.service.IMatchSqlService;
 import com.netease.roommates.vo.MatchScoreAndMessage;
 import com.netease.roommates.po.Personality;
 import com.netease.roommates.po.User;
@@ -29,6 +30,8 @@ public class MatchDataService implements IMatchDataService {
 	private JdbcTemplate jdbcTemplate;
 	@Autowired
 	private IUserInfoService userInfoService;
+	@Autowired
+	private IMatchSqlService matchSqlService;
 	
 	@Override
 	public List selectAllUsers() throws ServiceException {
@@ -41,7 +44,7 @@ public class MatchDataService implements IMatchDataService {
 	@Override
 	public List selectAllPersonalitys() throws ServiceException {
 		// TODO Auto-generated method stub
-		log.debug("MatchDataService.selectAllUsers");
+		log.debug("MatchDataService.selectAllPersonalitys");
 		List personalitys = jdbcTemplate.queryForList("select * from user_personality");
 		return personalitys;
 	}
@@ -63,296 +66,9 @@ public class MatchDataService implements IMatchDataService {
 	@Override
 	public List<Integer> getUserIdListByCondition(int id, int xb, int f, int gs, int cy, int cw,
 			int zx, int ws, int xg, int fk){
-		String selectSqlString = "";
-		
-		if(f==1){
-			if(cy*cw*zx*ws*xg*fk == 1){
-				selectSqlString = "select s.userId from sys_user s left join roommates_hate r on "
-						+ "s.userId=r.userId where r.userId is null and s.userId!="+id + " and";
-				switch(xb){
-				case 2: selectSqlString += " s.gender=0 and"; break;
-				case 3: selectSqlString += " s.gender=1 and"; break;
-				default: break;
-				}
-				
-				switch(gs){
-				case 2: selectSqlString += " s.company='网易' and"; break;
-				case 3: selectSqlString += " s.company='阿里' and"; break;
-				case 4: selectSqlString += " s.company='大华' and"; break;
-				case 5: selectSqlString += " s.company='UC斯达康' and"; break;
-				case 6: selectSqlString += " s.company='海康威视' and"; break;
-				default: break;
-				}
-				
-				String suffix = selectSqlString.substring(selectSqlString.length()-4, 
-						selectSqlString.length());
-				
-				if(suffix.equals(" and")){
-					selectSqlString = selectSqlString.substring(0, 
-							selectSqlString.length()-4);
-				}
-				
-			}
-			else{
-				selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId join user_personality p "
-						+ "on s.userId = p.userId where r.userId is null and s.userId!="+id+" and";
-				
-				switch(xb){
-				case 2: selectSqlString += " s.gender=0 and"; break;
-				case 3: selectSqlString += " s.gender=1 and"; break;
-				default: break;
-				}
-				switch(gs){
-				case 2: selectSqlString += " s.company='网易' and"; break;
-				case 3: selectSqlString += " s.company='阿里' and"; break;
-				case 4: selectSqlString += " s.company='大华' and"; break;
-				case 5: selectSqlString += " s.company='UC斯达康' and"; break;
-				case 6: selectSqlString += " s.company='海康威视' and"; break;
-				default: break;
-				}
-				switch(cy){
-				case 2: selectSqlString += " p.smoking=2 and"; break;
-				case 3: selectSqlString += " p.smoking=3 and"; break;
-				case 4: selectSqlString += " p.smoking=4 and"; break;
-				default: break;
-				}
-
-				switch(cw){
-				case 2: selectSqlString += " p.pet=2 and"; break;
-				case 3: selectSqlString += " p.pet=3 and"; break;
-				case 4: selectSqlString += " p.pet=4 and"; break;
-				default: break;
-				}
-
-				switch(zx){
-				case 2: selectSqlString += " p.dailySchedule=2 and"; break;
-				case 3: selectSqlString += " p.dailySchedule=3 and"; break;
-				default: break;
-				}
-				switch(ws){
-				case 2: selectSqlString += " p.cleanliness=2 and"; break;
-				case 3: selectSqlString += " p.cleanliness=3 and"; break;
-				case 4: selectSqlString += " p.cleanliness=4 and"; break;
-				default: break;
-				}
-				switch(xg){
-				case 2: selectSqlString += " p.personCharacter=2 and"; break;
-				case 3: selectSqlString += " p.personCharacter=3 and"; break;
-				case 4: selectSqlString += " p.personCharacter=4 and"; break;
-				default: break;
-				}
-				switch(fk){
-				case 2: selectSqlString += " p.visitor=2 and"; break;
-				case 3: selectSqlString += " p.visitor=3 and"; break;
-				case 4: selectSqlString += " p.visitor=4 and"; break;
-				default: break;
-				}
-				
-				String suffix = selectSqlString.substring(selectSqlString.length()-4, 
-						selectSqlString.length());
-				
-				if(suffix.equals(" and")){
-					selectSqlString = selectSqlString.substring(0, 
-							selectSqlString.length()-4);
-				}
-			}
-		}
-		else {
-			// 有房
-			if(f==2){
-				if(cy*cw*zx*ws*xg*fk == 1){
-					selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId "
-							+ "join fn_house f on s.userId=f.userId where r.userId is null and s.userId!="+id + " and";
-					switch(xb){
-					case 2: selectSqlString += " gender=0 and"; break;
-					case 3: selectSqlString += " gender=1 and"; break;
-					default: break;
-					}
-					
-					switch(gs){
-					case 2: selectSqlString += " company='网易' and"; break;
-					case 3: selectSqlString += " company='阿里' and"; break;
-					case 4: selectSqlString += " company='大华' and"; break;
-					case 5: selectSqlString += " company='UC斯达康' and"; break;
-					case 6: selectSqlString += " company='海康威视' and"; break;
-					default: break;
-					}
-					
-					String suffix = selectSqlString.substring(selectSqlString.length()-4, 
-							selectSqlString.length());
-					
-					if(suffix.equals(" and")){
-						selectSqlString = selectSqlString.substring(0, 
-								selectSqlString.length()-4);
-					}
-					
-				}
-				else{
-					selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId "
-							+ "join user_personality p "
-							+ "on s.userId = p.userId join fn_house f on s.userId=f.userId "
-							+ "where r.userId is null and s.userId!="+id+" and";
-					
-					switch(xb){
-					case 2: selectSqlString += " s.gender=0 and"; break;
-					case 3: selectSqlString += " s.gender=1 and"; break;
-					default: break;
-					}
-					switch(gs){
-					case 2: selectSqlString += " s.company='网易' and"; break;
-					case 3: selectSqlString += " s.company='阿里' and"; break;
-					case 4: selectSqlString += " s.company='大华' and"; break;
-					case 5: selectSqlString += " s.company='UC斯达康' and"; break;
-					case 6: selectSqlString += " s.company='海康威视' and"; break;
-					default: break;
-					}
-					switch(cy){
-					case 2: selectSqlString += " p.smoking=2 and"; break;
-					case 3: selectSqlString += " p.smoking=3 and"; break;
-					case 4: selectSqlString += " p.smoking=4 and"; break;
-					default: break;
-					}
-
-					switch(cw){
-					case 2: selectSqlString += " p.pet=2 and"; break;
-					case 3: selectSqlString += " p.pet=3 and"; break;
-					case 4: selectSqlString += " p.pet=4 and"; break;
-					default: break;
-					}
-
-					switch(zx){
-					case 2: selectSqlString += " p.dailySchedule=2 and"; break;
-					case 3: selectSqlString += " p.dailySchedule=3 and"; break;
-					default: break;
-					}
-					switch(ws){
-					case 2: selectSqlString += " p.cleanliness=2 and"; break;
-					case 3: selectSqlString += " p.cleanliness=3 and"; break;
-					case 4: selectSqlString += " p.cleanliness=4 and"; break;
-					default: break;
-					}
-					switch(xg){
-					case 2: selectSqlString += " p.personCharacter=2 and"; break;
-					case 3: selectSqlString += " p.personCharacter=3 and"; break;
-					case 4: selectSqlString += " p.personCharacter=4 and"; break;
-					default: break;
-					}
-					switch(fk){
-					case 2: selectSqlString += " p.visitor=2 and"; break;
-					case 3: selectSqlString += " p.visitor=3 and"; break;
-					case 4: selectSqlString += " p.visitor=4 and"; break;
-					default: break;
-					}
-					
-					String suffix = selectSqlString.substring(selectSqlString.length()-4, 
-							selectSqlString.length());
-					
-					if(suffix.equals(" and")){
-						selectSqlString = selectSqlString.substring(0, 
-								selectSqlString.length()-4);
-					}
-				}
-				
-			}
-			else if(f==3){
-				if(cy*cw*zx*ws*xg*fk == 1){
-					selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId "
-							+ "left join fn_house f on s.userId=f.userId"
-							+ " where f.userId is null and r.userId is null and s.userId!="+id + " and";
-					switch(xb){
-					case 2: selectSqlString += " gender=0 and"; break;
-					case 3: selectSqlString += " gender=1 and"; break;
-					default: break;
-					}
-					
-					switch(gs){
-					case 2: selectSqlString += " company='网易' and"; break;
-					case 3: selectSqlString += " company='阿里' and"; break;
-					case 4: selectSqlString += " company='大华' and"; break;
-					case 5: selectSqlString += " company='UC斯达康' and"; break;
-					case 6: selectSqlString += " company='海康威视' and"; break;
-					default: break;
-					}
-					
-					String suffix = selectSqlString.substring(selectSqlString.length()-4, 
-							selectSqlString.length());
-					
-					if(suffix.equals(" and")){
-						selectSqlString = selectSqlString.substring(0, 
-								selectSqlString.length()-4);
-					}
-					
-				}
-				else{
-					selectSqlString = "select s.userId from sys_user s left join roommates_hate r on s.userId=r.userId "
-							+ "left join fn_house f on s.userId=f.userId"
-							+ " join user_personality p on s.userId = p.userId  "
-							+ "where f.userId is null and r.userId is null and s.userId!="+id+" and";
-					
-					switch(xb){
-					case 2: selectSqlString += " s.gender=0 and"; break;
-					case 3: selectSqlString += " s.gender=1 and"; break;
-					default: break;
-					}
-					switch(gs){
-					case 2: selectSqlString += " s.company='网易' and"; break;
-					case 3: selectSqlString += " s.company='阿里' and"; break;
-					case 4: selectSqlString += " s.company='大华' and"; break;
-					case 5: selectSqlString += " s.company='UC斯达康' and"; break;
-					case 6: selectSqlString += " s.company='海康威视' and"; break;
-					default: break;
-					}
-					switch(cy){
-					case 2: selectSqlString += " p.smoking=2 and"; break;
-					case 3: selectSqlString += " p.smoking=3 and"; break;
-					case 4: selectSqlString += " p.smoking=4 and"; break;
-					default: break;
-					}
-
-					switch(cw){
-					case 2: selectSqlString += " p.pet=2 and"; break;
-					case 3: selectSqlString += " p.pet=3 and"; break;
-					case 4: selectSqlString += " p.pet=4 and"; break;
-					default: break;
-					}
-
-					switch(zx){
-					case 2: selectSqlString += " p.dailySchedule=2 and"; break;
-					case 3: selectSqlString += " p.dailySchedule=3 and"; break;
-					default: break;
-					}
-					switch(ws){
-					case 2: selectSqlString += " p.cleanliness=2 and"; break;
-					case 3: selectSqlString += " p.cleanliness=3 and"; break;
-					case 4: selectSqlString += " p.cleanliness=4 and"; break;
-					default: break;
-					}
-					switch(xg){
-					case 2: selectSqlString += " p.personCharacter=2 and"; break;
-					case 3: selectSqlString += " p.personCharacter=3 and"; break;
-					case 4: selectSqlString += " p.personCharacter=4 and"; break;
-					default: break;
-					}
-					switch(fk){
-					case 2: selectSqlString += " p.visitor=2 and"; break;
-					case 3: selectSqlString += " p.visitor=3 and"; break;
-					case 4: selectSqlString += " p.visitor=4 and"; break;
-					default: break;
-					}
-					
-					String suffix = selectSqlString.substring(selectSqlString.length()-4, 
-							selectSqlString.length());
-					
-					if(suffix.equals(" and")){
-						selectSqlString = selectSqlString.substring(0, 
-								selectSqlString.length()-4);
-					}
-				}
-				
-			}
-		}
-		
-		List<Integer> userIdList = (List<Integer>)jdbcTemplate.queryForList(selectSqlString, Integer.class);;
+		String selectSqlString = matchSqlService.generateSqlStrByCondition(id, xb, f, gs, cy, cw, zx, ws, xg, fk);
+		String orderSqlString = "select * from ( " + selectSqlString + " ) res order by res.userId desc";
+		List<Integer> userIdList = (List<Integer>)jdbcTemplate.queryForList(orderSqlString, Integer.class);
 		return userIdList;
 	}
 	
@@ -363,27 +79,32 @@ public class MatchDataService implements IMatchDataService {
 		if(curUser == null) return matchUserInfo;
 		for(int i=0; i<userIdList.size(); ++i){
 			User user = userInfoService.getUserById(userIdList.get(i));
-			MatchScoreAndMessage matchScoreAndMessage = new MatchScoreAndMessage();
-			MatchUserSimpleInfo userTmpInfo = userInfoToMatchUserSimpleInfo(user);
-			userTmpInfo.setHasHouse(false);
-			if(curUser.getPersonality()!=null && user.getPersonality()!=null){
+			// 如果还在找房，则显示出来
+			if(user.getStatus()==0){
+				MatchScoreAndMessage matchScoreAndMessage = new MatchScoreAndMessage();
+				MatchUserSimpleInfo userTmpInfo = userInfoToMatchUserSimpleInfo(user);
+				userTmpInfo.setHasHouse(false);
+				if(curUser.getPersonality()!=null && user.getPersonality()!=null){
+					
+					matchScoreAndMessage = this.getVectorSimilarityBetweenTwoPersonality(curUser.getPersonality(), user.getPersonality());
+					matchScoreAndMessage.setMatchMessage(setDisplayMatchMessage(curUser, user));
+				}
+				if(user.getUserHouse()!=null) userTmpInfo.setHasHouse(true);
 				
-				matchScoreAndMessage = this.getVectorSimilarityBetweenTwoPersonality(curUser.getPersonality(), user.getPersonality());
-				matchScoreAndMessage.setMatchMessage(setDisplayMatchMessage(curUser, user));
+				userTmpInfo.setMatchScore(matchScoreAndMessage.getMatchScore());
+				userTmpInfo.setMatchMessage(matchScoreAndMessage.getMatchMessage());
+				matchUserInfo.add(userTmpInfo);
 			}
-			if(user.getUserHouse()!=null) userTmpInfo.setHasHouse(true);
-			
-			userTmpInfo.setMatchScore(matchScoreAndMessage.getMatchScore());
-			userTmpInfo.setMatchMessage(matchScoreAndMessage.getMatchMessage());
-			matchUserInfo.add(userTmpInfo);
 		}
-		// 按分数高低进行排序
-		Collections.sort(matchUserInfo,new Comparator<MatchUserSimpleInfo>(){
-			@Override
-			public int compare(MatchUserSimpleInfo matchUserInfo1, MatchUserSimpleInfo matchUserInfo2){
-				return matchUserInfo2.getMatchScore()-matchUserInfo1.getMatchScore();
-			}
-		});
+		// 如果有填过问卷，则按分数高低进行排序
+		if(curUser.getPersonality()!=null){
+			Collections.sort(matchUserInfo,new Comparator<MatchUserSimpleInfo>(){
+				@Override
+				public int compare(MatchUserSimpleInfo matchUserInfo1, MatchUserSimpleInfo matchUserInfo2){
+					return matchUserInfo2.getMatchScore()-matchUserInfo1.getMatchScore();
+				}
+			});
+		}
 		return matchUserInfo;
 	}
 	
@@ -392,7 +113,6 @@ public class MatchDataService implements IMatchDataService {
 	public MatchScoreAndMessage getSimilarityBetweenTwoPersonality(Personality per1, Personality per2){
 		MatchScoreAndMessage matchScoreAndMessage = new MatchScoreAndMessage();
 		int matchScore = 0;
-		String matchMessage = "TA";
 
 		// 权重 分配
 		int zxWeight = 1; // 作息选项权重
@@ -407,7 +127,6 @@ public class MatchDataService implements IMatchDataService {
 		int user2DailySchedule = per2.getDailySchedule();
 		if(user1DailySchedule == user2DailySchedule){
 			matchScore += zxWeight*1;
-			matchMessage = matchMessage + " 作息 ";
 		}
 		else matchScore += zxWeight*(-1);
 
@@ -418,7 +137,6 @@ public class MatchDataService implements IMatchDataService {
 		user2Smoking -= 2;
 		if(user1Smoking == user2Smoking){
 			matchScore += cyWeight*1;
-			matchMessage = matchMessage + " 抽烟 ";
 		}
 		else matchScore += cyWeight*(user1Smoking*user2Smoking);
 
@@ -429,7 +147,6 @@ public class MatchDataService implements IMatchDataService {
 		user2Pet -= 2;
 		if(user1Pet == user2Pet){
 			matchScore += cwWeight*1;
-			matchMessage = matchMessage + " 宠物 ";
 		}
 		else matchScore += cwWeight*(user1Pet*user2Pet);
 
@@ -440,7 +157,6 @@ public class MatchDataService implements IMatchDataService {
 		user2Visitor -= 2;
 		if(user1Visitor == user2Visitor){
 			matchScore += fkWeight*1;
-			matchMessage = matchMessage + " 访客 ";
 		}
 		else matchScore += fkWeight*(user1Visitor*user2Visitor);
 
@@ -451,7 +167,6 @@ public class MatchDataService implements IMatchDataService {
 		user2Sanitation -= 2;
 		if(user1Sanitation == user2Sanitation){
 			matchScore += grwsWeight*1;
-			matchMessage = matchMessage + " 个人卫生 ";
 		}
 		else matchScore += grwsWeight*(user1Sanitation*user2Sanitation);
 
@@ -462,7 +177,6 @@ public class MatchDataService implements IMatchDataService {
 		user2Character -= 2;
 		if(user1Character == user2Character){
 			matchScore += xgWeight*1;
-			matchMessage = matchMessage + " 性格 ";
 		}
 		else matchScore += xgWeight*(user1Character*user2Character);
 
@@ -471,11 +185,8 @@ public class MatchDataService implements IMatchDataService {
 		matchScore = matchScore+zxWeight+cyWeight+cwWeight+fkWeight+grwsWeight+xgWeight;
 		matchScore = (int)(100*(double)matchScore/(double)totalWeight);
 
-		if(matchMessage == "TA") matchMessage = " ";
-		else matchMessage += "与您相同！";
-
 		matchScoreAndMessage.setMatchScore(matchScore);
-		matchScoreAndMessage.setMatchMessage(matchMessage);
+		matchScoreAndMessage.setMatchMessage("");
 
 		return matchScoreAndMessage;
 	}
@@ -566,14 +277,15 @@ public class MatchDataService implements IMatchDataService {
 	@Override
 	public MatchUserSimpleInfo userInfoToMatchUserSimpleInfo(User user){
 		MatchUserSimpleInfo matchUserInfo = new MatchUserSimpleInfo();
-		matchUserInfo.setCompany(user.getCompany());
-		matchUserInfo.setGender(user.getGender());
-		matchUserInfo.setNickName(user.getNickName());
+		if(user.getCompany()!=null) matchUserInfo.setCompany(user.getCompany());
+		if(user.getGender()!=null) matchUserInfo.setGender(user.getGender());
+		if(user.getNickName()!=null) matchUserInfo.setNickName(user.getNickName());
 
 		// matchUserInfo.setPhotoId(user.getUserId(), 0);
-		matchUserInfo.setPhotoId(123, 0);
+		if(user.getHasPhoto()) matchUserInfo.setPhotoId(user.getUserId(), 0);
+		else matchUserInfo.setPhotoId(123, 0);
 		matchUserInfo.setUserId(user.getUserId());
-		matchUserInfo.setAge(dateToAge(user.getBirthday()));
+		if(user.getBirthday()!=null) matchUserInfo.setAge(dateToAge(user.getBirthday()));
 		return matchUserInfo;
 	}
 
@@ -589,10 +301,9 @@ public class MatchDataService implements IMatchDataService {
 
 	@Override
 	public String setDisplayMatchMessage(User curUser, User user) throws ServiceException {
-		// TODO Auto-generated method stub
 		Personality curPer = curUser.getPersonality();
 		Personality per = user.getPersonality();
-		
+		if(curPer==null || per==null) return "";
 		// 公司，年龄，问卷
 		if(curPer.getCleanliness()==per.getCleanliness() && curPer.getPersonCharacter()==per.getPersonCharacter()
 				&& curPer.getDailySchedule()==per.getDailySchedule() && curPer.getPet()==per.getPet() 
@@ -610,5 +321,34 @@ public class MatchDataService implements IMatchDataService {
 		return "";
 	}
 
-
+	@Override
+	public List<MatchUserSimpleInfo> searchUserSimpleInfoByPara(String keyWords, int id, int p, int xb, int f, int gs,
+			int cy, int cw, int zx, int ws, int xg, int fk) throws ServiceException {
+		
+		String selectSqlString = matchSqlService.generateSqlStrByCondition(id, xb, f, gs, cy, cw, zx, ws, xg, fk);
+		keyWords="%"+keyWords+"%";
+		String nickSqlString = "select su.userId from sys_user su join ( " + selectSqlString + " ) res on su.userId=res.userId where "
+				+ "su.nickName like ?";
+		List<Integer> nickUserIdList = (List<Integer>)jdbcTemplate.queryForList(nickSqlString, new Object[]{keyWords}, Integer.class);
+		if(nickUserIdList.size() != 0){
+			List<MatchUserSimpleInfo>  matchUserSimpleInfo = matchResultSimpleInfo(id, nickUserIdList);
+			List<MatchUserSimpleInfo> resultUserSimpleInfo = new ArrayList<MatchUserSimpleInfo>();
+			for(int i=(p-1)*20; i<p*20 && i<matchUserSimpleInfo.size(); ++i ){
+				resultUserSimpleInfo.add(matchUserSimpleInfo.get(i));
+			}
+			return resultUserSimpleInfo;
+		}
+		String addrSqlString = "select fh.userId from fn_house fh join ( " + selectSqlString + " ) res on fh.userId=res.userId where "
+				+ "fh.community like ?";
+		List<Integer> addrUserIdList = (List<Integer>)jdbcTemplate.queryForList(addrSqlString, new Object[]{keyWords}, Integer.class);
+		if(addrUserIdList.size() != 0){
+			List<MatchUserSimpleInfo>  matchUserSimpleInfo = matchResultSimpleInfo(id, addrUserIdList);
+			List<MatchUserSimpleInfo> resultUserSimpleInfo = new ArrayList<MatchUserSimpleInfo>();
+			for(int i=(p-1)*20; i<p*20 && i<matchUserSimpleInfo.size(); ++i ){
+				resultUserSimpleInfo.add(matchUserSimpleInfo.get(i));
+			}
+			return resultUserSimpleInfo;
+		}
+		return null;
+	}
 }

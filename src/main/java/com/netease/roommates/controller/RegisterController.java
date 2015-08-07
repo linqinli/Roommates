@@ -3,8 +3,8 @@ package com.netease.roommates.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -40,14 +40,18 @@ public class RegisterController {
 		String userId = request.getParameter("userId");
 		Map<String, Object> info = new HashMap<String, Object>();
 		HttpSession session= request.getSession();
+		if(userId==null){
+			info.put("result", 0);
+			info.put("info", "传入参数错误");
+			return info;
+		}
 		if((Integer)session.getAttribute("userId")==null){
 			info.put("result", 0);
 			info.put("info", "超时");
 			return info;
 		}
 		else{
-			int p_userId = (Integer)session.getAttribute("userId");
-			System.out.println(p_userId+"");
+			int p_userId = (Integer)(session.getAttribute("userId"));
 			if(p_userId==Integer.parseInt(userId)){
 				User user = userInfoService.getUserById(p_userId);
 				if(user==null ||  user.getCompanyEmail()==null || user.getCompanyEmail().isEmpty()){
@@ -55,10 +59,18 @@ public class RegisterController {
 					info.put("info", "邮箱未验证成功");
 				}
 				else{
+					request.getSession().setAttribute("isChecked",true);
+					String sessionId = session.getId();
+					//user.setSessionId(sessionId);
+					//userInfoService.updateUserBasicInfo(user);
 					info.put("result", 1);
 					info.put("info", "验证成功");
+					info.put("access_token", sessionId);
 					info.put("userId", p_userId);
-					request.getSession().setAttribute("isChecked",true);
+					//Map<String, Object> dataMap = new HashMap<String, Object>();
+					//dataMap.put("userId", p_userId);
+					//dataMap.put("sessionId", sessionId);
+					//info.put("data", dataMap);
 				}
 			}
 			else{
@@ -73,13 +85,12 @@ public class RegisterController {
 	
 	@RequestMapping(value="/register/usercheck")
 	@ResponseBody
-	public Map<String, Object> userCheck(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public Map<String, Object> userCheck(HttpServletRequest request) throws Exception{
 		Map<String, Object> info = new HashMap<String,Object>();
 		request.setCharacterEncoding("utf-8"); 
 		String p_userId = request.getParameter("checkid");
 		String p_email = request.getParameter("checkemail");
 		String p_name = request.getParameter("checkname");
-		System.out.println(Integer.parseInt(p_userId)+"+"+p_email);
 		User user = userInfoService.getUserById(Integer.parseInt(p_userId));
 		System.out.println(user);
 		if(user!=null && p_name.equals(HashGeneratorUtils.generateSaltMD5(user.getNickName()))){
@@ -90,7 +101,7 @@ public class RegisterController {
 			return info;
 		}
 		//info.put("result", 0);
-		info.put("验证结果", "验证失败");
+		info.put("验证结果", "邮箱验证失败");
 		return info;
 		
 	}
@@ -114,17 +125,17 @@ public class RegisterController {
 		
 		if(p_name==null || p_name.isEmpty()){
 			info.put("result", 0);
-			info.put("info", "昵称为空");
+			info.put("info", "请输入昵称");
 			return info;
 		}
 		if(p_password==null || p_password.isEmpty()){
 			info.put("result", 0);
-			info.put("info", "密码为空");
+			info.put("info", "请输入密码");
 			return info;
 		}
 		if(p_email==null || p_email.isEmpty()){
 			info.put("result", 0);
-			info.put("info", "邮箱为空");
+			info.put("info", "请输入企业邮箱");
 			return info;
 		}
 		
@@ -136,7 +147,7 @@ public class RegisterController {
 		
 		if(!emailAddress.emailCheck(p_email)){
 			info.put("result", 0);
-			info.put("info", "邮箱格式错误");
+			info.put("info", "请输入您的企业邮箱");
 			return info;
 		}
 		
@@ -168,17 +179,21 @@ public class RegisterController {
 			info.put("info", "注册失败");
 			return info;
 		}
+		
 		int userId = registerUser.getUserId();
-		request.getSession(true);
-		request.getSession().setAttribute("userId",userId);
-		request.getSession().setAttribute("isRegister",true);
 		info.put("result", 1);
 		info.put("info", "注册成功");
-		info.put("userId", userId);
-		
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		dataMap.put("userId",userId);
+		dataMap.put("avatar", "http://223.252.223.13/Roommates/photo/photo_default.jpg");
+		dataMap.put("company", emailAddress.getCompany(p_email));
+		info.put("data", dataMap);
+		//request.getSession(false).invalidate();
+		request.getSession(true);
+		request.getSession().setAttribute("userId",userId);
 		
 		StringBuffer mailstring = new StringBuffer("这是验证邮件，请访问如下网址：<br/><a href=");
-		StringBuffer stringbuffer = new StringBuffer("223.252.223.13/Roommates/api/register/usercheck");
+		StringBuffer stringbuffer = new StringBuffer("http://223.252.223.13/Roommates/api/register/usercheck");
 		stringbuffer.append("?checkid=" + userId);
 		stringbuffer.append("&checkemail=" + p_email);
 		stringbuffer.append("&checkname=" + HashGeneratorUtils.generateSaltMD5(p_name));

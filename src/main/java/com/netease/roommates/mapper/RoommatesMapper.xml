@@ -23,6 +23,11 @@
 		from roommates_favorite rf 
 		join sys_user su 
 		on rf.favorite = su.userId 
-		where rf.userId=#{userId}
+		where rf.userId=#{userId} and (su.status=0 or su.status is null)
+		
+	</select>
+	
+	<select id="isFavorite" parameterType="int" resultType="boolean">
+		select count(*) from roommates_favorite where userId=#{userId} and favorite=#{targetUserId}
 	</select>
 </mapper>

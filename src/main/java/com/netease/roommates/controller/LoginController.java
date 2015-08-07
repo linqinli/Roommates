@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,9 +36,11 @@ public class LoginController {
 	
 	@RequestMapping(value="/logout")
 	@ResponseBody
-	public Map<String, Object> logout(HttpServletRequest request, HttpServletResponse response){
+	public Map<String, Object> logout(HttpServletRequest request) throws Exception{
 		Map<String, Object> info = new HashMap<String, Object>();
+		//int userId = (Integer)request.getSession().getAttribute("userId");
 		request.getSession().invalidate();
+		//userInfoService.logoutById(userId);
 		info.put("result",1);
 		return info;
 	}
@@ -65,19 +67,19 @@ public class LoginController {
 		
 		if(p_email==null || p_email.isEmpty()){
 			info.put("result", 0);
-			info.put("info","邮箱为空");
+			info.put("info","请输入企业邮箱");
 			return info;
 		}
 		if(p_password==null || p_password.isEmpty()){
 			info.put("result", 0);
-			info.put("info", "密码为空");
+			info.put("info", "请输入登录密码");
 			return info;
 		}
 		
 		
 		if(!emailAddress.emailCheck(p_email)){
 			info.put("result", 0);
-			info.put("info", "邮箱格式错误");
+			info.put("info", "请输入您的企业邮箱");
 			return info;
 		}
 		
@@ -87,14 +89,20 @@ public class LoginController {
 			if(user.getPwdMD5Hash().equals(HashGeneratorUtils.generateSaltMD5(p_password))){
 				info.put("result", 1);
 				info.put("info", "登录成功");
-				request.getSession(true);
+				//request.getSession(false).invalidate();
+				HttpSession session = request.getSession(true);
+				String sessionId = session.getId();
 				request.getSession().setAttribute("userId",user.getUserId());
 				request.getSession().setAttribute("isChecked",true);
+				//user.setSessionId(sessionId);
+				//userInfoService.updateUserBasicInfo(user);
+				info.put("access_token", sessionId);
 				
-				boolean isInfoAll = (user.getUserName()!=null&&user.getGender()!=null&user.getPhoneNumber()!=null&&user.getBirthday()!=null&&user.getAddress()!=null&&user.getPosition()!=null);
+				
+				boolean isInfoAll = (user.getNickName()!=null&&user.getGender()!=null&user.getPhoneNumber()!=null&&user.getBirthday()!=null&& user.getPosition()!=null);
 				int isQuestionnaireAll = userInfoService.isQuestionnaireAll(user.getUserId());
-				String credit = "一般";
-				String headImgUrl = "http://223.252.223.13/Roommates/photo/photo_" + user.getUserId() + "_small.jpg";
+				String credit = "一般信用";
+				String headImgUrl = "http://223.252.223.13/Roommates/photo/photo_" + user.getUserId() + ".jpg";
 				Personality personality = userInfoService.getUserPersonalityById(user.getUserId());
 				
 				
@@ -119,7 +127,10 @@ public class LoginController {
 				Map<String, Object> dataMap = new HashMap<String, Object>();
 				dataMap.put("userId", user.getUserId());
 				dataMap.put("nickName", user.getNickName());
-				dataMap.put("avatar", headImgUrl);
+				if(user.getHasPhoto())
+					dataMap.put("avatar", headImgUrl);
+				else
+					dataMap.put("avatar", "http://223.252.223.13/Roommates/photo/photo_default.jpg");
 				dataMap.put("lookStatus",user.getStatus());
 				dataMap.put("credit", credit);
 				dataMap.put("auth", auth);
@@ -138,6 +149,7 @@ public class LoginController {
 				if(tags!=null)
 					dataMap.put("tags", tags);				
 				dataMap.put("completeInfo", isInfoAll);
+				//dataMap.put("sessionId", sessionId);
 				
 				info.put("data", dataMap);
 			
@@ -145,13 +157,13 @@ public class LoginController {
 			}
 			else{
 				info.put("result", 0);
-				info.put("info", "邮箱与密码不匹配");
+				info.put("info", "密码输入不正确，请重新输入");
 				return info;
 			}
 		}
 		else{
 			info.put("result",0);
-			info.put("info", "该邮箱未注册");
+			info.put("info", "该企业邮箱尚未注册，请检查邮箱");
 			return info;
 		}
 	}
