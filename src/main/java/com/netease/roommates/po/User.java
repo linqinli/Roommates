@@ -22,6 +22,7 @@ public class User implements Serializable{
 	private Boolean hasPhoto;
 	private Personality personality;
 	private UserHouse userHouse;
+	//private String sessionId;
 	
 	public User() {
 		// used for serialization.
@@ -154,5 +155,13 @@ public class User implements Serializable{
 	public void setUserHouse(UserHouse userHouse) {
 		this.userHouse = userHouse;
 	}
+	
+//	public String getSessionId() {
+//		return sessionId;
+//	}
+//	
+//	public void setSessionId(String sessionId) {
+//		this.sessionId = sessionId;
+//	}
 	
 }

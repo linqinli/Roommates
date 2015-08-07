@@ -89,7 +89,6 @@ public class LoginController {
 			if(user.getPwdMD5Hash().equals(HashGeneratorUtils.generateSaltMD5(p_password))){
 				info.put("result", 1);
 				info.put("info", "登录成功");
-				info.put("access_token", 1);
 				//request.getSession(false).invalidate();
 				HttpSession session = request.getSession(true);
 				String sessionId = session.getId();
@@ -97,7 +96,7 @@ public class LoginController {
 				request.getSession().setAttribute("isChecked",true);
 				//user.setSessionId(sessionId);
 				//userInfoService.updateUserBasicInfo(user);
-				
+				info.put("access_token", sessionId);
 				
 				
 				boolean isInfoAll = (user.getNickName()!=null&&user.getGender()!=null&user.getPhoneNumber()!=null&&user.getBirthday()!=null&& user.getPosition()!=null);
