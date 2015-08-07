@@ -39,6 +39,7 @@ public class RegisterControllerTest {
 		HttpSession session = mock(HttpSession.class);
 		when( request.getParameter("userId")).thenReturn("1");
 		when(request.getSession()).thenReturn(session);
+		when(session.getId()).thenReturn("1");
 		when(session.getAttribute("userId")).thenReturn(1);
 		User user = new User();
 		//user.setUserId(1);

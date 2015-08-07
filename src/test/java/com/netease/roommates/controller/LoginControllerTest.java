@@ -62,6 +62,7 @@ public class LoginControllerTest {
 		user.setHasPhoto(true);
 		when(userInfoService.getUserByEmail("hztest@corp.netease.com")).thenReturn(user);
 		when(request.getSession()).thenReturn(session);
+		when(session.getId()).thenReturn("1");
 		Personality personality = new Personality();
 		when(userInfoService.getUserPersonalityById(1)).thenReturn(personality);
 		when(userHouseService.getUserHouseById(1)).thenReturn(userhouse);

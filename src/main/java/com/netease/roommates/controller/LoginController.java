@@ -90,7 +90,7 @@ public class LoginController {
 				info.put("result", 1);
 				info.put("info", "登录成功");
 				//request.getSession(false).invalidate();
-				HttpSession session = request.getSession(true);
+				HttpSession session = request.getSession();
 				String sessionId = session.getId();
 				request.getSession().setAttribute("userId",user.getUserId());
 				request.getSession().setAttribute("isChecked",true);
