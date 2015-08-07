@@ -59,10 +59,18 @@ public class RegisterController {
 					info.put("info", "邮箱未验证成功");
 				}
 				else{
+					request.getSession().setAttribute("isChecked",true);
+					String sessionId = session.getId();
+					//user.setSessionId(sessionId);
+					//userInfoService.updateUserBasicInfo(user);
 					info.put("result", 1);
 					info.put("info", "验证成功");
+					info.put("access_token", sessionId);
 					info.put("userId", p_userId);
-					request.getSession().setAttribute("isChecked",true);
+					//Map<String, Object> dataMap = new HashMap<String, Object>();
+					//dataMap.put("userId", p_userId);
+					//dataMap.put("sessionId", sessionId);
+					//info.put("data", dataMap);
 				}
 			}
 			else{
@@ -173,16 +181,16 @@ public class RegisterController {
 		}
 		
 		int userId = registerUser.getUserId();
-		request.getSession(true);
-		request.getSession().setAttribute("userId",userId);
-		request.getSession().setAttribute("isRegister",true);
 		info.put("result", 1);
 		info.put("info", "注册成功");
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		dataMap.put("userId",userId);
 		dataMap.put("avatar", "http://223.252.223.13/Roommates/photo/photo_default.jpg");
+		dataMap.put("company", emailAddress.getCompany(p_email));
 		info.put("data", dataMap);
-		
+		//request.getSession(false).invalidate();
+		request.getSession(true);
+		request.getSession().setAttribute("userId",userId);
 		
 		StringBuffer mailstring = new StringBuffer("这是验证邮件，请访问如下网址：<br/><a href=");
 		StringBuffer stringbuffer = new StringBuffer("http://223.252.223.13/Roommates/api/register/usercheck");

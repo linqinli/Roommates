@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,9 +36,11 @@ public class LoginController {
 	
 	@RequestMapping(value="/logout")
 	@ResponseBody
-	public Map<String, Object> logout(HttpServletRequest request){
+	public Map<String, Object> logout(HttpServletRequest request) throws Exception{
 		Map<String, Object> info = new HashMap<String, Object>();
+		//int userId = (Integer)request.getSession().getAttribute("userId");
 		request.getSession().invalidate();
+		//userInfoService.logoutById(userId);
 		info.put("result",1);
 		return info;
 	}
@@ -85,13 +89,19 @@ public class LoginController {
 			if(user.getPwdMD5Hash().equals(HashGeneratorUtils.generateSaltMD5(p_password))){
 				info.put("result", 1);
 				info.put("info", "登录成功");
-				request.getSession(true);
+				//request.getSession(false).invalidate();
+				HttpSession session = request.getSession(true);
+				String sessionId = session.getId();
 				request.getSession().setAttribute("userId",user.getUserId());
 				request.getSession().setAttribute("isChecked",true);
+				//user.setSessionId(sessionId);
+				//userInfoService.updateUserBasicInfo(user);
+				info.put("access_token", sessionId);
+				
 				
 				boolean isInfoAll = (user.getNickName()!=null&&user.getGender()!=null&user.getPhoneNumber()!=null&&user.getBirthday()!=null&& user.getPosition()!=null);
 				int isQuestionnaireAll = userInfoService.isQuestionnaireAll(user.getUserId());
-				String credit = "一般";
+				String credit = "一般信用";
 				String headImgUrl = "http://223.252.223.13/Roommates/photo/photo_" + user.getUserId() + ".jpg";
 				Personality personality = userInfoService.getUserPersonalityById(user.getUserId());
 				
@@ -139,6 +149,7 @@ public class LoginController {
 				if(tags!=null)
 					dataMap.put("tags", tags);				
 				dataMap.put("completeInfo", isInfoAll);
+				//dataMap.put("sessionId", sessionId);
 				
 				info.put("data", dataMap);
 			
