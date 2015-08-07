@@ -108,7 +108,6 @@ public class MatchController {
 		try {
 			keyWords = new String(keyWords.getBytes("iso-8859-1"), "utf8");
 		} catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		

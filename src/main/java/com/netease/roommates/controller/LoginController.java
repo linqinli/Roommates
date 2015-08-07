@@ -5,8 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.netease.common.service.impl.CheckWord;
 import com.netease.common.service.impl.emailAddress;
+import com.netease.roommates.interceptor.PermissionInterceptor;
 import com.netease.roommates.po.Personality;
 import com.netease.roommates.po.User;
 import com.netease.roommates.vo.LoginAndRegisterUserVO;
@@ -34,10 +38,17 @@ public class LoginController {
 	
 	@RequestMapping(value="/logout")
 	@ResponseBody
-	public Map<String, Object> logout(HttpServletRequest request){
+	public Map<String, Object> logout(HttpServletRequest request) throws Exception{
+		String token = request.getHeader("Authorization");
+		if (!StringUtils.isEmpty(token)) {
+			PermissionInterceptor.removeToken(token);
+		}
+		
 		Map<String, Object> info = new HashMap<String, Object>();
-		request.getSession().invalidate();
-		info.put("result",1);
+		//int userId = (Integer)request.getSession().getAttribute("userId");
+		//request.getSession().invalidate();
+		//userInfoService.logoutById(userId);
+		info.put("result",0);
 		return info;
 	}
 	
@@ -83,15 +94,23 @@ public class LoginController {
 		
 		if(user!=null){
 			if(user.getPwdMD5Hash().equals(HashGeneratorUtils.generateSaltMD5(p_password))){
+				PermissionInterceptor.removeUserId(user.getUserId());
+				
 				info.put("result", 1);
 				info.put("info", "登录成功");
-				request.getSession(true);
+				//request.getSession(false).invalidate();
+				HttpSession session = request.getSession(true);
+				String sessionId = session.getId();
 				request.getSession().setAttribute("userId",user.getUserId());
 				request.getSession().setAttribute("isChecked",true);
+				//user.setSessionId(sessionId);
+				//userInfoService.updateUserBasicInfo(user);
+				info.put("access_token", sessionId);
+				
 				
 				boolean isInfoAll = (user.getNickName()!=null&&user.getGender()!=null&user.getPhoneNumber()!=null&&user.getBirthday()!=null&& user.getPosition()!=null);
 				int isQuestionnaireAll = userInfoService.isQuestionnaireAll(user.getUserId());
-				String credit = "一般";
+				String credit = "一般信用";
 				String headImgUrl = "http://223.252.223.13/Roommates/photo/photo_" + user.getUserId() + ".jpg";
 				Personality personality = userInfoService.getUserPersonalityById(user.getUserId());
 				
@@ -139,6 +158,7 @@ public class LoginController {
 				if(tags!=null)
 					dataMap.put("tags", tags);				
 				dataMap.put("completeInfo", isInfoAll);
+				//dataMap.put("sessionId", sessionId);
 				
 				info.put("data", dataMap);
 			
