@@ -5,7 +5,6 @@ public class LoginAndRegisterUserVO {
 	private String email;
 	private String password;
 	private int userId;
-	//private String sessionId;
 	
 	public LoginAndRegisterUserVO(){}
 	public String getNickname(){
@@ -32,11 +31,6 @@ public class LoginAndRegisterUserVO {
 	public void setUserId(int userId){
 		this.userId = userId;
 	}
-//	public String getSessionId(){
-//		return sessionId;
-//	}
-//	public void setSessionId(String sessionId){
-//		this.sessionId = sessionId;
-//	}
+
 	
 }
