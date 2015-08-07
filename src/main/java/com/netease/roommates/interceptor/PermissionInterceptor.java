@@ -35,8 +35,6 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
 			if (tokenUserMap.containsKey(token)) {
 				HttpSession session = request.getSession();
 				int userId = tokenUserMap.get(token);
-				tokenUserMap.remove(token);
-				tokenUserMap.put(session.getId(), userId);
 				session.setAttribute(USER_ID, userId);
 				return true;
 			}
@@ -48,7 +46,7 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
 		Object userId = request.getSession().getAttribute(USER_ID);
-		if (userId != null && !tokenUserMap.values().contains(userId)) {
+		if (userId != null && !tokenUserMap.containsValue(userId)) {
 			tokenUserMap.put(request.getSession().getId(), (Integer) userId);
 		}
 	}
@@ -61,5 +59,19 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
 			logger.error("", ioe);
 		}
 	}
-
+    
+	public static void removeToken(String token) {
+		tokenUserMap.remove(token);
+	}
+	
+	public static void removeUserId(int userId) {
+		if(tokenUserMap.containsValue(userId)) {
+			for(String token : tokenUserMap.keySet()) {
+				if(tokenUserMap.get(token).equals(userId)) {
+					tokenUserMap.remove(token);
+					break;
+				}
+			}
+		}
+	}
 }

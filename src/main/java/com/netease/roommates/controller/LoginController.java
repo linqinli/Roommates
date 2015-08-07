@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.netease.common.service.impl.CheckWord;
 import com.netease.common.service.impl.emailAddress;
+import com.netease.roommates.interceptor.PermissionInterceptor;
 import com.netease.roommates.po.Personality;
 import com.netease.roommates.po.User;
 import com.netease.roommates.vo.LoginAndRegisterUserVO;
@@ -37,11 +39,16 @@ public class LoginController {
 	@RequestMapping(value="/logout")
 	@ResponseBody
 	public Map<String, Object> logout(HttpServletRequest request) throws Exception{
+		String token = request.getHeader("Authorization");
+		if (!StringUtils.isEmpty(token)) {
+			PermissionInterceptor.removeToken(token);
+		}
+		
 		Map<String, Object> info = new HashMap<String, Object>();
 		//int userId = (Integer)request.getSession().getAttribute("userId");
-		request.getSession().invalidate();
+		//request.getSession().invalidate();
 		//userInfoService.logoutById(userId);
-		info.put("result",1);
+		info.put("result",0);
 		return info;
 	}
 	
@@ -87,6 +94,8 @@ public class LoginController {
 		
 		if(user!=null){
 			if(user.getPwdMD5Hash().equals(HashGeneratorUtils.generateSaltMD5(p_password))){
+				PermissionInterceptor.removeUserId(user.getUserId());
+				
 				info.put("result", 1);
 				info.put("info", "登录成功");
 				//request.getSession(false).invalidate();
