@@ -1,5 +1,6 @@
 package com.netease.roommates.vo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.netease.roommates.po.UserHouse;
@@ -68,6 +69,15 @@ public class MatchUserHouse {
 		this.setPrice(userHouse.getPrice());
 		this.setDescription(userHouse.getDescription());
 		this.setUpdateTime(userHouse.getUpdateTime().substring(0, 10));
+		if(userHouse.getPictures()!=null && userHouse.getPictures()!=""){
+			String[] tmpStrs = userHouse.getPictures().split(";");
+			List<String> tmpPicUrls = new ArrayList<String>();
+			String PREFIX = "http://223.252.223.13/Roommates/photo/house/";
+			for(int i=0; i<tmpStrs.length; i++){
+				tmpPicUrls.add(PREFIX+tmpStrs[i]);
+			}
+			this.setImages(tmpPicUrls);
+		}
 	}
 	public String getUpdateTime() {
 		return updateTime;

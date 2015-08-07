@@ -70,7 +70,7 @@ public class MatchController {
 	@ResponseBody
 	public Map matchPeopleDetail(HttpSession session, @PathVariable int id) throws ServiceException {
 		MatchUserDetailInfo matchUserDetailInfo;// = matchDetailService.getDetailByUser(id);
-		if(session.getAttribute(USER_ID)==null){
+		if(session==null || session.getAttribute(USER_ID)==null){
 			matchUserDetailInfo =  matchDetailService.getDetailByUser(id);
 		}else{
 			int curUserId = (Integer) session.getAttribute(USER_ID);
@@ -108,7 +108,6 @@ public class MatchController {
 		try {
 			keyWords = new String(keyWords.getBytes("iso-8859-1"), "utf8");
 		} catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		

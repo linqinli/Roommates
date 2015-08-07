@@ -17,7 +17,7 @@ public interface IUserHouseService {
 
 	public List<String> saveBase64Image(int userId, List<String> images) throws ServiceException;
 
-	public void addImage(int userId, List<String> images) throws ServiceException;
+	public List<String> addImage(int userId, List<String> images) throws ServiceException;
 
 	public void deleteImage(int userId, List<String> photoNames);
 
