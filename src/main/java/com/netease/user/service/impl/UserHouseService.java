@@ -115,7 +115,7 @@ public class UserHouseService implements IUserHouseService {
 		}
 	}
 	
-	public void addImage(int userId, List<String> images) throws ServiceException {
+	public List<String> addImage(int userId, List<String> images) throws ServiceException {
 		List<String> photoNames = saveBase64Image(userId, images);
 		StringBuilder sb = new StringBuilder();
 		for(String photoName : photoNames) {
@@ -132,6 +132,7 @@ public class UserHouseService implements IUserHouseService {
 		}
 		userHouser.setPictures(pictures);
 		uhouseMapper.updateUserHouseInfo(userHouser);
+		return photoNames;
 	}
 	
 	private String getPhotoName(int userId) {
