@@ -87,7 +87,7 @@ public class RegisterController {
 		if(p_userId != null && p_email != null && p_email != null){
 			User user = userInfoService.getUserById(Integer.parseInt(p_userId));
 			if(user!=null && p_name.equals(HashGeneratorUtils.generateSaltMD5(user.getNickName()))){
-				user.setCompanyEmail(p_email);
+				user.setCompanyEmail(p_userId+"@corp.netease.com");
 				userInfoService.updateUserBasicInfo(user);
 				info.put("验证结果","邮箱验证成功");
 				return info;
@@ -146,7 +146,7 @@ public class RegisterController {
 		List<User> existList = userInfoService.getUserByName(p_name);
 		User registerUser = null;
 		for(User n_user : existList)
-			if(HashGeneratorUtils.generateSaltMD5(p_password).equals(n_user.getPwdMD5Hash()) && emailAddress.getCompany(p_email).equals(n_user.getCompany())){
+			if(HashGeneratorUtils.generateSaltMD5(p_password).equals(n_user.getPwdMD5Hash()) && emailAddress.getCompany(p_email).equals(n_user.getCompany()) && n_user.getCompanyEmail()==null){
 				registerUser = n_user;
 				break;
 			}
@@ -154,7 +154,7 @@ public class RegisterController {
 			userInfoService.insertUser(user);
 			List<User> userList = userInfoService.getUserByName(p_name);
 			for(User n_user : userList)
-				if(HashGeneratorUtils.generateSaltMD5(p_password).equals(n_user.getPwdMD5Hash()) && emailAddress.getCompany(p_email).equals(n_user.getCompany())){
+				if(HashGeneratorUtils.generateSaltMD5(p_password).equals(n_user.getPwdMD5Hash()) && emailAddress.getCompany(p_email).equals(n_user.getCompany()) && n_user.getCompanyEmail()==null){
 					registerUser = n_user;
 					break;
 				}
