@@ -37,21 +37,21 @@ public class RegisterController {
 	@RequestMapping(value="/register/check")
 	@ResponseBody
 	public Map<String, Object> check(HttpServletRequest request) throws Exception{
-		String userId = request.getParameter("userId");
+//		String userId = request.getParameter("userId");
 		Map<String, Object> info = new HashMap<String, Object>();
 		HttpSession session= request.getSession();
-		if(userId==null){
-			info.put("result", 0);
-			info.put("info", "传入参数错误");
-			return info;
-		}
+//		if(userId==null){
+//			info.put("result", 0);
+//			info.put("info", "传入参数错误");
+//			return info;
+//		}
 		if((Integer)session.getAttribute("userId")==null){
 			info.put("result", 0);
 			info.put("info", "操作超时");
 			return info;
 		}
 		int p_userId = (Integer)(session.getAttribute("userId"));
-		if(p_userId == Integer.parseInt(userId)){
+//		if(p_userId == Integer.parseInt(userId)){
 			User user = userInfoService.getUserById(p_userId);
 			if(user==null ||  user.getCompanyEmail()==null || user.getCompanyEmail().isEmpty()){
 				info.put("result", 0);
@@ -67,12 +67,12 @@ public class RegisterController {
 				info.put("userId", p_userId);
 				return info;
 			}
-		}
-		else{
-			info.put("result", 0);
-			info.put("info", "用户错误");
-			return info;
-		}
+//		}
+//		else{
+//			info.put("result", 0);
+//			info.put("info", "用户错误");
+//			return info;
+//		}
 	}
 	
 	
