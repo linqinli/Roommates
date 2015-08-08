@@ -44,15 +44,17 @@ public class PhotoController {
 			JsonBuilder result = new JsonBuilder();
 			int userId = (Integer) session.getAttribute(USER_ID);
 			String base64Image = params.get("file");
-			if (!StringUtils.isEmpty(base64Image) && base64Image.length() < 200 * 1024) {
+			if (!StringUtils.isEmpty(base64Image)) {
 				int idx = base64Image.indexOf(',');
 				if (idx != -1) {
 					base64Image = base64Image.substring(idx + 1);
 					byte[] decodedBytes = DatatypeConverter.parseBase64Binary(base64Image);
-					photoTransportService.fildUpload(generatePathByUserId(userId), decodedBytes);
-					result.append("errono", 0);
-					result.append("imgUrl", PHOTO_URL_PREFIX + userId + SUFFIX);
-					return result.build();
+					if (decodedBytes.length <= 200 * 1024) {
+						photoTransportService.fildUpload(generatePathByUserId(userId), decodedBytes);
+						result.append("errono", 0);
+						result.append("imgUrl", PHOTO_URL_PREFIX + userId + SUFFIX);
+						return result.build();
+					}
 				}
 			}
 			throw new ControllerException("Photo is empty or excess max size 200KB or base64 format error.");
