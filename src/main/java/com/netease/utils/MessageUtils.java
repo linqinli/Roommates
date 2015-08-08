@@ -35,6 +35,6 @@ public class MessageUtils {
 	}
 
 	public static String getMessage(String msgKey) {
-		return (String) prop.getProperty(msgKey);
+		return prop.getProperty(msgKey);
 	}
 }

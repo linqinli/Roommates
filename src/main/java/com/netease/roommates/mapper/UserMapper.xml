@@ -69,6 +69,14 @@
 			<if test="constellation != null">
 				constellation = #{constellation, jdbcType=VARCHAR},
 			</if>
+			<if test="hasPhoto != null">
+				hasPhoto = #{hasPhoto, jdbcType=BIT},
+			</if>
+			<!--  
+			<if test="sessionId != null">
+				sessionId = #{sessionId, jdbcType=VARCHAR},
+			</if>
+			-->
 			updateTime = now()
 		</set>
 		where userId=#{userId}

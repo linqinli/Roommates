@@ -14,14 +14,13 @@ public class MatchSqlService implements IMatchSqlService {
 		
 		if(f==1){
 			if(cy*cw*zx*ws*xg*fk == 1){
-				selectSqlString = "select distinct s.userId from sys_user s left join roommates_hate r on "
-						+ "s.userId=r.userId join user_personality p on s.userId=p.userId where (r.hate!="+id+" or r.hate is null) and s.userId!="+id + 
+				selectSqlString = "select distinct s.userId from sys_user s join user_personality p on s.userId=p.userId where s.userId!="+id + 
 						" and s.phoneNumber is not null and";
 				selectSqlString = selectSqlString + generateXbSql(xb) + generateGsSql(gs);
 			}
 			else{
-				selectSqlString = "select distinct s.userId from sys_user s left join roommates_hate r on s.userId=r.userId join user_personality p "
-						+ "on s.userId = p.userId where (r.hate!="+id+" or r.hate is null) and s.userId!="+id+" and s.phoneNumber is not null and";
+				selectSqlString = "select distinct s.userId from sys_user s join user_personality p "
+						+ "on s.userId = p.userId where s.userId!="+id+" and s.phoneNumber is not null and";
 				selectSqlString = selectSqlString + this.generateXbSql(xb) + this.generateGsSql(gs)
 				+this.generateCySql(cy) + this.generateCwSql(cw) + this.generateZxSql(zx)
 				+this.generateWsSql(ws)+this.generateXgSql(xg) + this.generateFkSql(fk);
@@ -31,16 +30,16 @@ public class MatchSqlService implements IMatchSqlService {
 			// 有房
 			if(f==2){
 				if(cy*cw*zx*ws*xg*fk == 1){
-					selectSqlString = "select distinct s.userId from sys_user s left join roommates_hate r on s.userId=r.userId "
-							+ "join fn_house f on s.userId=f.userId join user_personality p on s.userId=p.userId where (r.hate!="+id+
-							" or r.hate is null) and s.phoneNumber is not null and s.userId!="+id + " and";
+					selectSqlString = "select distinct s.userId from sys_user s "
+							+ "join fn_house f on s.userId=f.userId join user_personality p on s.userId=p.userId "
+							+ "where s.phoneNumber is not null and s.userId!="+id + " and";
 					selectSqlString = selectSqlString+this.generateXbSql(xb)+this.generateGsSql(gs);
 				}
 				else{
-					selectSqlString = "select distinct s.userId from sys_user s left join roommates_hate r on s.userId=r.userId "
+					selectSqlString = "select distinct s.userId from sys_user s "
 							+ "join user_personality p "
 							+ "on s.userId = p.userId join fn_house f on s.userId=f.userId "
-							+ "where (r.hate!="+id+" or r.hate is null) and s.phoneNumber is not null and s.userId!="+id+" and";
+							+ "where s.phoneNumber is not null and s.userId!="+id+" and";
 					selectSqlString = selectSqlString + this.generateXbSql(xb) + this.generateGsSql(gs)
 					+this.generateCySql(cy) + this.generateCwSql(cw) + this.generateZxSql(zx)
 					+this.generateWsSql(ws)+this.generateXgSql(xg) + this.generateFkSql(fk);
@@ -49,16 +48,17 @@ public class MatchSqlService implements IMatchSqlService {
 			}
 			else if(f==3){
 				if(cy*cw*zx*ws*xg*fk == 1){
-					selectSqlString = "select distinct s.userId from sys_user s left join roommates_hate r on s.userId=r.userId "
+					selectSqlString = "select distinct s.userId from sys_user s "
 							+ "left join fn_house f on s.userId=f.userId"
-							+ " join user_personality p on s.userId=p.userId where f.userId is null and s.phoneNumber is not null and (r.hate!="+id+" or r.hate) is null and s.userId!="+id + " and";
+							+ " join user_personality p on s.userId=p.userId where f.userId is null and s.phoneNumber is not null "
+							+ "and s.userId!="+id + " and";
 					selectSqlString = selectSqlString+this.generateXbSql(xb)+this.generateGsSql(gs);
 				}
 				else{
-					selectSqlString = "select distinct s.userId from sys_user s left join roommates_hate r on s.userId=r.userId "
+					selectSqlString = "select distinct s.userId from sys_user s "
 							+ "left join fn_house f on s.userId=f.userId"
 							+ " join user_personality p on s.userId = p.userId  "
-							+ "where f.userId is null and (r.hate!="+id+" or r.hate is null) and s.phoneNumber is not null and s.userId!="+id+" and";
+							+ "where f.userId is null and s.phoneNumber is not null and s.userId!="+id+" and";
 					
 					selectSqlString = selectSqlString + this.generateXbSql(xb) + this.generateGsSql(gs)
 					+this.generateCySql(cy) + this.generateCwSql(cw) + this.generateZxSql(zx)
@@ -66,6 +66,9 @@ public class MatchSqlService implements IMatchSqlService {
 				}
 			}
 		}
+		
+		selectSqlString = selectSqlString + " s.userId not in (select r.hate from roommates_hate r where r.userId="+id+")";
+		
 		String suffix = selectSqlString.substring(selectSqlString.length()-4, 
 				selectSqlString.length());
 		
