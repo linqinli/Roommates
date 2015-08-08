@@ -130,14 +130,5 @@ public class UserInfoService implements IUserInfoService {
 		}
 	}
 	
-	
-//	public void logoutById(int userId) throws ServiceException {
-//		try {
-//			userMapper.logoutById(userId);
-//		} catch (DataAccessException se) {
-//			log.error("error logout by userId: " + userId, se);
-//			throw new ServiceException(se);
-//		}
-//	}
 
 }

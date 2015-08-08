@@ -44,7 +44,7 @@ public class LoginControllerTest {
 		HttpSession session = mock(HttpSession.class);
 		when(request.getSession()).thenReturn(session);
 		Map<String, Object> result = loginController.logout(request);
-		assertEquals(result.toString(), "{result=0}");
+		assertEquals(result.toString(), "{result=1}");
 	}
 		
 	
@@ -62,11 +62,12 @@ public class LoginControllerTest {
 		user.setHasPhoto(true);
 		when(userInfoService.getUserByEmail("hztest@corp.netease.com")).thenReturn(user);
 		when(request.getSession()).thenReturn(session);
+		when(session.getId()).thenReturn("1");
 		Personality personality = new Personality();
 		when(userInfoService.getUserPersonalityById(1)).thenReturn(personality);
 		when(userHouseService.getUserHouseById(1)).thenReturn(userhouse);
-		//Map<String, Object> result = loginController.loginCheck(request, g_user);
-		//assertEquals(result.get("result"),1);
+		Map<String, Object> result = loginController.loginCheck(request, g_user);
+		assertEquals(result.get("result"),1);
 		
 	}
 }

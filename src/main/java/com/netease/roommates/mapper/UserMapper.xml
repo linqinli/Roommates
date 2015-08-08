@@ -141,14 +141,5 @@
 		or
 		cleanliness!=1 or personCharacter!=1)
 	</select>
-<!--  
-	<update id="logoutById" parameterType="int">
-		update sys_user
-		<set>
-			sessionId = null,
-			updateTime = now()
-		</set>
-		where userId=#{userId}
-	</update>
--->
+
 </mapper>
