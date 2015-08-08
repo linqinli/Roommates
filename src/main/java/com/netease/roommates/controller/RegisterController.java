@@ -178,7 +178,8 @@ public class RegisterController {
 		info.put("data", dataMap);
 		HttpSession session = request.getSession();
 		session.setAttribute("userId",userId);
-		
+		String sessionId = session.getId();
+		info.put("access_token", sessionId);
 		
 		
 		StringBuffer mailstring = new StringBuffer("这是验证邮件，请访问如下网址：<br/><a href=");
