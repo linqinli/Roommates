@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.web.servlet.ModelAndView;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -62,7 +63,7 @@ public class RegisterControllerTest {
 		User user = new User();
 		user.setNickName("test");
 		when(userInfoService.getUserById(1)).thenReturn(user);
-		Map<String, Object> result = registerController.userCheck(request);
+		ModelAndView result = registerController.userCheck(request);
 		//assertEquals(result.toString(),"{验证结果=邮箱验证成功}");
 	}
 	

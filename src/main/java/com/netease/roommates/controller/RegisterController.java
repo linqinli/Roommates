@@ -93,20 +93,6 @@ public class RegisterController {
 		return mv;
 	}
 	
-	@RequestMapping(value="/register/test")
-	@ResponseBody
-	public String userCdsheck(HttpServletRequest request) throws Exception{
-		
-		return "hello贾";
-	}
-
-	@RequestMapping(value="/register/hello")
-	public ModelAndView yyrCheck(HttpServletRequest request) throws Exception{
-		ModelAndView  mv = new ModelAndView ("register");
-		mv.addObject("result", "成功！！！！");
-		return mv;
-	}
-	
 	
 	@RequestMapping(value="/register", method = RequestMethod.POST)
 	@ResponseBody
