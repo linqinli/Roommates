@@ -1,6 +1,5 @@
 package com.netease.roommates.controller;
 
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +24,6 @@ import com.netease.roommates.vo.TagVO;
 import com.netease.user.service.IUserHouseService;
 
 
-
 @Controller
 @RequestMapping("/api")
 public class LoginController {
@@ -39,30 +37,18 @@ public class LoginController {
 	public Map<String, Object> logout(HttpServletRequest request) throws Exception{
 		request.getSession().invalidate();
 		Map<String, Object> info = new HashMap<String, Object>();
-		info.put("result",0);
+		info.put("result",1);
 		return info;
 	}
 	
 	
 	@RequestMapping(value="/login", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> loginCheck(HttpServletRequest request, @RequestBody LoginAndRegisterUserVO g_user) throws Exception{
-	
+	public Map<String, Object> loginCheck(HttpServletRequest request, @RequestBody LoginAndRegisterUserVO g_user) throws Exception{	
 		Map<String, Object> info=new HashMap<String, Object>();
-		try {
-			request.setCharacterEncoding("utf-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		
+		request.setCharacterEncoding("utf-8");
 		String p_email=g_user.getEmail();
 		String p_password=g_user.getPassword();
-		if(CheckWord.check(p_email) || CheckWord.check(p_password)){
-			info.put("result", 0);
-			info.put("info", "包含非法字符");
-			return info;
-		}
-		
 		if(p_email==null || p_email.isEmpty()){
 			info.put("result", 0);
 			info.put("info","请输入企业邮箱");
@@ -73,34 +59,31 @@ public class LoginController {
 			info.put("info", "请输入登录密码");
 			return info;
 		}
-		
-		
 		if(!emailAddress.emailCheck(p_email)){
 			info.put("result", 0);
 			info.put("info", "请输入您的企业邮箱");
 			return info;
 		}
+		if(CheckWord.check(p_email) || CheckWord.check(p_password)){
+			info.put("result", 0);
+			info.put("info", "包含非法字符");
+			return info;
+		}
 		
 		User user = userInfoService.getUserByEmail(p_email);
-		
+
 		if(user!=null){
 			if(user.getPwdMD5Hash().equals(HashGeneratorUtils.generateSaltMD5(p_password))){
-				info.put("result", 1);
-				info.put("info", "登录成功");
-				//request.getSession(false).invalidate();
-				HttpSession session = request.getSession(true);
+				HttpSession session = request.getSession();
 				String sessionId = session.getId();
-				request.getSession().setAttribute("userId",user.getUserId());
-				request.getSession().setAttribute("isChecked",true);
-				//user.setSessionId(sessionId);
-				//userInfoService.updateUserBasicInfo(user);
-				info.put("access_token", sessionId);
-				
-				
+				session.setAttribute("userId",user.getUserId());
+				session.setAttribute("isChecked",true);
+								
 				boolean isInfoAll = (user.getNickName()!=null&&user.getGender()!=null&user.getPhoneNumber()!=null&&user.getBirthday()!=null&& user.getPosition()!=null);
 				int isQuestionnaireAll = userInfoService.isQuestionnaireAll(user.getUserId());
 				String credit = "一般信用";
 				String headImgUrl = "http://223.252.223.13/Roommates/photo/photo_" + user.getUserId() + ".jpg";
+				String defaultImgUrl = "http://223.252.223.13/Roommates/photo/photo_default.jpg";
 				Personality personality = userInfoService.getUserPersonalityById(user.getUserId());
 				
 				
@@ -128,7 +111,7 @@ public class LoginController {
 				if(user.getHasPhoto())
 					dataMap.put("avatar", headImgUrl);
 				else
-					dataMap.put("avatar", "http://223.252.223.13/Roommates/photo/photo_default.jpg");
+					dataMap.put("avatar", defaultImgUrl);
 				dataMap.put("lookStatus",user.getStatus());
 				dataMap.put("credit", credit);
 				dataMap.put("auth", auth);
@@ -143,12 +126,15 @@ public class LoginController {
 				if(user.getPosition() != null)
 					dataMap.put("job", user.getPosition());
 				if(user.getPhoneNumber() != null)
-				dataMap.put("phone", user.getPhoneNumber());
+					dataMap.put("phone", user.getPhoneNumber());
 				if(tags!=null)
 					dataMap.put("tags", tags);				
 				dataMap.put("completeInfo", isInfoAll);
-				//dataMap.put("sessionId", sessionId);
 				
+								
+				info.put("result", 1);
+				info.put("info", "登录成功");
+				info.put("access_token", sessionId);
 				info.put("data", dataMap);
 			
 				return info;

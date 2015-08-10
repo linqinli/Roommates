@@ -13,11 +13,13 @@ public class emailAddress {
 		Pattern hikvisEmail = Pattern.compile(".*@hikvision.com");
 		Pattern dahuaEmail = Pattern.compile(".*@dahuatech.com");
 		Pattern utEmail = Pattern.compile(".*@utstar.com");
+		Pattern yixinEmail = Pattern.compile(".*@yixin.im");
 		emailPattern.put(neteaseEmail, "网易");
 		emailPattern.put(alibabaEmail, "阿里巴巴");
 		emailPattern.put(hikvisEmail, "海康威视");
 		emailPattern.put(dahuaEmail, "大华");
 		emailPattern.put(utEmail, "UT斯达康");
+		emailPattern.put(yixinEmail,"网易");
 	}
 	
 	public static boolean emailCheck(String email){

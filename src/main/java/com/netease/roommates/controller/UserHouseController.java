@@ -87,7 +87,8 @@ public class UserHouseController {
 	 */
 	@RequestMapping(value = "/insert", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> insertUserHouse(HttpSession session, @RequestBody BatchPhotoModel model) throws ServiceException {
+	public Map<String, Object> insertUserHouse(HttpSession session, @RequestBody BatchPhotoModel model)
+			throws ServiceException {
 
 		Map<String, Object> result = new HashMap<String, Object>();//
 
@@ -149,7 +150,8 @@ public class UserHouseController {
 	 */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> updateUserHouse(HttpSession session, @RequestBody BatchPhotoModel model) throws ServiceException {
+	public Map<String, Object> updateUserHouse(HttpSession session, @RequestBody BatchPhotoModel model)
+			throws ServiceException {
 
 		Map<String, Object> result = new HashMap<String, Object>();
 
@@ -243,15 +245,24 @@ public class UserHouseController {
 	@RequestMapping(value = "/addimage", method = RequestMethod.POST)
 	public String addImage(HttpSession session, @RequestBody Map<String, Object> params) throws ControllerException {
 		try {
+			List<String> urls = new ArrayList<String>();
 			int userId = (Integer) session.getAttribute(USER_ID);
 			Object images = params.get("images");
 			if (images != null) {
 				@SuppressWarnings("unchecked")
 				List<String> photos = (List<String>) images;
-				userHouseService.addImage(userId, photos);
+				if (!photos.isEmpty()) {
+					List<String> photoNames = userHouseService.addImage(userId, photos);
+					for (String photoName : photoNames) {
+						urls.add(PREFIX + photoName);
+					}
+				}
 			}
+
 			JsonBuilder result = new JsonBuilder();
-			return result.append("errno", 0).build();
+			result.append("errno", 0);
+			result.append("url", urls);
+			return result.build();
 		} catch (ServiceException se) {
 			logger.error("Error add image", se);
 			throw new ControllerException("Error add image", se);

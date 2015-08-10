@@ -92,7 +92,7 @@ public class MatchDataService implements IMatchDataService {
 				if(user.getUserHouse()!=null) userTmpInfo.setHasHouse(true);
 				
 				userTmpInfo.setMatchScore(matchScoreAndMessage.getMatchScore());
-				userTmpInfo.setMatchMessage(matchScoreAndMessage.getMatchMessage());
+				userTmpInfo.setMatchMessage(setDisplayMatchMessage(curUser, user, matchScoreAndMessage.getMatchScore()));
 				matchUserInfo.add(userTmpInfo);
 			}
 		}
@@ -303,7 +303,8 @@ public class MatchDataService implements IMatchDataService {
 	public String setDisplayMatchMessage(User curUser, User user, int matchScore) throws ServiceException {
 		Personality curPer = curUser.getPersonality();
 		Personality per = user.getPersonality();
-		if(curPer==null || per==null) return "";
+		if(curPer==null || curUser.getPhoneNumber()==null || per==null) return "请完善个人信息哟";
+		
 		// 公司，年龄，问卷
 		if(curPer.getCleanliness()==per.getCleanliness() && curPer.getPersonCharacter()==per.getPersonCharacter()
 				&& curPer.getDailySchedule()==per.getDailySchedule() && curPer.getPet()==per.getPet() 

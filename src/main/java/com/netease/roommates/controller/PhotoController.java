@@ -22,7 +22,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.netease.exception.ControllerException;
+import com.netease.exception.ServiceException;
+import com.netease.roommates.po.User;
 import com.netease.user.service.IFileService;
+import com.netease.user.service.IUserInfoService;
 import com.netease.utils.JsonBuilder;
 
 @Controller
@@ -37,6 +40,9 @@ public class PhotoController {
 	@Autowired
 	private IFileService photoTransportService;
 
+	@Autowired
+	private IUserInfoService userInfoService;
+
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	@ResponseBody
 	public String upload(HttpSession session, @RequestBody Map<String, String> params) throws ControllerException {
@@ -44,18 +50,28 @@ public class PhotoController {
 			JsonBuilder result = new JsonBuilder();
 			int userId = (Integer) session.getAttribute(USER_ID);
 			String base64Image = params.get("file");
-			if (!StringUtils.isEmpty(base64Image) && base64Image.length() < 200 * 1024) {
+			if (!StringUtils.isEmpty(base64Image)) {
 				int idx = base64Image.indexOf(',');
 				if (idx != -1) {
 					base64Image = base64Image.substring(idx + 1);
 					byte[] decodedBytes = DatatypeConverter.parseBase64Binary(base64Image);
-					photoTransportService.fildUpload(generatePathByUserId(userId), decodedBytes);
-					result.append("errono", 0);
-					result.append("imgUrl", PHOTO_URL_PREFIX + userId + SUFFIX);
-					return result.build();
+					if (decodedBytes.length <= 200 * 1024) {
+						photoTransportService.fildUpload(generatePathByUserId(userId), decodedBytes);
+						User user = new User();
+						user.setUserId(userId);
+						user.setHasPhoto(true);
+						userInfoService.updateUserBasicInfo(user);
+						result.append("errono", 0);
+						result.append("imgUrl", PHOTO_URL_PREFIX + userId + SUFFIX);
+						return result.build();
+					}
 				}
 			}
 			throw new ControllerException("Photo is empty or excess max size 200KB or base64 format error.");
+		} catch (ServiceException se) {
+			logger.error("Error uploading photo", se);
+			throw new ControllerException("Error uploading photo", se);
+			
 		} catch (IOException ioe) {
 			logger.error("Error uploading photo", ioe);
 			throw new ControllerException("Error uploading photo", ioe);

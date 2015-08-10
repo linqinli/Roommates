@@ -25,5 +25,4 @@ public interface IUserInfoService {
 	
 	public Personality getUserPersonalityById(int userId) throws ServiceException;
 
-	//public void logoutById (int userId) throws ServiceException;
 }

@@ -39,9 +39,9 @@ public class RegisterControllerTest {
 		HttpSession session = mock(HttpSession.class);
 		when( request.getParameter("userId")).thenReturn("1");
 		when(request.getSession()).thenReturn(session);
+		when(session.getId()).thenReturn("1");
 		when(session.getAttribute("userId")).thenReturn(1);
 		User user = new User();
-		//user.setUserId(1);
 		user.setCompanyEmail("hztest@corp.netease.com");
 		when(userInfoService.getUserById(1)).thenReturn(user);
 		Map<String, Object> result = registerController.check(request);
@@ -54,6 +54,7 @@ public class RegisterControllerTest {
 		HttpServletRequest request = mock(HttpServletRequest.class);
 		when(request.getParameter("checkid")).thenReturn("1");
 		when(request.getParameter("checkname")).thenReturn(HashGeneratorUtils.generateSaltMD5("test"));
+		when(request.getParameter("checkemail")).thenReturn("hztest@corp.netease.com");
 		User user = new User();
 		user.setNickName("test");
 		when(userInfoService.getUserById(1)).thenReturn(user);
@@ -63,7 +64,7 @@ public class RegisterControllerTest {
 	
 	
 	@Test
-	public void testRegisterCheck() throws Exception{
+	public void testRegister() throws Exception{
 		HttpServletRequest request = mock(HttpServletRequest.class);
 		HttpSession session = mock(HttpSession.class);
 		LoginAndRegisterUserVO g_user = new LoginAndRegisterUserVO();
@@ -83,7 +84,7 @@ public class RegisterControllerTest {
 		existList.add(user);
 		when(userInfoService.getUserByName(t_name)).thenReturn(existList);
 		when(request.getSession()).thenReturn(session);
-		Map<String, Object> result = registerController.registercheck(request, g_user);
+		Map<String, Object> result = registerController.register(request, g_user);
 		assertEquals(result.get("result"), 1);
 	}
 }
