@@ -34,22 +34,6 @@ public class MatchDataService implements IMatchDataService {
 	private IMatchSqlService matchSqlService;
 	
 	@Override
-	public List selectAllUsers() throws ServiceException {
-		// TODO Auto-generated method stub
-		log.debug("MatchDataService.selectAllUsers");
-		List users = jdbcTemplate.queryForList("select * from sys_user");
-		return users;
-	}
-	
-	@Override
-	public List selectAllPersonalitys() throws ServiceException {
-		// TODO Auto-generated method stub
-		log.debug("MatchDataService.selectAllPersonalitys");
-		List personalitys = jdbcTemplate.queryForList("select * from user_personality");
-		return personalitys;
-	}
-	
-	@Override
 	public List<MatchUserSimpleInfo> getMatchUserSimpleInfoByPara(int id, int p, int xb, int f, int gs, int cy, int cw,
 			int zx, int ws, int xg, int fk) throws ServiceException{
 		List<Integer> userIdList = getUserIdListByCondition(id, xb, f, gs, cy, cw, zx, ws, xg, fk);
@@ -89,7 +73,9 @@ public class MatchDataService implements IMatchDataService {
 					matchScoreAndMessage = this.getVectorSimilarityBetweenTwoPersonality(curUser.getPersonality(), user.getPersonality());
 					matchScoreAndMessage.setMatchMessage(setDisplayMatchMessage(curUser, user, matchScoreAndMessage.getMatchScore()));
 				}
-				if(user.getUserHouse()!=null) userTmpInfo.setHasHouse(true);
+				if(user.getUserHouse()!=null){
+					userTmpInfo.setHasHouse(true);
+				}
 				
 				userTmpInfo.setMatchScore(matchScoreAndMessage.getMatchScore());
 				userTmpInfo.setMatchMessage(setDisplayMatchMessage(curUser, user, matchScoreAndMessage.getMatchScore()));
@@ -128,7 +114,7 @@ public class MatchDataService implements IMatchDataService {
 		if(user1DailySchedule == user2DailySchedule){
 			matchScore += zxWeight*1;
 		}
-		else matchScore += zxWeight*(-1);
+		else{ matchScore += zxWeight*(-1);}
 
 		// 抽烟选项匹配得分计算
 		int user1Smoking = per1.getSmoking();
@@ -138,7 +124,7 @@ public class MatchDataService implements IMatchDataService {
 		if(user1Smoking == user2Smoking){
 			matchScore += cyWeight*1;
 		}
-		else matchScore += cyWeight*(user1Smoking*user2Smoking);
+		else{ matchScore += cyWeight*(user1Smoking*user2Smoking);}
 
 		// 宠物选项匹配得分计算
 		int user1Pet = per1.getPet();
@@ -148,7 +134,7 @@ public class MatchDataService implements IMatchDataService {
 		if(user1Pet == user2Pet){
 			matchScore += cwWeight*1;
 		}
-		else matchScore += cwWeight*(user1Pet*user2Pet);
+		else{ matchScore += cwWeight*(user1Pet*user2Pet);}
 
 		// 访客选项匹配得分计算
 		int user1Visitor = per1.getVisitor();
@@ -158,7 +144,7 @@ public class MatchDataService implements IMatchDataService {
 		if(user1Visitor == user2Visitor){
 			matchScore += fkWeight*1;
 		}
-		else matchScore += fkWeight*(user1Visitor*user2Visitor);
+		else{ matchScore += fkWeight*(user1Visitor*user2Visitor);}
 
 		// 个人卫生选项匹配得分计算
 		int user1Sanitation = per1.getCleanliness();
