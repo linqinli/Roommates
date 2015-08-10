@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.netease.common.service.MailSender;
 import com.netease.common.service.impl.CheckWord;
@@ -67,8 +68,8 @@ public class RegisterController {
 	
 	@RequestMapping(value="/register/usercheck")
 	@ResponseBody
-	public Map<String, Object> userCheck(HttpServletRequest request) throws Exception{
-		Map<String, Object> info = new HashMap<String,Object>();
+	public Map<String,Object> userCheck(HttpServletRequest request) throws Exception{
+		Map<String, Object> result = new HashMap<String, Object>();
 		request.setCharacterEncoding("utf-8"); 
 		String p_userId = request.getParameter("checkid");
 		String p_email = request.getParameter("checkemail");
@@ -78,14 +79,47 @@ public class RegisterController {
 			if(user!=null && p_name.equals(HashGeneratorUtils.generateSaltMD5(user.getNickName()))){
 				user.setCompanyEmail(p_userId+"@corp.netease.com");
 				userInfoService.updateUserBasicInfo(user);
-				info.put("验证结果","邮箱验证成功");
-				return info;
+				result.put("结果", "您的邮箱已验证成功，快使用\"屋檐下\"匹配室友吧！");
+				return result;
 			}
 		}
-		info.put("验证结果", "邮箱验证失败");
-		return info;		
+		result.put("结果", "邮箱验证失败，请重新验证！");
+		return result;
 	}
-
+	
+//	@RequestMapping(value="/register/usercheck")
+//	@ResponseBody
+//	public String userCheck(HttpServletRequest request) throws Exception{
+//		request.setCharacterEncoding("utf-8"); 
+//		String p_userId = request.getParameter("checkid");
+//		String p_email = request.getParameter("checkemail");
+//		String p_name = request.getParameter("checkname");
+//		if(p_userId != null && p_email != null && p_email != null){
+//			User user = userInfoService.getUserById(Integer.parseInt(p_userId));
+//			if(user!=null && p_name.equals(HashGeneratorUtils.generateSaltMD5(user.getNickName()))){
+//				user.setCompanyEmail(p_userId+"@corp.netease.com");
+//				userInfoService.updateUserBasicInfo(user);
+//				return "您的邮箱已验证成功，快使用\"屋檐下\"匹配室友吧！";
+//			}
+//		}
+//		return "邮箱验证失败，请重新验证！";
+//	}
+//
+//	@RequestMapping(value="/register/hello")
+//	public String yyrCheck(HttpServletRequest request) throws Exception{
+//		ModelAndView  mv = new ModelAndView ("register");
+//		mv.addObject("result", "你好“”!!!");
+//		String str = "张三" ;
+//		byte[] jiema= str.getBytes("gb2312") ; //解码
+//		String   bianma = new String(jiema,"UTF-8");//编码 如果上面的解码不对 可能出现问题
+//		byte[] jiema1= str.getBytes("iso8859-1") ; //解码
+//		String   bianma1 = new String(jiema1,"UTF-8");//编码 如果上面的解码不对 可能出现问题
+//		byte[] jiema2= str.getBytes("UTF-8") ; //解码
+//		String   bianma2 = new String(jiema2,"UTF-8");//编码 如果上面的解码不对 可能出现问题
+//		byte[] jiema3= str.getBytes("UTF-8") ; //解码
+//		String   bianma3 = new String(jiema2,"GBK");//编码 如果上面的解码不对 可能出现问题
+//		return "register";
+//	}
 	
 	
 	@RequestMapping(value="/register", method = RequestMethod.POST)
