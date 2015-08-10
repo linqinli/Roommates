@@ -2,7 +2,6 @@ package com.netease.roommates.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,15 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.netease.exception.HashGenerationException;
 import com.netease.exception.ServiceException;
 import com.netease.match.service.IMatchDataService;
 import com.netease.match.service.IMatchDetailService;
-import com.netease.roommates.po.User;
 import com.netease.roommates.vo.MatchUserDetailInfo;
 import com.netease.roommates.vo.MatchUserSimpleInfo;
-import com.netease.user.service.IUserInfoService;
-import com.netease.utils.HashGeneratorUtils;
 
 @Controller
 @RequestMapping("/api")
@@ -37,7 +32,7 @@ public class MatchController {
 	
 	@RequestMapping(value = "/people/list")
 	@ResponseBody
-	public Map matchPeopleList(@RequestParam("id")int id,
+	public Map<String, Object> matchPeopleList(@RequestParam("id")int id,
 			@RequestParam(value="p", defaultValue="1")int p,
 			@RequestParam(value="xb", defaultValue="1")int xb,
 			@RequestParam(value="f", defaultValue="1")int f,
@@ -49,7 +44,10 @@ public class MatchController {
 			@RequestParam(value="xg", defaultValue="1")int xg,
 			@RequestParam(value="fk", defaultValue="1")int fk) throws ServiceException {
 		
-		Map resultMap = new HashMap<String, Object >();
+		// logger.info("Parameter: id=" + id + " p");
+		
+		Map<String, Object> resultMap = new HashMap<String, Object >();
+		
 		
 		List<MatchUserSimpleInfo> resultUserInfo = new ArrayList<MatchUserSimpleInfo>();
 		
@@ -68,7 +66,7 @@ public class MatchController {
 	
 	@RequestMapping(value = "/people/detail/{id}")
 	@ResponseBody
-	public Map matchPeopleDetail(HttpSession session, @PathVariable int id) throws ServiceException {
+	public Map<String, Object> matchPeopleDetail(HttpSession session, @PathVariable int id) throws ServiceException {
 		MatchUserDetailInfo matchUserDetailInfo;// = matchDetailService.getDetailByUser(id);
 		if(session==null || session.getAttribute(USER_ID)==null){
 			matchUserDetailInfo =  matchDetailService.getDetailByUser(id);
@@ -77,7 +75,7 @@ public class MatchController {
 			if(curUserId == id) return null;
 			matchUserDetailInfo =  matchDetailService.getDetailByUser(curUserId,id);
 		}
-		Map matchDetailMap = new HashMap<String, Object>();
+		Map<String, Object> matchDetailMap = new HashMap<String, Object>();
 		if(matchUserDetailInfo != null){
 			matchDetailMap.put("data", matchUserDetailInfo);
 			matchDetailMap.put("errno", 0);
@@ -92,7 +90,7 @@ public class MatchController {
 
 	@RequestMapping(value = "/people/search")
 	@ResponseBody
-	public Map searchPeopleList(@RequestParam("q")String keyWords,
+	public Map<String, Object> searchPeopleList(@RequestParam("q")String keyWords,
 			@RequestParam("id")int id,
 			@RequestParam(value="p", defaultValue="1")int p,
 			@RequestParam(value="xb", defaultValue="1")int xb,
@@ -111,7 +109,7 @@ public class MatchController {
 			e1.printStackTrace();
 		}
 		
-		Map resultMap = new HashMap<String, Object >();
+		Map<String, Object> resultMap = new HashMap<String, Object >();
 		
 		List<MatchUserSimpleInfo> resultUserInfo = new ArrayList<MatchUserSimpleInfo>();
 		

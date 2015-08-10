@@ -1,11 +1,15 @@
 package com.netease.match.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.netease.match.service.IMatchSqlService;
+import com.netease.roommates.controller.UserController;
 
 @Service
 public class MatchSqlService implements IMatchSqlService {
+	private Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@Override
 	public String generateSqlStrByCondition(int id, int xb, int f, int gs, int cy, int cw, int zx, int ws, int xg,
@@ -76,6 +80,7 @@ public class MatchSqlService implements IMatchSqlService {
 			selectSqlString = selectSqlString.substring(0, 
 					selectSqlString.length()-4);
 		}
+		logger.info("Execute Sql String : " + selectSqlString);
 		return selectSqlString;
 	}
 
@@ -97,7 +102,7 @@ public class MatchSqlService implements IMatchSqlService {
 		case 2: sqlString += " s.company='网易' and"; break;
 		case 3: sqlString += " s.company='阿里' and"; break;
 		case 4: sqlString += " s.company='大华' and"; break;
-		case 5: sqlString += " s.company='UC斯达康' and"; break;
+		case 5: sqlString += " s.company='UT斯达康' and"; break;
 		case 6: sqlString += " s.company='海康威视' and"; break;
 		default: break;
 		}
