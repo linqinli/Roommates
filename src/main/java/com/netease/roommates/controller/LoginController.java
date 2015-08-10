@@ -147,7 +147,7 @@ public class LoginController {
 		}
 		else{
 			info.put("result",0);
-			info.put("info", "该企业邮箱尚未注册，请检查邮箱");
+			info.put("info", "该企业邮箱尚未注册");
 			return info;
 		}
 	}
