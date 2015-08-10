@@ -41,5 +41,5 @@ public interface IMatchDataService {
 	public List<MatchUserSimpleInfo> searchUserSimpleInfoByPara(String keyWords, int id, int p, int xb, int f, int gs, int cy, int cw,
 			int zx, int ws, int xg, int fk) throws ServiceException;
 	
-	public String setDisplayMatchMessage(User curUser, User user) throws ServiceException; 
+	public String setDisplayMatchMessage(User curUser, User user, int matchScore) throws ServiceException; 
 }

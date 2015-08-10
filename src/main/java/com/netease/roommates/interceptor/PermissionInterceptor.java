@@ -15,7 +15,6 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
 
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-
 		String path = request.getServletPath();
 		if (path.startsWith("/api/login") || path.startsWith("/api/register")) {
 			return true;

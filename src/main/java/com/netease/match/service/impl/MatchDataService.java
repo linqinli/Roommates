@@ -87,12 +87,12 @@ public class MatchDataService implements IMatchDataService {
 				if(curUser.getPersonality()!=null && user.getPersonality()!=null){
 					
 					matchScoreAndMessage = this.getVectorSimilarityBetweenTwoPersonality(curUser.getPersonality(), user.getPersonality());
-					matchScoreAndMessage.setMatchMessage(setDisplayMatchMessage(curUser, user));
+					matchScoreAndMessage.setMatchMessage(setDisplayMatchMessage(curUser, user, matchScoreAndMessage.getMatchScore()));
 				}
 				if(user.getUserHouse()!=null) userTmpInfo.setHasHouse(true);
 				
 				userTmpInfo.setMatchScore(matchScoreAndMessage.getMatchScore());
-				userTmpInfo.setMatchMessage(matchScoreAndMessage.getMatchMessage());
+				userTmpInfo.setMatchMessage(setDisplayMatchMessage(curUser, user, matchScoreAndMessage.getMatchScore()));
 				matchUserInfo.add(userTmpInfo);
 			}
 		}
@@ -300,10 +300,11 @@ public class MatchDataService implements IMatchDataService {
 	}
 
 	@Override
-	public String setDisplayMatchMessage(User curUser, User user) throws ServiceException {
+	public String setDisplayMatchMessage(User curUser, User user, int matchScore) throws ServiceException {
 		Personality curPer = curUser.getPersonality();
 		Personality per = user.getPersonality();
-		if(curPer==null || per==null) return "";
+		if(curPer==null || curUser.getPhoneNumber()==null || per==null) return "请完善个人信息哟";
+		
 		// 公司，年龄，问卷
 		if(curPer.getCleanliness()==per.getCleanliness() && curPer.getPersonCharacter()==per.getPersonCharacter()
 				&& curPer.getDailySchedule()==per.getDailySchedule() && curPer.getPet()==per.getPet() 
@@ -317,8 +318,8 @@ public class MatchDataService implements IMatchDataService {
 		if(curUser.getCompany()==user.getCompany()) return "你们是同事";
 		if(curUser.getBirthday()!=null && user.getBirthday()!=null &&
 				Math.abs(curUser.getBirthday().getYear()-user.getBirthday().getYear())<=1) return "你们年龄相仿";
-		
-		return "";
+		if(matchScore > 50) return "你们俩个性相投";
+		else return "你们都是对方的新世界";
 	}
 
 	@Override
