@@ -4,12 +4,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,13 +22,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.netease.common.service.MailSender;
 import com.netease.common.service.impl.CheckWord;
-import com.netease.common.service.impl.DefaultMailSender;
 import com.netease.common.service.impl.emailAddress;
-import com.netease.exception.ServiceException;
 import com.netease.roommates.po.User;
 import com.netease.roommates.vo.LoginAndRegisterUserVO;
+import com.netease.roommates.vo.MailVO;
 import com.netease.user.service.IUserInfoService;
 import com.netease.utils.HashGeneratorUtils;
 
@@ -31,6 +34,9 @@ import com.netease.utils.HashGeneratorUtils;
 @RequestMapping("/api")
 public class RegisterController {
 	private Logger logger = LoggerFactory.getLogger(RegisterController.class);
+	
+	@Autowired
+	private JmsTemplate jmsTemplate;
 	
 	@Autowired
 	private IUserInfoService userInfoService;
@@ -193,22 +199,18 @@ public class RegisterController {
 		mailstring.append(stringbuffer+">"+stringbuffer+"</a>");
 		String mailString = mailstring.toString();
 		
-		final MailSender mailsender = new DefaultMailSender();
-		mailsender.setReceiver(p_email);
-		mailsender.setSubject("验证邮件");
-		mailsender.setContent(mailString);
+		final MailVO mail = new MailVO();
+		mail.setReceiver(p_email);
+		mail.setSubject("验证邮件");
+		mail.setContent(mailString);
 		
-		new Thread() {
-			public void run() {
-				try {
-					mailsender.send();
-					logger.info("Mail has been sent.");
-				} catch (ServiceException e) {
-					logger.error("Error sending email.", e);
-				}
+		jmsTemplate.send("mailbox-destination", new MessageCreator() {
+			@Override
+			public Message createMessage(Session session) throws JMSException {
+				return session.createObjectMessage(mail);
 			}
-		}.start();
-
+		});
+		
 		return info;
 	}
 }

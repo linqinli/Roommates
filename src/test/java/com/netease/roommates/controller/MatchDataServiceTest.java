@@ -33,6 +33,4 @@ public class MatchDataServiceTest {
 		matchDataService.getMatchUserSimpleInfoByPara(78, 1, 1, 1, 1, 3, 2, 3, 2, 1, 1);
 	}
 	
-	
-	
 }
