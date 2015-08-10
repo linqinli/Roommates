@@ -100,7 +100,7 @@ public class MatchSqlService implements IMatchSqlService {
 		String sqlString="";
 		switch(gs){
 		case 2: sqlString += " s.company='网易' and"; break;
-		case 3: sqlString += " s.company='阿里' and"; break;
+		case 3: sqlString += " s.company='阿里巴巴' and"; break;
 		case 4: sqlString += " s.company='大华' and"; break;
 		case 5: sqlString += " s.company='UT斯达康' and"; break;
 		case 6: sqlString += " s.company='海康威视' and"; break;
