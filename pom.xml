@@ -14,17 +14,20 @@
 	</properties>
 
 	<repositories>
+	    <!--
 		<repository>
 			<id>offical</id>
 			<name>Official Maven Central Repository</name>
 			<url>http://repo1.maven.org/maven2/</url>
 		</repository>
+		-->
 		<repository>
 			<id>hzntes</id>
 			<name>NTES-HZ Maven Repository</name>
 			<url>http://mvn.hz.netease.com/artifactory/repo</url>
 			<layout>default</layout>
 		</repository>
+		
 	</repositories>
 
 	<dependencies>
@@ -196,7 +199,7 @@
 		<dependency>
 			<groupId>org.apache.activemq</groupId>
 			<artifactId>activemq-broker</artifactId>
-			<version>5.11.1</version>
+			<version>5.10.2</version>
 		</dependency>
 
 		<dependency>

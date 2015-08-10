@@ -38,7 +38,9 @@ public class RoommatesController {
 		if (forbidId == null) {
 			throw new ControllerException("Required field forbidId is not present.");
 		}
-		roommatesService.addHate(userId, Integer.valueOf(forbidId));
+		int forId = Integer.valueOf(forbidId);
+		roommatesService.removeFavorite(userId, forId);
+		roommatesService.addHate(userId, forId);
 		JsonBuilder result = new JsonBuilder();
 		return result.append("errno", 0).build();
 	}
