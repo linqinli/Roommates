@@ -269,7 +269,7 @@ public class MatchDataService implements IMatchDataService {
 
 		// matchUserInfo.setPhotoId(user.getUserId(), 0);
 		if(user.getHasPhoto()) matchUserInfo.setPhotoId(user.getUserId(), 0);
-		else matchUserInfo.setPhotoId(123, 0);
+		else matchUserInfo.setPhotoId(123, 1);
 		matchUserInfo.setUserId(user.getUserId());
 		if(user.getBirthday()!=null) matchUserInfo.setAge(dateToAge(user.getBirthday()));
 		return matchUserInfo;

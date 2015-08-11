@@ -27,9 +27,10 @@ public class MatchUserSimpleInfo {
 	}
 	public void setPhotoId(int userid, int mode) {
 		String prefix = "http://223.252.223.13/Roommates/photo/photo_";
-		String smallSuffix = "_small.jpg";
+		String listSuffix = "list_default";
 		String suffix = ".jpg";
-		this.photoId = prefix + userid + suffix;
+		if(mode==0) this.photoId = prefix + userid + suffix;
+		else this.photoId = prefix + listSuffix + suffix;
 	}
 	public String getGender() {
 		return gender;
