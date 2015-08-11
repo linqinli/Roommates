@@ -61,6 +61,7 @@ public class RegisterController {
 		}
 		else{
 			session.setAttribute("isChecked",true);
+			session.setAttribute("userId", Integer.valueOf(userId));
 			String sessionId = session.getId();
 			info.put("result", 1);
 			info.put("info", "验证成功");

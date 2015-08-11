@@ -61,7 +61,7 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
 			ModelAndView modelAndView) throws Exception {
 		String path = request.getServletPath();
 		Object userIdObj = request.getSession().getAttribute(USER_ID);
-		if (path.startsWith("/api/login") && userIdObj != null) {
+		if ((path.startsWith("/api/login") || path.startsWith("/api/register/check")) && userIdObj != null) {
 			int userId = Integer.valueOf(userIdObj.toString());
 			userTokenMapper.put(userId, request.getSession().getId());
 		}
