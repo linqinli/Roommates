@@ -11,13 +11,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.netease.exception.ServiceException;
+import com.netease.roommates.po.User;
 import com.netease.roommates.vo.MailVO;
+import com.netease.user.service.IUserInfoService;
 import com.netease.utils.JsonBuilder;
 
 @Controller
 public class TestController {
 	@Autowired
 	private JmsTemplate jmsTemplate;
+	
+	@Autowired
+	private IUserInfoService userInfoService;
 	
 	@ResponseBody
 	@RequestMapping("/api/login/messagequeue")
@@ -35,5 +41,11 @@ public class TestController {
         });
 		
 		return new JsonBuilder().append("errno", 0).build();
+	}
+	
+	@ResponseBody
+	@RequestMapping("/api/login/user")
+	public User getUser(int id) throws ServiceException {
+		return userInfoService.getUserById(id);
 	}
 }
