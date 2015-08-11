@@ -73,6 +73,7 @@ public class RegisterController {
 	}
 	
 	
+
 	@RequestMapping(value="/register/usercheck")
 	@ResponseBody
 	public ModelAndView userCheck(HttpServletRequest request) throws Exception{
