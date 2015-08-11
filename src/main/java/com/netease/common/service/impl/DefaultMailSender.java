@@ -39,6 +39,12 @@ public class DefaultMailSender implements MailSender {
 		EmailAccountVO emailSina5 = new EmailAccountVO("roommate32123@sina.com", "smtp.sina.com", "roommate32123", "123456a");
 		EmailAccountVO emailSina6 = new EmailAccountVO("wuyanxia_welcome@sina.cn", "smtp.sina.cn", "wuyanxia_welcome", "wuyanxia");
 		EmailAccountVO emailSina7 = new EmailAccountVO("wuyanxia_001@sina.com", "smtp.sina.com", "wuyanxia_001", "wuyanxia");
+		EmailAccountVO emailSina8 = new EmailAccountVO("wuyanxia002@sina.com", "smtp.sina.com", "wuyanxia002", "wuyanxia");
+		EmailAccountVO email1261 = new EmailAccountVO("roommate001@126.com", "smtp.126.com", "roommate001", "wuyanxia");
+		EmailAccountVO email1262 = new EmailAccountVO("wuyanxia002@126.com", "smtp.126.com", "wuyanxia002", "wuyanxia");
+		EmailAccountVO email1263 = new EmailAccountVO("wuyanxia827@126.com", "smtp.126.com", "wuyanxia827", "wuyanxia");
+		
+		
 		
 		email.put(0, emailSina);
 		email.put(1, email126);
@@ -50,6 +56,10 @@ public class DefaultMailSender implements MailSender {
 		email.put(7, emailSina5);
 		email.put(8, emailSina6);
 		email.put(9, emailSina7);
+		email.put(10, emailSina8);
+		email.put(11, email1261);
+		email.put(12, email1262);
+		email.put(13, email1263);
 	}
 	
 	private String receiver;
@@ -78,15 +88,14 @@ public class DefaultMailSender implements MailSender {
 
 	@Override
 	public void send() throws ServiceException {
-		int count = 10;
-		for(int i=2; i<count; i++){
+		int count = 14;
+		for(int i=0; i<count; i++){
 			try {
 				if (StringUtils.isEmpty(receiver)) {
 					throw new MessagingException("Receiver should not be empty.");
 				}
 				num = i;
 				logger.info(num+"email send from"+email.get(num).getEmailAddress());
-				System.out.println(num+"email send from"+email.get(num).getEmailAddress());
 				
 				final String USERNAME = email.get(num).getUsername();
 				final String PASSWORD = email.get(num).getPassword();
@@ -94,8 +103,7 @@ public class DefaultMailSender implements MailSender {
 				props.put("mail.smtp.host", email.get(num).getSmtpAddress());
 				props.put("mail.smtp.starttls.enable", "true");
 				props.put("mail.smtp.auth", "true");
-				props.put("mail.smtp.port", "25");
-				Session session = Session.getDefaultInstance(props, new Authenticator() {
+				Session session = Session.getInstance(props, new Authenticator() {
 					public PasswordAuthentication getPasswordAuthentication() {
 						return new PasswordAuthentication(USERNAME, PASSWORD);
 					}
@@ -110,15 +118,12 @@ public class DefaultMailSender implements MailSender {
 				message.setContent(content, "text/html;charset=UTF-8");
 				Transport.send(message);
 				logger.info("Sent message to {} successfully....", receiver);
+				clearMailStatus();
 				break;
 			} catch (Exception mex) {
 				logger.error("Can not send mail to target user:" + receiver);
-				System.out.println("Can not send mail to target user:" + receiver);
-				//send();
 				//throw new ServiceException("Can not send mail to target user.", mex);
-			} finally {
-				clearMailStatus();
-			}
+			} 
 		}
 	}
 
