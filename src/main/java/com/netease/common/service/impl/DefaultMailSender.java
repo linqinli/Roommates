@@ -78,43 +78,47 @@ public class DefaultMailSender implements MailSender {
 
 	@Override
 	public void send() throws ServiceException {
-		try {
-			if (StringUtils.isEmpty(receiver)) {
-				throw new MessagingException("Receiver should not be empty.");
-			}
-			Random rand = new Random();
-			num = Math.abs(rand.nextInt());
-			num = num % 10;
-			logger.info(num+"email send from"+email.get(num).getEmailAddress());
-			
-			final String USERNAME = email.get(num).getUsername();
-			final String PASSWORD = email.get(num).getPassword();
-			Properties props = new Properties();
-			props.put("mail.smtp.host", email.get(num).getSmtpAddress());
-			props.put("mail.smtp.starttls.enable", "true");
-			props.put("mail.smtp.auth", "true");
-			props.put("mail.smtp.port", "25");
-			Session session = Session.getDefaultInstance(props, new Authenticator() {
-				public PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication(USERNAME, PASSWORD);
+		int count = 10;
+		for(int i=2; i<count; i++){
+			try {
+				if (StringUtils.isEmpty(receiver)) {
+					throw new MessagingException("Receiver should not be empty.");
 				}
-			});
-
-			// Create a default MimeMessage object.
-			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(email.get(num).getEmailAddress()));
-			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(receiver));
-
-			message.setSubject(subject);
-			message.setContent(content, "text/html;charset=UTF-8");
-			Transport.send(message);
-			logger.info("Sent message to {} successfully....", receiver);
-		} catch (MessagingException mex) {
-			logger.error("Can not send mail to target user:" + receiver);
-			//send();
-			throw new ServiceException("Can not send mail to target user.", mex);
-		} finally {
-			clearMailStatus();
+				num = i;
+				logger.info(num+"email send from"+email.get(num).getEmailAddress());
+				System.out.println(num+"email send from"+email.get(num).getEmailAddress());
+				
+				final String USERNAME = email.get(num).getUsername();
+				final String PASSWORD = email.get(num).getPassword();
+				Properties props = new Properties();
+				props.put("mail.smtp.host", email.get(num).getSmtpAddress());
+				props.put("mail.smtp.starttls.enable", "true");
+				props.put("mail.smtp.auth", "true");
+				props.put("mail.smtp.port", "25");
+				Session session = Session.getDefaultInstance(props, new Authenticator() {
+					public PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(USERNAME, PASSWORD);
+					}
+				});
+	
+				// Create a default MimeMessage object.
+				Message message = new MimeMessage(session);
+				message.setFrom(new InternetAddress(email.get(num).getEmailAddress()));
+				message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(receiver));
+	
+				message.setSubject(subject);
+				message.setContent(content, "text/html;charset=UTF-8");
+				Transport.send(message);
+				logger.info("Sent message to {} successfully....", receiver);
+				break;
+			} catch (Exception mex) {
+				logger.error("Can not send mail to target user:" + receiver);
+				System.out.println("Can not send mail to target user:" + receiver);
+				//send();
+				//throw new ServiceException("Can not send mail to target user.", mex);
+			} finally {
+				clearMailStatus();
+			}
 		}
 	}
 
