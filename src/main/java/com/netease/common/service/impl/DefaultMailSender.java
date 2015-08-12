@@ -30,19 +30,36 @@ public class DefaultMailSender implements MailSender {
 	int num;
 	static{
 		EmailAccountVO emailSina = new EmailAccountVO("roommates123@sina.com", "smtp.sina.com", "roommates123", "12345qwert");
-		EmailAccountVO emailTom1 = new EmailAccountVO("roommates1@tom.com", "smtp.tom.com", "roommates1", "12345qwert");
-		EmailAccountVO emailTom12 = new EmailAccountVO("roommates12@tom.com", "smtp.tom.com", "roommates12", "12345qwert");
 		EmailAccountVO emailTom123 = new EmailAccountVO("roommates123@tom.com", "smtp.tom.com", "roommates123", "123qwe");
-		EmailAccountVO emailTom1234 = new EmailAccountVO("roommates1234@tom.com", "smtp.tom.com", "roommates1234", "12345qwert");
-		EmailAccountVO emailTom12345 = new EmailAccountVO("roommates12345@tom.com", "smtp.tom.com", "roommates12345", "12345qwert");
-		EmailAccountVO email126 = new EmailAccountVO("roommates123@126.com", "smtp.126.com", "roommates123", "12345qwert");
+		EmailAccountVO email126 = new EmailAccountVO("roommates123@126.com", "smtp.126.com", "roommates123", "oyblyjwrqjkjyehc");
+		EmailAccountVO emailSina1 = new EmailAccountVO("roommate121@sina.com", "smtp.sina.com", "roommate121", "123456a");
+		EmailAccountVO emailSina2 = new EmailAccountVO("roommate12321@sina.com", "smtp.sina.com", "roommate12321", "123456a");
+		EmailAccountVO emailSina3 = new EmailAccountVO("wuyanxia6666@sina.com", "smtp.sina.com", "wuyanxia6666", "wuyanxia");
+		EmailAccountVO emailSina4 = new EmailAccountVO("wuyanxiahz@sina.com", "smtp.sina.com", "wuyanxiahz", "wuyanxia");
+		EmailAccountVO emailSina5 = new EmailAccountVO("roommate32123@sina.com", "smtp.sina.com", "roommate32123", "123456a");
+		EmailAccountVO emailSina6 = new EmailAccountVO("wuyanxia_welcome@sina.cn", "smtp.sina.cn", "wuyanxia_welcome", "wuyanxia");
+		EmailAccountVO emailSina7 = new EmailAccountVO("wuyanxia_001@sina.com", "smtp.sina.com", "wuyanxia_001", "wuyanxia");
+		EmailAccountVO emailSina8 = new EmailAccountVO("wuyanxia002@sina.com", "smtp.sina.com", "wuyanxia002", "wuyanxia");
+		EmailAccountVO email1261 = new EmailAccountVO("roommate001@126.com", "smtp.126.com", "roommate001", "wuyanxia");
+		EmailAccountVO email1262 = new EmailAccountVO("wuyanxia002@126.com", "smtp.126.com", "wuyanxia002", "wuyanxia");
+		EmailAccountVO email1263 = new EmailAccountVO("wuyanxia827@126.com", "smtp.126.com", "wuyanxia827", "wuyanxia");
+		
+		
+		
 		email.put(0, emailSina);
-		email.put(1, emailTom1);
-		email.put(2, emailTom12);
-		email.put(3, emailTom123);
-		email.put(4, emailTom1234);
-		email.put(5, emailTom12345);
-//		email.put(6, email126);
+		email.put(1, email126);
+		email.put(2, emailTom123);
+		email.put(3, emailSina1);
+		email.put(4, emailSina2);
+		email.put(5, emailSina3);
+		email.put(6, emailSina4);
+		email.put(7, emailSina5);
+		email.put(8, emailSina6);
+		email.put(9, emailSina7);
+		email.put(10, emailSina8);
+		email.put(11, email1261);
+		email.put(12, email1262);
+		email.put(13, email1263);
 	}
 	
 	private String receiver;
@@ -71,42 +88,42 @@ public class DefaultMailSender implements MailSender {
 
 	@Override
 	public void send() throws ServiceException {
-		try {
-			if (StringUtils.isEmpty(receiver)) {
-				throw new MessagingException("Receiver should not be empty.");
-			}
-			Random rand = new Random();
-			num = Math.abs(rand.nextInt());
-			num = num % 6;
-			logger.info("email send from"+email.get(num).getEmailAddress());
-					
-			final String USERNAME = email.get(num).getUsername();
-			final String PASSWORD = email.get(num).getPassword();
-			Properties props = new Properties();
-			props.put("mail.smtp.host", email.get(num).getSmtpAddress());
-			props.put("mail.smtp.starttls.enable", "true");
-			props.put("mail.smtp.auth", "true");
-			props.put("mail.smtp.port", "25");
-			Session session = Session.getDefaultInstance(props, new Authenticator() {
-				public PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication(USERNAME, PASSWORD);
+		int count = 14;
+		for(int i=0; i<count; i++){
+			try {
+				if (StringUtils.isEmpty(receiver)) {
+					throw new MessagingException("Receiver should not be empty.");
 				}
-			});
-
-			// Create a default MimeMessage object.
-			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(email.get(num).getEmailAddress()));
-			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(receiver));
-
-			message.setSubject(subject);
-			message.setContent(content, "text/html;charset=UTF-8");
-			Transport.send(message);
-			logger.info("Sent message to {} successfully....", receiver);
-		} catch (MessagingException mex) {
-			logger.error("Can not send mail to target user:" + receiver);
-			throw new ServiceException("Can not send mail to target user.", mex);
-		} finally {
-			clearMailStatus();
+				num = i;
+				logger.info(num+"email send from"+email.get(num).getEmailAddress());
+				
+				final String USERNAME = email.get(num).getUsername();
+				final String PASSWORD = email.get(num).getPassword();
+				Properties props = new Properties();
+				props.put("mail.smtp.host", email.get(num).getSmtpAddress());
+				props.put("mail.smtp.starttls.enable", "true");
+				props.put("mail.smtp.auth", "true");
+				Session session = Session.getInstance(props, new Authenticator() {
+					public PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(USERNAME, PASSWORD);
+					}
+				});
+	
+				// Create a default MimeMessage object.
+				Message message = new MimeMessage(session);
+				message.setFrom(new InternetAddress(email.get(num).getEmailAddress()));
+				message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(receiver));
+	
+				message.setSubject(subject);
+				message.setContent(content, "text/html;charset=UTF-8");
+				Transport.send(message);
+				logger.info("Sent message to {} successfully....", receiver);
+				clearMailStatus();
+				break;
+			} catch (Exception mex) {
+				logger.error("Can not send mail to target user:" + receiver);
+				//throw new ServiceException("Can not send mail to target user.", mex);
+			} 
 		}
 	}
 

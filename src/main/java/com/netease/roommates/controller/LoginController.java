@@ -141,7 +141,7 @@ public class LoginController {
 			}
 			else{
 				info.put("result", 0);
-				info.put("info", "密码输入不正确，请重新输入");
+				info.put("info", "密码输入错误，请重新输入");
 				return info;
 			}
 		}

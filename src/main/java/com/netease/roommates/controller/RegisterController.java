@@ -3,6 +3,7 @@ package com.netease.roommates.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.netease.common.service.impl.CheckWord;
+import com.netease.common.service.impl.DefaultMailSender;
 import com.netease.common.service.impl.emailAddress;
 import com.netease.roommates.po.User;
 import com.netease.roommates.vo.LoginAndRegisterUserVO;
@@ -73,6 +75,17 @@ public class RegisterController {
 	}
 	
 	
+	@RequestMapping(value="/register/email")
+	public void email()throws Exception{
+		DefaultMailSender sender = new DefaultMailSender();
+		sender.setContent("hello");
+		sender.setReceiver("hzjiajunwei@corp.netease.com");
+		sender.setSubject("test");
+		sender.send();
+	}
+	
+	
+	
 
 	@RequestMapping(value="/register/usercheck")
 	@ResponseBody
@@ -85,7 +98,7 @@ public class RegisterController {
 		if(p_userId != null && p_email != null && p_email != null){
 			User user = userInfoService.getUserById(Integer.parseInt(p_userId));
 			if(user!=null && p_name.equals(HashGeneratorUtils.generateSaltMD5(user.getNickName()))){
-				user.setCompanyEmail(p_userId+"@corp.netease.com");
+				user.setCompanyEmail(p_email);
 				userInfoService.updateUserBasicInfo(user);
 				mv.addObject("result", "您的邮箱已验证成功，快使用“屋檐下”匹配室友吧！");
 				return mv;
