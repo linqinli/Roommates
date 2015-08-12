@@ -70,4 +70,5 @@ public class LoginControllerTest {
 		assertEquals(result.get("result"),1);
 		
 	}
+	
 }
