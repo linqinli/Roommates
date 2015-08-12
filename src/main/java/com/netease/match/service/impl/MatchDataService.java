@@ -21,6 +21,7 @@ import com.netease.roommates.vo.MatchScoreAndMessage;
 import com.netease.roommates.po.Personality;
 import com.netease.roommates.po.User;
 import com.netease.roommates.vo.MatchUserSimpleInfo;
+import com.netease.user.service.IUserHouseService;
 import com.netease.user.service.IUserInfoService;
 
 @Service
@@ -32,6 +33,8 @@ public class MatchDataService implements IMatchDataService {
 	private IUserInfoService userInfoService;
 	@Autowired
 	private IMatchSqlService matchSqlService;
+	@Autowired
+	private IUserHouseService userHouseService;
 	
 	@Override
 	public List<MatchUserSimpleInfo> getMatchUserSimpleInfoByPara(int id, int p, int xb, int f, int gs, int cy, int cw,
@@ -73,7 +76,7 @@ public class MatchDataService implements IMatchDataService {
 					matchScoreAndMessage = this.getVectorSimilarityBetweenTwoPersonality(curUser.getPersonality(), user.getPersonality());
 					matchScoreAndMessage.setMatchMessage(setDisplayMatchMessage(curUser, user, matchScoreAndMessage.getMatchScore()));
 				}
-				if(user.getUserHouse()!=null){
+				if(userHouseService.getUserHouseById(user.getUserId())!=null){
 					userTmpInfo.setHasHouse(true);
 				}
 				

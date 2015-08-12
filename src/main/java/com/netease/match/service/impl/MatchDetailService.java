@@ -28,6 +28,7 @@ public class MatchDetailService implements IMatchDetailService {
 	@Autowired
 	private IRoommatesService roommatesService;
 	
+	
 
 	@Override
 	public MatchUserDetailInfo getDetailByUser(int userId) throws ServiceException {
@@ -48,7 +49,7 @@ public class MatchDetailService implements IMatchDetailService {
 		if(user.getPhoneNumber()!=null) matchUserDetailInfo.setTel(user.getPhoneNumber());
 		if(user.getConstellation()!=null) matchUserDetailInfo.setConstellation(user.getConstellation());
 		
-		if(user.getUserHouse()!=null){
+		if(userHouseService.getUserHouseById(user.getUserId())!=null){
 			matchUserDetailInfo.setHasHouse(true);
 			UserHouse userHouse = userHouseService.getUserHouseById(user.getUserId());
 			if(userHouse!=null) matchUserDetailInfo.setMatchUserHouse(userHouse);
@@ -88,7 +89,7 @@ public class MatchDetailService implements IMatchDetailService {
 		if(user.getPhoneNumber()!=null) matchUserDetailInfo.setTel(user.getPhoneNumber());
 		if(user.getConstellation()!=null) matchUserDetailInfo.setConstellation(user.getConstellation());
 		
-		if(user.getUserHouse()!=null){
+		if(userHouseService.getUserHouseById(user.getUserId())!=null){
 			matchUserDetailInfo.setHasHouse(true);
 			UserHouse userHouse = userHouseService.getUserHouseById(user.getUserId());
 			if(userHouse!=null) matchUserDetailInfo.setMatchUserHouse(userHouse);
