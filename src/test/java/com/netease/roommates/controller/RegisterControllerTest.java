@@ -64,7 +64,7 @@ public class RegisterControllerTest {
 		user.setNickName("test");
 		when(userInfoService.getUserById(1)).thenReturn(user);
 		ModelAndView result = registerController.userCheck(request);
-		//assertEquals(result.toString(),"{验证结果=邮箱验证成功}");
+		assertEquals(result.getModel().get("result"),"您的邮箱已验证成功，快使用“屋檐下”匹配室友吧！");
 	}
 	
 	
