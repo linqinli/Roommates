@@ -1,4 +1,4 @@
-package com.netease.roommates.controller;
+package com.netease.match.service;
 
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -31,6 +31,56 @@ public class MatchDataServiceTest {
 	@Test
 	public void testgetMatchUserSimpleInfoByPara() throws ServiceException{
 		matchDataService.getMatchUserSimpleInfoByPara(78, 1, 1, 1, 1, 3, 2, 3, 2, 1, 1);
+	}
+	
+	@Test
+	public void testgetUserIdListByCondition(){
+		matchDataService.getUserIdListByCondition(2, 1, 1, 1, 2, 3, 2, 2, 2, 1);
+	}
+	
+	@Test
+	public void testmatchResultSimpleInfo(){
+		
+	}
+	
+	@Test
+	public void testgetSimilarityBetweenTwoPersonality(){
+		
+	}
+	
+	@Test
+	public void testgetVectorSimilarityBetweenTwoPersonality(){
+		
+	}
+	
+	@Test
+	public void testqueryConstellation(){
+		
+	}
+	
+	@Test
+	public void testcosinAngleOfTwoVector(){
+		
+	}
+	
+	@Test
+	public void testuserInfoToMatchUserSimpleInfo(){
+		
+	}
+	
+	@Test
+	public void testdateToAge(){
+		
+	}
+	
+	@Test
+	public void testsetDisplayMatchMessage(){
+		
+	}
+	
+	@Test
+	public void testsearchUserSimpleInfoByPara(){
+		
 	}
 	
 }

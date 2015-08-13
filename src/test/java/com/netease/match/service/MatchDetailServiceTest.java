@@ -1,4 +1,4 @@
-package com.netease.roommates.controller;
+package com.netease.match.service;
 
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
